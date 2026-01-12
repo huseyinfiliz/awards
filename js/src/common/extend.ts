@@ -1,0 +1,81 @@
+import Extend from 'flarum/common/extenders';
+import Model from 'flarum/common/Model';
+
+import Team from './models/Team';
+import Season from './models/Season';
+import Week from './models/Week';
+import PickemEvent from './models/Event';
+import Pick from './models/Pick';
+import UserScore from './models/UserScore';
+
+export default [
+  new Extend.Store()
+    .add('pickem-teams', Team),
+  
+  new Extend.Model(Team)
+    .attribute('name')
+    .attribute('slug')
+    .attribute('logoPath')
+    .attribute('logoUrl'),
+
+  new Extend.Store()
+    .add('pickem-seasons', Season),
+  
+  new Extend.Model(Season)
+    .attribute('name')
+    .attribute('slug')
+    .attribute<Date>('startDate', Model.transformDate) // Tip ataması
+    .attribute<Date>('endDate', Model.transformDate),   // Tip ataması
+
+  new Extend.Store()
+    .add('pickem-weeks', Week),
+  
+  new Extend.Model(Week)
+    .attribute('name')
+    .attribute('seasonId')
+    .attribute('weekNumber')
+    .hasOne('season'),
+
+  new Extend.Store()
+    .add('pickem-events', PickemEvent),
+  
+  new Extend.Model(PickemEvent)
+    .attribute('weekId')
+    .attribute('homeTeamId')
+    .attribute('awayTeamId')
+    .attribute<Date>('matchDate', Model.transformDate) // Tip ataması
+    .attribute<Date>('cutoffDate', Model.transformDate) // Tip ataması
+    .attribute('allowDraw')
+    .attribute('status')
+    .attribute('homeScore')
+    .attribute('awayScore')
+    .attribute('result')
+    .attribute('canPick')
+    .hasOne('week')
+    .hasOne('homeTeam')
+    .hasOne('awayTeam'),
+
+  new Extend.Store()
+    .add('pickem-picks', Pick),
+  
+  new Extend.Model(Pick)
+    .attribute('userId')
+    .attribute('eventId')
+    .attribute('selectedOutcome')
+    .attribute('isCorrect')
+    .hasOne('event')
+    .hasOne('user'),
+
+  new Extend.Store()
+    .add('pickem-user-scores', UserScore),
+  
+  new Extend.Model(UserScore)
+    .attribute('userId')
+    .attribute('seasonId')
+    .attribute('totalPoints')
+    .attribute('totalPicks')
+    .attribute('correctPicks')
+    .attribute('accuracy')
+    .hasOne('user')
+    .hasOne('season'),
+];
