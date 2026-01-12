@@ -1,141 +1,149 @@
-![](https://i.ibb.co/5XYr4Lx7/pickem.gif)
+# Awards
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/huseyinfiliz/pickem.svg)](https://packagist.org/packages/huseyinfiliz/pickem) [![Total Downloads](https://img.shields.io/packagist/dt/huseyinfiliz/pickem.svg)](https://packagist.org/packages/huseyinfiliz/pickem)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards) [![Total Downloads](https://img.shields.io/packagist/dt/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards)
 
-# Pick'em
-A comprehensive sports prediction game extension for [Flarum](https://flarum.org) forums. Engage your community by allowing users to predict match outcomes, compete on a global leaderboard, and track their statistics.
-
-**Credits:** This extension sponsored by [@ernestdefoe ](https://discuss.flarum.org/u/ernestdefoe)& [@KBExit ](https://discuss.flarum.org/u/KBExit)✨
-
-### ⚽ Matches & Predictions
-![Matches Demo](https://i.ibb.co/FkqKT9zJ/image.png)
-
-### 🏆 Leaderboard System
-![Leaderboard Demo](https://i.ibb.co/WWpWKGpv/image.png)
-
-### 📝 My Picks Dashboard
-![My Picks Demo](https://i.ibb.co/qMGPk3kC/image.png)
-
-### ⚙️ Admin Management
-![Admin Demo](https://i.ibb.co/1wf6mb4/image.png)
+A community awards and voting extension for [Flarum](https://flarum.org) forums. Create annual awards, let your community vote for nominees, and publish results with winner badges.
 
 ## Features
 
-- 🎯 **Match Predictions**: Users can predict Home Win, Away Win, or Draw results
-- 🏆 **Leaderboard**: Automatic global ranking system based on correct predictions
-- 📊 **User Statistics**: Track accuracy rates, total points, and correct pick counts
-- ⚡ **Live Status**: Real-time match status (Scheduled, Closed, Finished)
-- ⏰ **Cutoff Control**: Automatic locking of picks when the match start time is reached
-- 📱 **Responsive Design**: Fully optimized card-based layout for mobile devices
-- 🔔 **Notifications**: Users receive alerts when match results are announced
-- 🛡️ **Admin Panel**: Complete management system for Teams, Seasons, Weeks, and Events
-- 🖼️ **Team Logos**: Visual team identity with logo support (URL or Upload)
+- **Create Awards**: Set up annual or event-based awards (e.g., "Game Awards 2025", "Community Choice Awards")
+- **Categories & Nominees**: Organize awards into categories with multiple nominees each
+- **Voting System**: Users vote for their favorite nominees with configurable vote limits
+- **Vote Management**: Single vote (replace), multiple votes, or unlimited voting per category
+- **User Suggestions**: Allow users to suggest nominees (with admin approval)
+- **Live Vote Counts**: Optionally show vote counts during active voting
+- **Results Publishing**: Publish results with automatic notifications to voters
+- **Winner Badges**: Display gold/silver/bronze badges for top 3 nominees
+- **Admin Vote Editing**: Manually adjust vote counts when needed
+- **Rate Limiting**: Built-in protection against vote spam (10 votes/minute)
 
-### Installation
+## Screenshots
+
+<!-- Add your screenshots here -->
+*Screenshots coming soon*
+
+## Installation
+
+Install via Composer:
 
 ```bash
-composer require huseyinfiliz/pickem
+composer require huseyinfiliz/awards:"*"
 ```
 
-You can also install with Extension Manager: `huseyinfiliz/pickem`
+Or install using Extension Manager: `huseyinfiliz/awards`
 
-### Updating
+## Updating
 
-```sh
-composer update huseyinfiliz/pickem
+```bash
+composer update huseyinfiliz/awards
+php flarum migrate
+php flarum cache:clear
 ```
 
-To remove simply run `composer remove huseyinfiliz/pickem`
+## Removal
 
-## Quick Start
+```bash
+composer remove huseyinfiliz/awards
+```
 
-### For Users
+## Configuration
 
-1.  Navigate to the **Pick'em** page from the sidebar
-2.  Browse the **Matches** tab to see upcoming events
-3.  Click on **Home**, **Draw**, or **Away** buttons to make your prediction
-4.  Visit **My Picks** to track your history and **Leaderboard** to see your ranking
+### Admin Panel
 
-### For Admins
+Navigate to **Admin -> Awards** to manage your awards:
 
-Navigate to **Admin → Pick'em** to configure the system. The admin panel is divided into tabs for easy management:
+#### Awards Tab
+- Create awards with name, year, description, and dates
+- Set award status: Draft -> Active -> Ended -> Published
+- Toggle "Show Live Votes" to display counts during voting
+- Publish results to notify all voters
 
-#### Teams Tab
+#### Categories Tab
+- Add categories to awards (e.g., "Best RPG", "Game of the Year")
+- Enable "Allow User Suggestions" for community input
+- Set sort order for display
 
-  - Create teams with **Name**, **Slug**, and **Logo**
-  - Supports direct image upload (requires FoF Upload) or external image URLs
+#### Nominees Tab
+- Add nominees with name and image URL
+- View and edit vote counts
+- Filter by award and category
 
-#### Seasons Tab
-
-  - Create seasons (e.g., "2024-2025 Season")
-  - Define start and end dates for organizational purposes
-
-#### Weeks Tab
-
-  - Group matches into weeks (e.g., "Week 1", "Playoffs")
-  - Link weeks to specific seasons
-
-#### Matches Tab
-
-  - Create matches by selecting Home and Away teams
-  - **Match Date**: When the game actually starts
-  - **Cutoff Date**: The deadline for users to make picks (usually match start time)
-  - **Allow Draw**: Toggle whether a "Draw" option is available for prediction
-  - **Status**: Manually manage statuses (Scheduled, Closed, Finished)
-  - **Enter Results**: Input scores after the match to automatically calculate points
+#### Suggestions Tab
+- Review pending user suggestions
+- Approve (creates new nominee)
+- Reject or merge into existing nominee
 
 #### Settings Tab
+- **Navigation Title**: Text shown in sidebar (default: "Awards")
+- **Votes Per Category**:
+  - `0` = Unlimited votes
+  - `1` = Single vote (clicking another replaces previous)
+  - `N` = Maximum N votes per category
 
-  - **Recalculate Scores**: A utility tool to recalculate all user scores and rankings from scratch if needed
+### Permissions
 
-### 🎯 Use Cases
+Configure in **Admin -> Permissions**:
 
-#### Sports Communities
+| Permission | Description |
+|------------|-------------|
+| View Awards | Access the awards page |
+| Vote in Awards | Cast votes for nominees |
+| View Results Early | See results before publishing |
+| Manage Awards | Full admin access |
 
-  - Football/Soccer leagues (Premier League, La Liga, etc.)
-  - Basketball tournaments (NBA, EuroLeague)
-  - Weekly NFL pick'em pools
+## Award Status Flow
 
-#### E-Sports Forums
+```
+Draft -> Active -> Ended -> Published
+```
 
-  - Tournament prediction brackets for games like LoL, CS:GO, or Valorant
-  - Team performance tracking
+1. **Draft**: Admin is setting up the award (not visible to users)
+2. **Active**: Voting is open (between start and end dates)
+3. **Ended**: Voting closed, admin reviews before publishing
+4. **Published**: Results visible, all voters receive notifications
 
-### TV & Events
+## User Guide
 
-  - Reality show elimination predictions
-  - Award show winners (Oscars, Grammys) pools
+### Voting
+1. Navigate to the Awards page from the sidebar
+2. Select an award (if multiple are active)
+3. Browse categories and click "Select" on your choice
+4. Click "Voted" to remove your vote
+5. Suggest nominees where allowed (pending admin approval)
 
-### 🔧 Advanced Details
+### Viewing Results
+- Published awards show winners with badges
+- Gold for 1st place, Silver for 2nd, Bronze for 3rd
+- Vote counts and percentages displayed
 
-#### Scoring System
+## Technical Details
 
-  - **Points**: Users earn **1 point** for every correct prediction.
-  - **Accuracy**: Calculated as `(Correct Picks / Total Picks) * 100`.
-  - **Ranking**: The leaderboard is sorted by Total Points (primary) and Correct Pick count (secondary).
+### Database Tables
+- `awards` - Main award records
+- `award_categories` - Categories within awards
+- `award_nominees` - Nominees in categories
+- `award_votes` - User votes
+- `award_other_suggestions` - User-submitted suggestions
 
-#### Permissions
+### API Endpoints
+- `GET/POST /api/awards` - List/create awards
+- `GET/PATCH/DELETE /api/awards/{id}` - Show/update/delete award
+- `POST /api/awards/{id}/publish` - Publish results
+- Similar CRUD for categories, nominees, votes, suggestions
 
-You can configure permissions via the Flarum Permission grid:
+## Translations
 
-  - **Manage pick'em system**: Allows full access to the admin panel (create/edit/delete data).
-  - **Make picks**: Allows users to participate in the game.
-  - **View Pick'em page**: Controls visibility of the extension page.
+This extension includes English translations. Community translations welcome!
 
-#### Automated Logic
+## Support
 
-  - **Result Calculation**: When an admin enters the score, the system automatically determines the winner (Home/Away/Draw).
-  - **Status Updates**: Matches are automatically marked as "Finished" when results are saved.
-  - **Notifications**: Users who predicted a match receive a notification when the result is entered.
+- **Issues**: [GitHub Issues](https://github.com/huseyinfiliz/awards/issues)
+- **Discussion**: [Flarum Discuss](https://discuss.flarum.org)
 
-#### 🌍 Translations
+## License
 
-This extension comes with English translations. Community translations are welcome!
-[![Translate](https://weblate.rob006.net/widgets/flarum/-/huseyinfiliz-pickem/multi-auto.svg)](https://weblate.rob006.net/projects/flarum/huseyinfiliz-pickem/)
+MIT License - see [LICENSE.md](LICENSE.md)
 
-#### 💖 Support & Contributing
+## Credits
 
-If you find this extension useful, consider:
-
-  - ⭐ Starring the repository on GitHub
-  - 💬 Leaving feedback on the [Flarum discussion](https://discuss.flarum.org/d/38433-pickem-match-prediction-extension)
+Developed by [Huseyin Filiz](https://github.com/huseyinfiliz)

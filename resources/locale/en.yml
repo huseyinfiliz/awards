@@ -1,5 +1,6 @@
 huseyinfiliz-awards:
   admin:
+    title: Awards Management
     nav:
       title: Awards
       description: Manage community awards and voting
@@ -12,7 +13,8 @@ huseyinfiliz-awards:
     awards:
       title: Manage Awards
       create: Create Award
-      edit: Edit Award
+      create_title: Create New Award
+      edit_title: Edit Award
       name: Award Name
       slug: Slug
       description: Description
@@ -27,35 +29,48 @@ huseyinfiliz-awards:
       show_live_votes: Show Live Vote Counts
       show_live_votes_help: Display vote counts while voting is active
       image_url: Cover Image URL
+      categories: Categories
+      votes: Votes
+      actions: Actions
+      publish: Publish Results
       delete_confirm: Are you sure you want to delete this award?
-      publish_results: Publish Results
       publish_confirm: Are you sure you want to publish results? All voters will be notified.
       empty: No awards created yet.
     categories:
       title: Manage Categories
       create: Create Category
-      edit: Edit Category
+      create_title: Create New Category
+      edit_title: Edit Category
       select_award: Select Award
       name: Category Name
       slug: Slug
       description: Description
       sort_order: Sort Order
+      nominees: Nominees
+      votes: Votes
       allow_other: Allow User Suggestions
       allow_other_help: Users can suggest nominees not in the list
+      actions: Actions
       delete_confirm: Are you sure you want to delete this category?
       empty: No categories found.
     nominees:
       title: Manage Nominees
       create: Create Nominee
-      edit: Edit Nominee
+      create_title: Create New Nominee
+      edit_title: Edit Nominee
       select_category: Select Category
       name: Nominee Name
       slug: Slug
+      image: Image
       image_url: Image URL
+      image_url_help: URL to the nominee's image (e.g., game cover, person photo)
       sort_order: Sort Order
       votes: Votes
       edit_votes: Edit Votes
       edit_votes_title: Adjust Vote Count
+      enter_votes: Enter new vote count
+      invalid_votes: Please enter a valid number
+      actions: Actions
       delete_confirm: Are you sure you want to delete this nominee?
       empty: No nominees found.
     suggestions:
@@ -65,12 +80,15 @@ huseyinfiliz-awards:
       category: Category
       user: Submitted By
       date: Date
+      actions: Actions
       approve: Approve
       reject: Reject
-      merge: Merge Into
+      merge: Merge
       approve_confirm: Create as new nominee? The user will automatically vote for it.
       reject_confirm: Reject this suggestion?
       merge_confirm: Merge into selected nominee? The user's vote will count for that nominee.
+      no_nominees: No nominees to merge into
+      select_nominee: "Enter the ID of the nominee to merge into:"
     settings:
       title: Settings
       nav_title: Navigation Title
@@ -90,6 +108,7 @@ huseyinfiliz-awards:
       voting_ends: "Voting ends {time}"
       voting_ended: "Voting ended {time}"
       voting_starts: "Voting starts {time}"
+      results_published: Results Published
       select_award: Select Award
       previous_awards: Previous Year Awards
     voting:
@@ -109,7 +128,8 @@ huseyinfiliz-awards:
       success: Suggestion submitted! It will be reviewed by moderators.
       already_submitted: You already submitted a suggestion for this category.
     empty:
-      no_awards: It looks like there are no awards here.
+      no_awards: No Active Awards
+      no_awards_description: There are no awards available at this time. Check back later!
       no_categories: No categories in this award yet.
       no_nominees: No nominees in this category yet.
     error:
@@ -117,6 +137,11 @@ huseyinfiliz-awards:
       rate_limit: Too many votes. Please wait a moment.
       other_not_allowed: This category doesn't accept suggestions.
       vote_limit_reached: "You can only vote for {limit} nominees in this category."
+      not_available: This award is not available yet.
+
+  lib:
+    buttons:
+      save: Save Changes
 
   email:
     results_published:

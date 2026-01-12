@@ -1,0 +1,248 @@
+import app from 'flarum/admin/app';
+import Component from 'flarum/common/Component';
+import Button from 'flarum/common/components/Button';
+import Select from 'flarum/common/components/Select';
+import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import Award from '../../common/models/Award';
+import Category from '../../common/models/Category';
+import Nominee from '../../common/models/Nominee';
+import OtherSuggestion from '../../common/models/OtherSuggestion';
+
+export default class SuggestionsTab extends Component {
+  loading: boolean = true;
+  awards: Award[] = [];
+  categories: Category[] = [];
+  nominees: Nominee[] = [];
+  suggestions: OtherSuggestion[] = [];
+  selectedAwardId: string = '';
+  selectedCategoryId: string = '';
+
+  oninit(vnode: any) {
+    super.oninit(vnode);
+    this.loadAwards();
+  }
+
+  async loadAwards() {
+    this.loading = true;
+    m.redraw();
+
+    try {
+      const awards = await app.store.find<Award[]>('awards');
+      this.awards = awards || [];
+      if (this.awards.length > 0 && !this.selectedAwardId) {
+        this.selectedAwardId = String(this.awards[0].id());
+        await this.loadCategories();
+      }
+    } catch (error) {
+      console.error('Failed to load awards:', error);
+    }
+
+    this.loading = false;
+    m.redraw();
+  }
+
+  async loadCategories() {
+    if (!this.selectedAwardId) {
+      this.categories = [];
+      return;
+    }
+
+    try {
+      const categories = await app.store.find<Category[]>('award-categories', {
+        filter: { award_id: this.selectedAwardId },
+      });
+      this.categories = categories || [];
+      this.selectedCategoryId = '';
+      await this.loadSuggestions();
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
+
+    m.redraw();
+  }
+
+  async loadSuggestions() {
+    try {
+      const params: any = { filter: { status: 'pending' } };
+      if (this.selectedCategoryId) {
+        params.filter.category_id = this.selectedCategoryId;
+      } else if (this.selectedAwardId) {
+        params.filter.award_id = this.selectedAwardId;
+      }
+
+      const suggestions = await app.store.find<OtherSuggestion[]>('award-other-suggestions', params);
+      this.suggestions = suggestions || [];
+
+      // Load nominees for merge dropdown
+      if (this.selectedCategoryId) {
+        const nominees = await app.store.find<Nominee[]>('award-nominees', {
+          filter: { category_id: this.selectedCategoryId },
+        });
+        this.nominees = nominees || [];
+      }
+    } catch (error) {
+      console.error('Failed to load suggestions:', error);
+      this.suggestions = [];
+    }
+
+    m.redraw();
+  }
+
+  view() {
+    if (this.loading) {
+      return <LoadingIndicator />;
+    }
+
+    const awardOptions: Record<string, string> = { '': 'All Awards' };
+    this.awards.forEach((award) => {
+      awardOptions[String(award.id())] = `${award.name()} (${award.year()})`;
+    });
+
+    const categoryOptions: Record<string, string> = { '': 'All Categories' };
+    this.categories.forEach((category) => {
+      categoryOptions[String(category.id())] = category.name();
+    });
+
+    return (
+      <div className="SuggestionsTab">
+        <div className="SuggestionsTab-header">
+          <Select
+            value={this.selectedAwardId}
+            options={awardOptions}
+            onchange={(value: string) => {
+              this.selectedAwardId = value;
+              this.loadCategories();
+            }}
+          />
+          <Select
+            value={this.selectedCategoryId}
+            options={categoryOptions}
+            onchange={(value: string) => {
+              this.selectedCategoryId = value;
+              this.loadSuggestions();
+            }}
+            disabled={this.categories.length === 0}
+          />
+        </div>
+
+        <table className="SuggestionsTab-table Table">
+          <thead>
+            <tr>
+              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.name')}</th>
+              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.category')}</th>
+              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.user')}</th>
+              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.actions')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.suggestions.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="SuggestionsTab-empty">
+                  {app.translator.trans('huseyinfiliz-awards.admin.suggestions.empty')}
+                </td>
+              </tr>
+            ) : (
+              this.suggestions.map((suggestion) => (
+                <tr key={suggestion.id()}>
+                  <td>
+                    <strong>{suggestion.name()}</strong>
+                  </td>
+                  <td>{suggestion.category()?.name?.()}</td>
+                  <td>{suggestion.user()?.displayName?.()}</td>
+                  <td className="SuggestionsTab-actions">
+                    <Button
+                      className="Button Button--primary"
+                      icon="fas fa-check"
+                      onclick={() => this.approveSuggestion(suggestion)}
+                    >
+                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve')}
+                    </Button>
+                    <Button className="Button" icon="fas fa-times" onclick={() => this.rejectSuggestion(suggestion)}>
+                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject')}
+                    </Button>
+                    <Button className="Button" icon="fas fa-compress-arrows-alt" onclick={() => this.mergeSuggestion(suggestion)}>
+                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  async approveSuggestion(suggestion: OtherSuggestion) {
+    try {
+      await app.request({
+        method: 'PATCH',
+        url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
+        body: { data: { attributes: { status: 'approved' } } },
+      });
+      this.loadSuggestions();
+    } catch (error) {
+      console.error('Failed to approve suggestion:', error);
+    }
+  }
+
+  async rejectSuggestion(suggestion: OtherSuggestion) {
+    if (!confirm(app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject_confirm') as string)) {
+      return;
+    }
+
+    try {
+      await app.request({
+        method: 'PATCH',
+        url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
+        body: { data: { attributes: { status: 'rejected' } } },
+      });
+      this.loadSuggestions();
+    } catch (error) {
+      console.error('Failed to reject suggestion:', error);
+    }
+  }
+
+  async mergeSuggestion(suggestion: OtherSuggestion) {
+    // Get nominees for this category
+    const categoryId = suggestion.category()?.id?.();
+    if (!categoryId) return;
+
+    try {
+      const nominees = await app.store.find<Nominee[]>('award-nominees', {
+        filter: { category_id: categoryId },
+      });
+
+      if (nominees.length === 0) {
+        alert(app.translator.trans('huseyinfiliz-awards.admin.suggestions.no_nominees') as string);
+        return;
+      }
+
+      const nomineeOptions = nominees.map((n) => `${n.id()}: ${n.name()}`).join('\n');
+      const selectedId = prompt(
+        `${app.translator.trans('huseyinfiliz-awards.admin.suggestions.select_nominee')}\n\n${nomineeOptions}`
+      );
+
+      if (!selectedId) return;
+
+      const nomineeId = parseInt(selectedId.split(':')[0], 10);
+      if (isNaN(nomineeId)) return;
+
+      await app.request({
+        method: 'PATCH',
+        url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
+        body: {
+          data: {
+            attributes: { status: 'merged' },
+            relationships: {
+              mergedToNominee: { data: { type: 'award-nominees', id: String(nomineeId) } },
+            },
+          },
+        },
+      });
+      this.loadSuggestions();
+    } catch (error) {
+      console.error('Failed to merge suggestion:', error);
+    }
+  }
+}

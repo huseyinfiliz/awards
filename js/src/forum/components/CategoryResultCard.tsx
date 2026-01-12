@@ -1,7 +1,7 @@
+import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import Category from '../../common/models/Category';
 import Award from '../../common/models/Award';
-import Badge from 'flarum/common/components/Badge';
 
 export default class CategoryResultCard extends Component {
   view() {

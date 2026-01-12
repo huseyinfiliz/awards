@@ -1,7 +1,9 @@
+import app from 'flarum/forum/app';
 import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Alert from 'flarum/common/components/Alert';
+import Category from '../../common/models/Category';
 
 export default class SuggestionModal extends Modal {
   oninit(vnode: any) {
