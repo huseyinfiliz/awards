@@ -1,3 +1,4 @@
+import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import Category from '../../common/models/Category';
 import Award from '../../common/models/Award';

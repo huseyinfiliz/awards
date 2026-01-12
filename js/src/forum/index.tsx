@@ -2,31 +2,28 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import LinkButton from 'flarum/common/components/LinkButton';
-import NotificationGrid from 'flarum/forum/components/NotificationGrid';
 import commonExtenders from '../common/extend';
-import PickemPage from './components/PickemPage';
-import EventResultNotification from './components/EventResultNotification';
+import AwardsPage from './components/AwardsPage';
 
-app.initializers.add('huseyinfiliz/pickem', () => {
+app.initializers.add('huseyinfiliz/awards', () => {
   commonExtenders.forEach((extender) => extender.extend(app));
 
-  app.routes.pickem = { path: '/pickem', component: PickemPage };
+  app.routes.awards = { path: '/awards', component: AwardsPage };
 
   extend(IndexPage.prototype, 'navItems', function (items) {
-    if (app.forum.attribute('pickem.canView')) {
+    if (app.forum.attribute('awards.canView') !== false) {
+      const navTitle = app.forum.attribute('huseyinfiliz-awards.nav_title') || 'Awards';
       items.add(
-        'pickem',
+        'awards',
         LinkButton.component(
           {
-            href: app.route('pickem'),
+            href: app.route('awards'),
             icon: 'fas fa-trophy',
           },
-          app.translator.trans('huseyinfiliz-pickem.lib.nav.pickem')
+          navTitle
         ),
         85
       );
     }
   });
-
-  app.notificationComponents.pickem_event_result = EventResultNotification;
 });

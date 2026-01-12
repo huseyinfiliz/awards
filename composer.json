@@ -34,12 +34,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "Huseyinfiliz\\Awards\\": "src/"
+      "HuseyinFiliz\\Awards\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Huseyinfiliz\\Awards\\Tests\\": "tests/"
+      "HuseyinFiliz\\Awards\\Tests\\": "tests/"
     }
   },
   "extra": {
