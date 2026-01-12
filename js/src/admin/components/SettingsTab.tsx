@@ -1,14 +1,16 @@
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
-import Switch from 'flarum/common/components/Switch';
+import Stream from 'flarum/common/utils/Stream';
 
 export default class SettingsTab extends Component {
+  navTitle: Stream<string>;
+  votesPerCategory: Stream<number>;
   loading: boolean = false;
-  reverseDisplay: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
-    this.reverseDisplay = app.data.settings['huseyinfiliz-pickem.reverse_display'] === '1';
+    this.navTitle = Stream(app.data.settings['huseyinfiliz-awards.nav_title'] || 'Awards');
+    this.votesPerCategory = Stream(parseInt(app.data.settings['huseyinfiliz-awards.votes_per_category'] || '1'));
   }
 
   view() {
@@ -17,70 +19,52 @@ export default class SettingsTab extends Component {
         <div className="Form-group">
           <h3>
             <i className="fas fa-cogs" />
-            {app.translator.trans('huseyinfiliz-pickem.lib.nav.settings')}
+            {app.translator.trans('huseyinfiliz-awards.admin.tabs.settings')}
           </h3>
           
           <div className="Form-group">
-            <Switch
-              state={this.reverseDisplay}
-              onchange={this.toggleReverseDisplay.bind(this)}
-            >
-              {app.translator.trans('huseyinfiliz-pickem.admin.settings.reverse_display_label')}
-            </Switch>
+            <label>{app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title')}</label>
+            <input className="FormControl" bidi={this.navTitle} />
             <div className="helpText">
-              {app.translator.trans('huseyinfiliz-pickem.admin.settings.reverse_display_help')}
+              {app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title_help')}
             </div>
           </div>
 
-          <hr />
+          <div className="Form-group">
+            <label>{app.translator.trans('huseyinfiliz-awards.admin.settings.votes_per_category')}</label>
+            <input className="FormControl" type="number" min="0" bidi={this.votesPerCategory} />
+            <div className="helpText">
+              {app.translator.trans('huseyinfiliz-awards.admin.settings.votes_per_category_help')}
+            </div>
+          </div>
 
-          <p>
-            {app.translator.trans('huseyinfiliz-pickem.admin.settings.recalc_help')}
-          </p>
-          <Button
-            className="Button Button--primary"
-            icon="fas fa-sync"
-            loading={this.loading}
-            onclick={this.recalculateScores.bind(this)}
-          >
-            {app.translator.trans('huseyinfiliz-pickem.admin.settings.recalc_btn')}
-          </Button>
+          <div className="Form-group">
+            <Button
+              className="Button Button--primary"
+              loading={this.loading}
+              onclick={this.saveSettings.bind(this)}
+            >
+              {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 
-  toggleReverseDisplay(value: boolean) {
-    this.reverseDisplay = value;
+  saveSettings() {
+    this.loading = true;
     app.request({
       method: 'POST',
       url: app.forum.attribute('apiUrl') + '/settings',
       body: {
-        'huseyinfiliz-pickem.reverse_display': value ? '1' : '0'
+        'huseyinfiliz-awards.nav_title': this.navTitle(),
+        'huseyinfiliz-awards.votes_per_category': this.votesPerCategory()
       }
-    });
-  }
-
-  recalculateScores() {
-    if (this.loading) return;
-
-    if (!confirm(app.translator.trans('huseyinfiliz-pickem.admin.settings.recalc_confirm'))) {
-      return;
-    }
-
-    this.loading = true;
-    m.redraw();
-    app.request({
-      method: 'POST',
-      url: app.forum.attribute('apiUrl') + '/pickem/recalculate-all-scores',
-    }).then(response => {
+    }).then(() => {
       this.loading = false;
       m.redraw();
-      app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-pickem.admin.settings.recalc_queued'));
-    }).catch(error => {
-      this.loading = false;
-      m.redraw();
-      console.error(error);
+      app.alerts.show({ type: 'success' }, app.translator.trans('core.lib.success_message'));
     });
   }
 }

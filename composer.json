@@ -1,21 +1,21 @@
 {
-  "name": "huseyinfiliz/pickem",
-  "description": "Pick'em game extension for Flarum",
+  "name": "huseyinfiliz/awards",
+  "description": "Community awards and voting extension for Flarum",
   "keywords": [
     "flarum",
-    "extension",
-    "pickem",
-    "predictions",
-    "sports"
+    "awards",
+    "voting",
+    "polls",
+    "community"
   ],
   "type": "flarum-extension",
   "license": "MIT",
   "support": {
-    "issues": "https://github.com/huseyinfiliz/pickem/issues",
-    "source": "https://github.com/huseyinfiliz/pickem",
+    "issues": "https://github.com/huseyinfiliz/awards/issues",
+    "source": "https://github.com/huseyinfiliz/awards",
     "forum": "https://discuss.flarum.org/d/your-discussion-id"
   },
-  "homepage": "https://github.com/huseyinfiliz/pickem",
+  "homepage": "https://github.com/huseyinfiliz/awards",
   "funding": [
     {
       "type": "website",
@@ -34,17 +34,17 @@
   ],
   "autoload": {
     "psr-4": {
-      "HuseyinFiliz\\Pickem\\": "src/"
+      "Huseyinfiliz\\Awards\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "HuseyinFiliz\\Pickem\\Tests\\": "tests/"
+      "Huseyinfiliz\\Awards\\Tests\\": "tests/"
     }
   },
   "extra": {
     "flarum-extension": {
-      "title": "Pick'em",
+      "title": "Awards",
       "category": "feature",
       "icon": {
         "name": "fas fa-trophy",
