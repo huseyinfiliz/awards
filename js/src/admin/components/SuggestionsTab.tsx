@@ -49,7 +49,7 @@ export default class SuggestionsTab extends Component {
 
     try {
       const categories = await app.store.find<Category[]>('award-categories', {
-        filter: { award_id: this.selectedAwardId },
+        filter: { award: this.selectedAwardId },
       });
       this.categories = categories || [];
       this.selectedCategoryId = '';
@@ -63,11 +63,11 @@ export default class SuggestionsTab extends Component {
 
   async loadSuggestions() {
     try {
-      const params: any = { filter: { status: 'pending' } };
+      const params: any = { filter: {} };
       if (this.selectedCategoryId) {
-        params.filter.category_id = this.selectedCategoryId;
+        params.filter.category = this.selectedCategoryId;
       } else if (this.selectedAwardId) {
-        params.filter.award_id = this.selectedAwardId;
+        params.filter.award = this.selectedAwardId;
       }
 
       const suggestions = await app.store.find<OtherSuggestion[]>('award-other-suggestions', params);
@@ -76,7 +76,7 @@ export default class SuggestionsTab extends Component {
       // Load nominees for merge dropdown
       if (this.selectedCategoryId) {
         const nominees = await app.store.find<Nominee[]>('award-nominees', {
-          filter: { category_id: this.selectedCategoryId },
+          filter: { category: this.selectedCategoryId },
         });
         this.nominees = nominees || [];
       }
@@ -178,7 +178,7 @@ export default class SuggestionsTab extends Component {
       await app.request({
         method: 'PATCH',
         url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
-        body: { data: { attributes: { status: 'approved' } } },
+        body: { data: { attributes: { action: 'approve' } } },
       });
       this.loadSuggestions();
     } catch (error) {
@@ -195,7 +195,7 @@ export default class SuggestionsTab extends Component {
       await app.request({
         method: 'PATCH',
         url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
-        body: { data: { attributes: { status: 'rejected' } } },
+        body: { data: { attributes: { action: 'reject' } } },
       });
       this.loadSuggestions();
     } catch (error) {
@@ -210,7 +210,7 @@ export default class SuggestionsTab extends Component {
 
     try {
       const nominees = await app.store.find<Nominee[]>('award-nominees', {
-        filter: { category_id: categoryId },
+        filter: { category: categoryId },
       });
 
       if (nominees.length === 0) {
@@ -233,9 +233,9 @@ export default class SuggestionsTab extends Component {
         url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
         body: {
           data: {
-            attributes: { status: 'merged' },
-            relationships: {
-              mergedToNominee: { data: { type: 'award-nominees', id: String(nomineeId) } },
+            attributes: {
+              action: 'merge',
+              mergeToNomineeId: nomineeId,
             },
           },
         },

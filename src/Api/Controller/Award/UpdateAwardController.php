@@ -28,14 +28,27 @@ class UpdateAwardController extends AbstractShowController
         if (Arr::has($data, 'name')) {
             $award->name = Arr::get($data, 'name');
         }
+        if (Arr::has($data, 'year')) {
+            $award->year = Arr::get($data, 'year');
+        }
         if (Arr::has($data, 'slug')) {
-            $award->slug = Arr::get($data, 'slug') ?: Str::slug($award->name);
+            $providedSlug = Arr::get($data, 'slug');
+
+            // Generate slug from name + year if empty
+            $baseSlug = $providedSlug ?: Str::slug($award->name) . '-' . $award->year;
+            $slug = $baseSlug;
+            $counter = 2;
+
+            // Ensure slug is unique (excluding current award)
+            while (Award::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+
+            $award->slug = $slug;
         }
         if (Arr::has($data, 'description')) {
             $award->description = Arr::get($data, 'description');
-        }
-        if (Arr::has($data, 'year')) {
-            $award->year = Arr::get($data, 'year');
         }
         if (Arr::has($data, 'startsAt')) {
             $award->starts_at = Arr::get($data, 'startsAt');

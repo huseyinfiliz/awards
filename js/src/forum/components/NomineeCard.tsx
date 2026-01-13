@@ -16,7 +16,7 @@ export default class NomineeCard extends Component {
 
     // Check if user has voted for this nominee
     const userVotes = app.store.all<Vote>('award-votes');
-    const userVote = userVotes.find(v => v.category().id() === category.id() && v.nominee().id() === nominee.id());
+    const userVote = userVotes.find(v => v.category()?.id() === category.id() && v.nominee()?.id() === nominee.id());
     const isVoted = !!userVote;
     const canVote = award.isVotingOpen() && app.session.user;
 
