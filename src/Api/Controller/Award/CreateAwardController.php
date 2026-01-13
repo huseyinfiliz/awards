@@ -22,11 +22,25 @@ class CreateAwardController extends AbstractCreateController
 
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
+        $name = Arr::get($data, 'name');
+        $year = Arr::get($data, 'year', date('Y'));
+
+        // Generate slug with year if not provided
+        $baseSlug = Arr::get($data, 'slug') ?: Str::slug($name) . '-' . $year;
+        $slug = $baseSlug;
+        $counter = 2;
+
+        // Ensure slug is unique
+        while (Award::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
         $award = Award::create([
-            'name' => Arr::get($data, 'name'),
-            'slug' => Arr::get($data, 'slug') ?: Str::slug(Arr::get($data, 'name')),
+            'name' => $name,
+            'slug' => $slug,
             'description' => Arr::get($data, 'description'),
-            'year' => Arr::get($data, 'year', date('Y')),
+            'year' => $year,
             'starts_at' => Arr::get($data, 'startsAt'),
             'ends_at' => Arr::get($data, 'endsAt'),
             'status' => Arr::get($data, 'status', 'draft'),

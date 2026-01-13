@@ -49,7 +49,7 @@ export default class NomineesTab extends Component {
 
     try {
       const categories = await app.store.find<Category[]>('award-categories', {
-        filter: { award_id: this.selectedAwardId },
+        filter: { award: this.selectedAwardId },
       });
       this.categories = categories || [];
       if (this.categories.length > 0) {
@@ -74,7 +74,7 @@ export default class NomineesTab extends Component {
 
     try {
       const nominees = await app.store.find<Nominee[]>('award-nominees', {
-        filter: { category_id: this.selectedCategoryId },
+        filter: { category: this.selectedCategoryId },
       });
       this.nominees = nominees || [];
     } catch (error) {

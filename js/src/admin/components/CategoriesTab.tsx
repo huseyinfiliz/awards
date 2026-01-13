@@ -45,7 +45,7 @@ export default class CategoriesTab extends Component {
 
     try {
       const categories = await app.store.find<Category[]>('award-categories', {
-        filter: { award_id: this.selectedAwardId },
+        filter: { award: this.selectedAwardId },
       });
       this.categories = categories || [];
     } catch (error) {
