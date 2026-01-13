@@ -106,7 +106,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                 }, 200);
               }}
             />
-            {this.showSuggestions() && this.nameSuggestions().length > 0 && (
+            {this.showSuggestions() && this.nameSuggestions().length > 0 ? (
               <ul className="Dropdown-menu" style={{
                 position: 'absolute',
                 top: '100%',
@@ -117,12 +117,15 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                 maxHeight: '200px',
                 overflowY: 'auto'
               }}>
-                {this.nameSuggestions().map(suggestion => (
+                {this.nameSuggestions().map((suggestion: string) => (
                   <li>
                     <button
                       type="button"
                       className="Button Button--link"
-                      onclick={() => this.selectSuggestion(suggestion)}
+                      onclick={(e: Event) => {
+                        e.preventDefault();
+                        this.selectSuggestion(suggestion);
+                      }}
                       style={{ width: '100%', textAlign: 'left' }}
                     >
                       {suggestion}
@@ -130,7 +133,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                   </li>
                 ))}
               </ul>
-            )}
+            ) : null}
           </div>
 
           <div className="Form-group">
