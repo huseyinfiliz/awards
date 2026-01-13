@@ -118,6 +118,10 @@ huseyinfiliz-awards:
       voted: Voted
       change_vote: Change Vote
       voting_closed: Voting is closed
+      ended: Voting has ended
+      ends_in_days: "Voting ends in {days} days"
+      ends_in_hours: "Voting ends in {hours} hours"
+      ends_soon: Voting ends soon
     results:
       winner: Winner
       runner_up: Runner Up
