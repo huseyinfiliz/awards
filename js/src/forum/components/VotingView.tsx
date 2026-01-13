@@ -2,12 +2,34 @@ import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import Award from '../../common/models/Award';
 import CategoryCard from './CategoryCard';
-import humanTime from 'flarum/common/utils/humanTime';
 
 export default class VotingView extends Component {
+  formatEndDate(date: Date | null): string {
+    if (!date) return '';
+
+    const now = new Date();
+    const diff = date.getTime() - now.getTime();
+
+    if (diff <= 0) {
+      return app.translator.trans('huseyinfiliz-awards.forum.voting.ended') as string;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+    if (days > 0) {
+      return app.translator.trans('huseyinfiliz-awards.forum.voting.ends_in_days', { days }) as string;
+    }
+    if (hours > 0) {
+      return app.translator.trans('huseyinfiliz-awards.forum.voting.ends_in_hours', { hours }) as string;
+    }
+    return app.translator.trans('huseyinfiliz-awards.forum.voting.ends_soon') as string;
+  }
+
   view() {
     const award = this.attrs.award as Award;
     const categories = award.categories() || [];
+    const endsAt = award.endsAt();
 
     return (
       <div className="VotingView">
@@ -18,7 +40,7 @@ export default class VotingView extends Component {
             <div className="VotingView-meta">
               {award.isVotingOpen() ? (
                 <span className="TagLabel Label--success">
-                  {app.translator.trans('huseyinfiliz-awards.forum.page.voting_ends', { time: humanTime(award.endsAt()) })}
+                  {this.formatEndDate(endsAt)}
                 </span>
               ) : (
                 <span className="TagLabel Label--warning">

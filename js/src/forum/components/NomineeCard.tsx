@@ -80,6 +80,9 @@ export default class NomineeCard extends Component {
           });
       } else {
           // Create new vote
+          const category = this.attrs.category as Category;
+          const categoryId = category.id();
+
           app.request({
               method: 'POST',
               url: app.forum.attribute('apiUrl') + '/award-votes',
@@ -91,14 +94,21 @@ export default class NomineeCard extends Component {
                   }
               }
           }).then((response: any) => {
+              // Remove any existing votes in this category from the store
+              // (backend deletes them when votes_per_category=1, but frontend store doesn't know)
+              const existingVotes = app.store.all<Vote>('award-votes').filter(v => {
+                  const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+                  return String(vCategoryId) === String(categoryId);
+              });
+              existingVotes.forEach(v => app.store.remove(v));
+
+              // Add the new vote to the store
               app.store.pushPayload(response);
               this.loading = false;
               m.redraw();
           }).catch((e: any) => {
               this.loading = false;
               m.redraw();
-              // Error is handled globally by Flarum's request util usually, but createRecord/save handles it too.
-              // Since we use raw request, we might need to rely on global error handler or show alert.
               throw e;
           });
       }

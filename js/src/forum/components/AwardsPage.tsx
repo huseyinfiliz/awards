@@ -6,6 +6,7 @@ import listItems from 'flarum/common/helpers/listItems';
 import ItemList from 'flarum/common/utils/ItemList';
 import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
+import Vote from '../../common/models/Vote';
 import VotingView from './VotingView';
 import ResultsView from './ResultsView';
 
@@ -39,12 +40,26 @@ export default class AwardsPage extends Page {
         this.awards.find((a) => a.isPublished()) ||
         this.awards[0] ||
         null;
+
+      // Load user's votes if logged in
+      if (app.session.user) {
+        await this.loadUserVotes();
+      }
     } catch (error) {
       console.error('Failed to load awards:', error);
     }
 
     this.loading = false;
     m.redraw();
+  }
+
+  async loadUserVotes() {
+    try {
+      // Load all user votes (they will be filtered by user on backend)
+      await app.store.find<Vote[]>('award-votes');
+    } catch (error) {
+      console.error('Failed to load user votes:', error);
+    }
   }
 
   view() {
