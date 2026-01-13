@@ -18,16 +18,11 @@ return [
 
     (new Extend\Settings())
         ->default('huseyinfiliz-awards.allow_guest_view', false)
-        ->default('huseyinfiliz-awards.votes_per_category', 1),
-
-    (new Extend\Permission())
-        ->add('awards.view', 'reply', 'huseyinfiliz-awards.permissions.view')
-        ->add('awards.vote', 'reply', 'huseyinfiliz-awards.permissions.vote')
-        ->add('awards.viewResults', 'moderate', 'huseyinfiliz-awards.permissions.view_results')
-        ->add('awards.manage', 'admin', 'huseyinfiliz-awards.permissions.manage'),
+        ->default('huseyinfiliz-awards.votes_per_category', 1)
+        ->serializeToForum('awardsVotesPerCategory', 'huseyinfiliz-awards.votes_per_category'),
 
     (new Extend\Notification())
-        ->type(Notification\ResultsPublishedBlueprint::class, ['alert', 'email']),
+        ->type(Notification\ResultsPublishedBlueprint::class, \HuseyinFiliz\Awards\Api\Serializer\AwardSerializer::class, ['alert', 'email']),
 
     (new Extend\Routes('api'))
         // Awards
@@ -38,21 +33,21 @@ return [
         ->delete('/awards/{id}', 'awards.delete', Controller\Award\DeleteAwardController::class)
         ->post('/awards/{id}/publish', 'awards.publish', Controller\Admin\PublishResultsController::class)
 
-        // Categories
+        // Categories - autocomplete ÖNCE gelmeli
+        ->get('/award-categories/autocomplete', 'award-categories.autocomplete', Controller\Category\AutocompleteCategoriesController::class)
         ->get('/award-categories', 'award-categories.index', Controller\Category\ListCategoriesController::class)
         ->post('/award-categories', 'award-categories.create', Controller\Category\CreateCategoryController::class)
         ->get('/award-categories/{id}', 'award-categories.show', Controller\Category\ShowCategoryController::class)
         ->patch('/award-categories/{id}', 'award-categories.update', Controller\Category\UpdateCategoryController::class)
         ->delete('/award-categories/{id}', 'award-categories.delete', Controller\Category\DeleteCategoryController::class)
-        ->get('/award-categories/autocomplete', 'award-categories.autocomplete', Controller\Category\AutocompleteCategoriesController::class)
 
-        // Nominees
+        // Nominees - autocomplete ÖNCE gelmeli
+        ->get('/award-nominees/autocomplete', 'award-nominees.autocomplete', Controller\Nominee\AutocompleteNomineesController::class)
         ->get('/award-nominees', 'award-nominees.index', Controller\Nominee\ListNomineesController::class)
         ->post('/award-nominees', 'award-nominees.create', Controller\Nominee\CreateNomineeController::class)
         ->get('/award-nominees/{id}', 'award-nominees.show', Controller\Nominee\ShowNomineeController::class)
         ->patch('/award-nominees/{id}', 'award-nominees.update', Controller\Nominee\UpdateNomineeController::class)
         ->delete('/award-nominees/{id}', 'award-nominees.delete', Controller\Nominee\DeleteNomineeController::class)
-        ->get('/award-nominees/autocomplete', 'award-nominees.autocomplete', Controller\Nominee\AutocompleteNomineesController::class)
         ->patch('/award-nominees/{id}/votes', 'award-nominees.updateVotes', Controller\Admin\UpdateNomineeVotesController::class)
 
         // Votes
