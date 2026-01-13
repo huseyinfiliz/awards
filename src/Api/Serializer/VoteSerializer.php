@@ -21,6 +21,8 @@ class VoteSerializer extends AbstractSerializer
 
         return [
             'createdAt' => $this->formatDate($vote->created_at),
+            'nomineeId' => $vote->nominee_id,
+            'categoryId' => $vote->category_id,
         ];
     }
 

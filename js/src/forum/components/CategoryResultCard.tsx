@@ -7,8 +7,10 @@ export default class CategoryResultCard extends Component {
   view() {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
+    // Sort by vote count and show only top 3
     const nominees = (category.nominees() || [])
-        .sort((a, b) => b.voteCount() - a.voteCount());
+        .sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0))
+        .slice(0, 3);
 
     const canShowVotes = award.canShowVotes();
 

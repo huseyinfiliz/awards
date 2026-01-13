@@ -15,15 +15,16 @@ export default class NomineeCard extends Component {
     const award = this.attrs.award as Award;
 
     // Check if user has voted for this nominee
-    // Use safe comparison that handles unloaded relationships (hasOne returns false if not loaded)
+    // Use direct ID attributes for reliable comparison (relationships may not be loaded)
     const userVotes = app.store.all<Vote>('award-votes');
+    const nomineeId = nominee.id();
+    const categoryId = category.id();
+
     const userVote = userVotes.find(v => {
-      const voteCategory = v.category();
-      const voteNominee = v.nominee();
-      // In Flarum, hasOne returns false if relationship not loaded, so check for truthy object with id function
-      const categoryMatch = voteCategory && typeof voteCategory.id === 'function' && voteCategory.id() === category.id();
-      const nomineeMatch = voteNominee && typeof voteNominee.id === 'function' && voteNominee.id() === nominee.id();
-      return categoryMatch && nomineeMatch;
+      // First try direct attributes (most reliable)
+      const vNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      return String(vNomineeId) === String(nomineeId) && String(vCategoryId) === String(categoryId);
     });
     const isVoted = !!userVote;
     const canVote = award.isVotingOpen() && app.session.user;
