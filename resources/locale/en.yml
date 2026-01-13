@@ -104,6 +104,8 @@ huseyinfiliz-awards:
   forum:
     nav:
       title: Awards
+      categories: Categories
+      all_categories: All Categories
     page:
       voting_ends: "Voting ends {time}"
       voting_ended: "Voting ended {time}"
