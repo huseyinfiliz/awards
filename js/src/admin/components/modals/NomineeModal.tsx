@@ -15,6 +15,8 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
   slug: Stream<string>;
   imageUrl: Stream<string>;
   sortOrder: Stream<number>;
+  nameSuggestions: Stream<string[]>;
+  showSuggestions: Stream<boolean>;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -25,6 +27,8 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
     this.slug = Stream(nominee?.slug() || '');
     this.imageUrl = Stream(nominee?.imageUrl() || '');
     this.sortOrder = Stream(nominee?.sortOrder() || 0);
+    this.nameSuggestions = Stream<string[]>([]);
+    this.showSuggestions = Stream(false);
   }
 
   className() {
@@ -37,13 +41,96 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
       : app.translator.trans('huseyinfiliz-awards.admin.nominees.create_title');
   }
 
+  async searchNominees(query: string) {
+    if (query.length < 2) {
+      this.nameSuggestions([]);
+      this.showSuggestions(false);
+      m.redraw();
+      return;
+    }
+
+    try {
+      const response = await app.request<any>({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/award-nominees/autocomplete',
+        params: { 'filter[q]': query }
+      });
+
+      const names = (response.data || [])
+        .map((n: any) => n.attributes?.name)
+        .filter((name: string) => name && name.toLowerCase() !== query.toLowerCase());
+
+      this.nameSuggestions([...new Set(names)] as string[]);
+      this.showSuggestions(names.length > 0);
+    } catch (error) {
+      console.error('Autocomplete error:', error);
+      this.nameSuggestions([]);
+      this.showSuggestions(false);
+    }
+
+    m.redraw();
+  }
+
+  selectSuggestion(name: string) {
+    this.name(name);
+    this.showSuggestions(false);
+    this.nameSuggestions([]);
+    m.redraw();
+  }
+
   content() {
     return (
       <div className="Modal-body">
         <div className="Form">
-          <div className="Form-group">
+          <div className="Form-group" style={{ position: 'relative' }}>
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</label>
-            <input className="FormControl" bidi={this.name} />
+            <input
+              className="FormControl"
+              value={this.name()}
+              oninput={(e: InputEvent) => {
+                const value = (e.target as HTMLInputElement).value;
+                this.name(value);
+                this.searchNominees(value);
+              }}
+              onfocus={() => {
+                if (this.nameSuggestions().length > 0) {
+                  this.showSuggestions(true);
+                  m.redraw();
+                }
+              }}
+              onblur={() => {
+                // Delay to allow click on suggestion
+                setTimeout(() => {
+                  this.showSuggestions(false);
+                  m.redraw();
+                }, 200);
+              }}
+            />
+            {this.showSuggestions() && this.nameSuggestions().length > 0 && (
+              <ul className="Dropdown-menu" style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                zIndex: 1000,
+                display: 'block',
+                maxHeight: '200px',
+                overflowY: 'auto'
+              }}>
+                {this.nameSuggestions().map(suggestion => (
+                  <li>
+                    <button
+                      type="button"
+                      className="Button Button--link"
+                      onclick={() => this.selectSuggestion(suggestion)}
+                      style={{ width: '100%', textAlign: 'left' }}
+                    >
+                      {suggestion}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="Form-group">
