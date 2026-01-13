@@ -1,430 +1,149 @@
-// Forum styles for Awards extension
+// Awards Forum Styles
+// Based on actual component class names
 
 // ============================================
-// VARIABLES
-// ============================================
-
-@awards-success-color: #27ae60;
-@awards-danger-color: #e74c3c;
-@awards-warning-color: #f39c12;
-@awards-info-color: #3498db;
-@awards-finished-color: @muted-color;
-
-// ============================================
-// ALL STYLES IN .AwardsPage SCOPE
+// AWARDS PAGE - Main Container
 // ============================================
 
 .AwardsPage {
-  // Media query variables
-  @desktop-up: ~"screen and (min-width: 992px)";
-  @tablet-down: ~"screen and (max-width: 991.98px)";
-  @phone-down: ~"screen and (max-width: 767.98px)";
-
-  @media (min-width: 768px) {
-    .Hero.AwardsHero .container {
-      padding-bottom: 40px;
-    }
-  }
-
-  // ============================================
-  // SIDENAV
-  // ============================================
-
-  &-nav {
-    .Nav {
-      margin: 0 0 15px;
-      padding: 0;
-      list-style: none;
-
-      .Nav-item {
-        margin: 0;
-
-        a {
-          display: block;
-          padding: 10px 15px;
-          color: var(--muted-color);
-          text-decoration: none;
-          border-radius: var(--border-radius);
-          transition: all 0.2s;
-
-          &:hover {
-            background: var(--control-bg);
-            color: var(--link-color);
-          }
-
-          &.active {
-            background: var(--primary-color);
-            color: white;
-            font-weight: 600;
-          }
-        }
-      }
-    }
-  }
-
-  // ============================================
-  // SELECTOR
-  // ============================================
-
-  &-selector {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: var(--control-bg);
-    border-radius: var(--border-radius);
-
-    .Select {
-      width: 100%;
-      max-width: 400px;
-    }
-  }
-
-  // ============================================
-  // TABS - Flarum Native Style
-  // ============================================
-
-  .AwardsPage-tabs {
+  // Sidenav container
+  .sideNavContainer {
     display: flex;
-    gap: 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--control-bg-shaded);
+    gap: 30px;
 
-    // Mobile horizontal scroll
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    position: relative;
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
+  }
 
-    // Hide scrollbar
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none;
+  // Sidebar navigation
+  &-nav {
+    flex: 0 0 200px;
+
+    @media (max-width: 767px) {
+      flex: none;
+      width: 100%;
     }
 
-    .Button.AwardsPage-tab {
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 10px 16px;
-      font-weight: 500;
-      font-size: 14px;
-      color: var(--muted-color);
-      transition: color 0.2s;
-      position: relative;
-      margin-bottom: -1px;
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-      // Mobile optimization
-      white-space: nowrap;
-      flex-shrink: 0;
+    .Nav-item {
+      margin: 0;
 
-      &:hover {
-        color: var(--link-color);
-      }
+      a {
+        display: block;
+        padding: 10px 15px;
+        color: var(--muted-color);
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        transition: all 0.2s;
 
-      &.active {
-        color: var(--link-color);
-        font-weight: 600;
+        i {
+          margin-right: 8px;
+        }
 
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
+        &:hover {
+          background: var(--control-bg);
+          color: var(--link-color);
+        }
+
+        &.active {
           background: var(--primary-color);
+          color: white;
+          font-weight: 600;
         }
       }
 
-      @media @phone-down {
-        padding: 10px 12px;
-        font-size: 13px;
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--link-color);
-        outline-offset: -2px;
-        z-index: 1;
-      }
-
-      &:active {
-        transform: translateY(1px);
-      }
-    }
-
-    @media @phone-down {
-      &::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 30px;
-        background: linear-gradient(to right, transparent, var(--body-bg) 90%);
-        pointer-events: none;
-      }
-    }
-  }
-
-  // ============================================
-  // TAB CONTENT CONTAINER
-  // ============================================
-  .AwardsPage-tabContent {
-    position: relative;
-    margin-top: 20px;
-  }
-
-  .AwardsPage-tabPane {
-    display: none;
-
-    &.active {
-      display: block;
-    }
-
-    animation: fadeInTab 0.2s ease-in;
-  }
-
-  @keyframes fadeInTab {
-    from {
-      opacity: 0;
-      transform: translateY(-5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .AwardsPage-tab-content {
-    margin-top: 20px;
-  }
-
-  // ============================================
-  // CATEGORY SECTION
-  // ============================================
-
-  .CategorySection {
-    margin-bottom: 30px;
-    background: var(--control-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-
-    &-header {
-      padding: 20px;
-      background: var(--body-bg-light);
-      border-bottom: 1px solid var(--control-bg-shaded);
-
-      h3 {
-        margin: 0 0 5px;
-        font-size: 18px;
+      &.Nav-header {
+        padding: 15px 15px 5px;
+        font-size: 11px;
         font-weight: 700;
-        color: var(--heading-color);
-      }
-
-      p {
-        margin: 0;
-        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         color: var(--muted-color);
       }
     }
 
-    &-nominees {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-      padding: 20px;
-
-      @media @phone-down {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px;
-        padding: 15px;
-      }
-    }
-  }
-
-  // ============================================
-  // FILTERS
-  // ============================================
-  .AwardsPage-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 16px;
-    background: var(--control-bg);
-    border-radius: var(--border-radius);
-    margin-bottom: 16px;
-    align-items: flex-end;
-
-    @media @phone-down {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .FilterGroup {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-      min-width: 180px;
-
-      @media @phone-down {
-        min-width: 100%;
-      }
-
-      label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text-color);
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-
-        i {
-          font-size: 11px;
-          color: var(--primary-color);
-          width: 14px;
-        }
-      }
-
-      .FormControl {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid var(--control-bg-shaded);
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 500;
-        background: var(--body-bg-light);
-        color: var(--text-color);
-        transition: all 0.2s ease;
-        cursor: pointer;
-
-        &:focus {
-          border-color: var(--primary-color);
-          outline: none;
-          box-shadow: 0 0 0 3px fade(@primary-color, 10%);
-        }
-
-        &:hover {
-          border-color: fade(@primary-color, 50%);
-        }
-      }
-    }
-  }
-
-  // ============================================
-  // EMPTY STATES
-  // ============================================
-
-  .AwardsPage-empty,
-  .VotingPage-empty,
-  .ResultsPage-empty {
-    text-align: center;
-    padding: 50px 20px;
-    color: var(--body-color);
-    opacity: 0.5;
-
-    i {
-      font-size: 40px;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    p {
-      font-size: 14px;
-    }
-  }
-
-  // ============================================
-  // RESPONSIVE
-  // ============================================
-
-  @media @tablet-down {
-    .AwardsPage-filters {
-      padding: 12px;
-    }
-
-    .AwardsPage-tabs {
-      .Button {
-        flex-shrink: 0;
-        padding: 10px 14px;
-        font-size: 13px;
-      }
-    }
-  }
-}
-
-// ============================================
-// NOMINEE CARD
-// ============================================
-
-.NomineeCard {
-  background: var(--control-bg);
-  border-radius: var(--border-radius);
-  border: 2px solid transparent;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  padding: 16px;
-  text-align: center;
-  transition: all 0.2s ease;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  &--voted,
-  &--selected {
-    border: 2px solid var(--primary-color);
-    background: fade(@primary-color, 5%);
-  }
-
-  &-image {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 12px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--body-bg-light);
-
-    img {
+    .Select {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   }
 
-  &-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--body-bg-shaded);
-    color: var(--muted-color);
-    font-size: 28px;
+  &-selectorItem {
+    padding: 10px 15px;
   }
 
-  &-content {
-    h3 {
-      margin: 0 0 12px;
-      font-size: 14px;
-      font-weight: 600;
+  &-awardInfo {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--control-bg);
+    margin-bottom: 10px;
+  }
+
+  &-awardName {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-size: 16px;
       color: var(--heading-color);
     }
   }
 
-  &-title {
-    margin: 0 0 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--heading-color);
+  &-awardYear {
+    font-size: 12px;
+    color: var(--muted-color);
   }
 
-  .Button {
-    width: 100%;
+  // Main content area
+  &-content {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// ============================================
+// VOTING VIEW
+// ============================================
+
+.VotingView {
+  &-header {
+    margin-bottom: 30px;
+
+    &.Hero {
+      padding: 40px 0;
+      text-align: center;
+      background: var(--hero-bg);
+      border-radius: var(--border-radius);
+      margin-bottom: 30px;
+    }
+
+    .Hero-content {
+      h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--heading-color);
+      }
+
+      .lead {
+        margin: 0 0 15px;
+        font-size: 16px;
+        color: var(--muted-color);
+      }
+    }
+  }
+
+  &-meta {
+    margin-top: 15px;
+  }
+
+  &-content {
+    // Content container
   }
 }
 
@@ -433,87 +152,314 @@
 // ============================================
 
 .ResultsView {
-  .Winner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    background: fade(@primary-color, 10%);
-    border-radius: var(--border-radius);
-    border: 2px solid var(--primary-color);
+  &-header {
+    margin-bottom: 30px;
 
-    &-image {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      overflow: hidden;
-      flex-shrink: 0;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    &.Hero {
+      padding: 40px 0;
+      text-align: center;
+      background: var(--hero-bg);
+      border-radius: var(--border-radius);
+      margin-bottom: 30px;
     }
 
-    &-info {
-      flex: 1;
-
-      h4 {
-        margin: 0 0 4px;
-        font-size: 18px;
+    .Hero-content {
+      h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
         font-weight: 700;
         color: var(--heading-color);
       }
 
-      .votes {
-        font-size: 14px;
+      .lead {
+        margin: 0 0 15px;
+        font-size: 16px;
         color: var(--muted-color);
       }
     }
-
-    &-badge {
-      background: var(--primary-color);
-      color: white;
-      padding: 8px 16px;
-      border-radius: var(--border-radius);
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-    }
   }
 
-  .RunnerUp {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: var(--control-bg);
-    border-radius: var(--border-radius);
-    margin-top: 8px;
+  &-meta {
+    margin-top: 15px;
+  }
 
-    &-rank {
-      width: 32px;
-      height: 32px;
-      background: var(--body-bg-shaded);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  &-content {
+    // Content container
+  }
+}
+
+// ============================================
+// CATEGORY CARD
+// ============================================
+
+.CategoryCard {
+  margin-bottom: 30px;
+  background: var(--control-bg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  &-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--body-bg);
+
+    h2 {
+      margin: 0 0 5px;
+      font-size: 20px;
       font-weight: 700;
+      color: var(--heading-color);
+    }
+
+    p {
+      margin: 0;
       font-size: 14px;
       color: var(--muted-color);
     }
+  }
 
-    &-name {
-      flex: 1;
-      font-weight: 600;
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    &-votes {
-      font-size: 13px;
-      color: var(--muted-color);
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(2, 1fr);
     }
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 15px;
+    }
+  }
+}
+
+.CategoryResultCard {
+  // Extends CategoryCard styles
+}
+
+// ============================================
+// NOMINEE CARD
+// ============================================
+
+.NomineeCard {
+  background: var(--body-bg);
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  // Voted/Selected state
+  &--voted,
+  &--selected {
+    border-color: var(--primary-color);
+    background: fade(@primary-color, 5%);
+  }
+
+  // Winner state (results)
+  &--winner {
+    border-color: gold;
+    background: fade(gold, 8%);
+  }
+
+  // Image container
+  &-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: var(--control-bg);
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // Placeholder when no image
+  &-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--control-bg);
+    color: var(--muted-color);
+    font-size: 48px;
+  }
+
+  // Content area
+  &-content {
+    .TagLabel {
+      margin-bottom: 10px;
+    }
+  }
+
+  // Title
+  &-title {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading-color);
+    line-height: 1.3;
+  }
+
+  // Badge for winners (gold, silver, bronze)
+  &-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+
+    &--gold {
+      background: linear-gradient(135deg, #ffd700, #ffb800);
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+
+    &--silver {
+      background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+      box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+    }
+
+    &--bronze {
+      background: linear-gradient(135deg, #cd7f32, #b87333);
+      box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+    }
+  }
+
+  // Stats (votes, percentage)
+  &-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  &-votes {
+    font-size: 13px;
+    color: var(--muted-color);
+  }
+
+  &-percentage {
+    font-size: 12px;
+    color: var(--muted-color);
+  }
+
+  // Button styling
+  .Button {
+    width: 100%;
+  }
+}
+
+// ============================================
+// OTHER CARD (Suggestion)
+// ============================================
+
+.OtherCard {
+  background: var(--body-bg);
+  border: 2px dashed var(--control-bg);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--primary-color);
+  }
+
+  &-icon {
+    font-size: 32px;
+    color: var(--muted-color);
+    margin-bottom: 10px;
+  }
+
+  &-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin-bottom: 10px;
+  }
+}
+
+// ============================================
+// TAG LABELS
+// ============================================
+
+.TagLabel {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+
+  &.Label--success {
+    background: fade(#27ae60, 15%);
+    color: #27ae60;
+  }
+
+  &.Label--warning {
+    background: fade(#f39c12, 15%);
+    color: #f39c12;
+  }
+
+  &.Label--info {
+    background: fade(#3498db, 15%);
+    color: #3498db;
+  }
+
+  &.Label--danger {
+    background: fade(#e74c3c, 15%);
+    color: #e74c3c;
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.EmptyState {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--muted-color);
+
+  i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
   }
 }
 
@@ -536,60 +482,5 @@
         width: 100%;
       }
     }
-  }
-}
-
-// ============================================
-// VOTING STATUS BANNER
-// ============================================
-
-.VotingStatus {
-  padding: 16px;
-  border-radius: var(--border-radius);
-  margin-bottom: 20px;
-  text-align: center;
-
-  &--open {
-    background: fade(@awards-success-color, 15%);
-    color: @awards-success-color;
-    border: 1px solid @awards-success-color;
-  }
-
-  &--closed {
-    background: fade(@awards-danger-color, 15%);
-    color: @awards-danger-color;
-    border: 1px solid @awards-danger-color;
-  }
-
-  &--upcoming {
-    background: fade(@awards-warning-color, 15%);
-    color: @awards-warning-color;
-    border: 1px solid @awards-warning-color;
-  }
-
-  h4 {
-    margin: 0 0 4px;
-    font-weight: 700;
-  }
-
-  p {
-    margin: 0;
-    font-size: 14px;
-    opacity: 0.8;
-  }
-}
-
-// ============================================
-// LOAD MORE
-// ============================================
-
-.LoadMore {
-  text-align: center;
-  margin: 20px 0;
-
-  .Button {
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 600;
   }
 }

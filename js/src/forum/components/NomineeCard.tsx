@@ -15,8 +15,16 @@ export default class NomineeCard extends Component {
     const award = this.attrs.award as Award;
 
     // Check if user has voted for this nominee
+    // Use safe comparison that handles unloaded relationships (hasOne returns false if not loaded)
     const userVotes = app.store.all<Vote>('award-votes');
-    const userVote = userVotes.find(v => v.category()?.id() === category.id() && v.nominee()?.id() === nominee.id());
+    const userVote = userVotes.find(v => {
+      const voteCategory = v.category();
+      const voteNominee = v.nominee();
+      // In Flarum, hasOne returns false if relationship not loaded, so check for truthy object with id function
+      const categoryMatch = voteCategory && typeof voteCategory.id === 'function' && voteCategory.id() === category.id();
+      const nomineeMatch = voteNominee && typeof voteNominee.id === 'function' && voteNominee.id() === nominee.id();
+      return categoryMatch && nomineeMatch;
+    });
     const isVoted = !!userVote;
     const canVote = award.isVotingOpen() && app.session.user;
 
