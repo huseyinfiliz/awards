@@ -45,7 +45,7 @@ huseyinfiliz-awards:
       name: Category Name
       slug: Slug
       description: Description
-      sort_order: Sort Order
+      sort_order: Order
       nominees: Nominees
       votes: Votes
       allow_other: Allow User Suggestions
@@ -53,6 +53,8 @@ huseyinfiliz-awards:
       actions: Actions
       delete_confirm: Are you sure you want to delete this category?
       empty: No categories found.
+      move_up: Move Up
+      move_down: Move Down
     nominees:
       title: Manage Nominees
       create: Create Nominee
@@ -60,11 +62,16 @@ huseyinfiliz-awards:
       edit_title: Edit Nominee
       select_category: Select Category
       name: Nominee Name
+      description: Description
+      description_help: Short description shown below the name (optional)
       slug: Slug
       image: Image
       image_url: Image URL
       image_url_help: URL to the nominee's image (e.g., game cover, person photo)
-      sort_order: Sort Order
+      upload_image: Upload Image
+      upload_success: Image uploaded successfully
+      upload_error: Failed to upload image
+      sort_order: Order
       votes: Votes
       edit_votes: Edit Votes
       edit_votes_title: Adjust Vote Count
@@ -73,6 +80,8 @@ huseyinfiliz-awards:
       actions: Actions
       delete_confirm: Are you sure you want to delete this nominee?
       empty: No nominees found.
+      move_up: Move Up
+      move_down: Move Down
     suggestions:
       title: Pending Suggestions
       empty: No pending suggestions
@@ -86,9 +95,11 @@ huseyinfiliz-awards:
       merge: Merge
       approve_confirm: Create as new nominee? The user will automatically vote for it.
       reject_confirm: Reject this suggestion?
-      merge_confirm: Merge into selected nominee? The user's vote will count for that nominee.
-      no_nominees: No nominees to merge into
-      select_nominee: "Enter the ID of the nominee to merge into:"
+      merge_title: Merge Suggestion
+      merge_info: "Merge \"{name}\" into an existing nominee. The user's vote will count for that nominee."
+      select_nominee_label: Select Nominee
+      select_nominee_placeholder: "-- Select a nominee --"
+      no_nominees: No nominees available in this category to merge into.
     settings:
       title: Settings
       nav_title: Navigation Title
@@ -122,6 +133,8 @@ huseyinfiliz-awards:
       ends_in_days: "Voting ends in {days} days"
       ends_in_hours: "Voting ends in {hours} hours"
       ends_soon: Voting ends soon
+      vote_saved: Your vote has been saved!
+      vote_removed: Your vote has been removed.
     results:
       winner: Winner
       runner_up: Runner Up
@@ -148,11 +161,3 @@ huseyinfiliz-awards:
   lib:
     buttons:
       save: Save Changes
-
-  email:
-    results_published:
-      subject: "{award} Results Are In!"
-      body: |
-        The results for {award} have been published!
-
-        Check out the winners: {url}

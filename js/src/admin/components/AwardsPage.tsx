@@ -18,7 +18,7 @@ export default class AwardsPage extends ExtensionPage {
 
   content() {
     return (
-      <div className="AwardsPage">
+      <div className="huseyinfiliz-awards">
         <div className="AwardsPage-header">
           <div className="container">
             <h2>{app.translator.trans('huseyinfiliz-awards.admin.title')}</h2>

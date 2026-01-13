@@ -1,473 +1,558 @@
-// Awards Forum Styles
-// Based on actual component class names
-
-// ============================================
-// AWARDS PAGE - Main Container
+// Awards Forum Styles - Flarum 1.8.x Compatible
+// All classes prefixed with HFAwards to avoid conflicts
 // ============================================
 
-.AwardsPage {
-  // Sidenav container
-  .sideNavContainer {
-    display: flex;
-    gap: 30px;
+// Variables with HFAwards prefix
+@hf-awards-success-color: #27ae60;
+@hf-awards-warning-color: #f39c12;
+@hf-awards-info-color: #3498db;
+@hf-awards-gold-color: #ffd700;
+@hf-awards-silver-color: #c0c0c0;
+@hf-awards-bronze-color: #cd7f32;
 
-    @media (max-width: 767px) {
-      flex-direction: column;
+// ============================================
+// MAIN SCOPE - All styles inside this block
+// ============================================
+
+.huseyinfiliz-awards {
+  // ============================================
+  // AWARDS PAGE - Flarum IndexPage Style
+  // ============================================
+
+  // Hero Header (Mobile)
+  @media (min-width: 768px) {
+    .Hero.AwardsHero .container {
+      padding-bottom: 40px;
     }
   }
 
-  // Sidebar navigation
-  &-nav {
-    flex: 0 0 200px;
-
-    @media (max-width: 767px) {
-      flex: none;
-      width: 100%;
+  .AwardsHero {
+    .Hero-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
 
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+    .Hero-subtitle {
+      margin-top: 10px;
+      font-size: 16px;
+      color: var(--muted-color);
     }
+  }
 
-    .Nav-item {
-      margin: 0;
-
-      a {
-        display: block;
-        padding: 10px 15px;
-        color: var(--muted-color);
-        text-decoration: none;
-        border-radius: var(--border-radius);
-        transition: all 0.2s;
-
-        i {
-          margin-right: 8px;
-        }
-
-        &:hover {
-          background: var(--control-bg);
-          color: var(--link-color);
-        }
-
-        &.active {
-          background: var(--primary-color);
-          color: white;
-          font-weight: 600;
-        }
-      }
-
-      &.Nav-header {
-        padding: 15px 15px 5px;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--muted-color);
-      }
-    }
+  // Award Selector
+  .AwardsPage-selector {
+    margin-bottom: 20px;
 
     .Select {
-      width: 100%;
+      max-width: 300px;
     }
   }
 
-  &-selectorItem {
-    padding: 10px 15px;
+  // Category Navigation (Horizontal Scroll)
+  .AwardsPage-categoryNav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--control-bg-shaded);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    // Hide scrollbar
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .AwardsPage-categoryLink {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted-color);
+      background: var(--control-bg);
+      border: none;
+      border-radius: 20px;
+      transition: all 0.2s;
+      white-space: nowrap;
+
+      &:hover {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+    }
   }
 
-  &-awardInfo {
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--control-bg);
-    margin-bottom: 10px;
+  // Content area
+  .AwardsPage-content {
+    scroll-behavior: smooth;
   }
 
-  &-awardName {
+  // ============================================
+  // VOTING VIEW
+  // ============================================
+
+  .VotingView {
+    &-status {
+      margin-bottom: 20px;
+    }
+  }
+
+  // ============================================
+  // RESULTS VIEW
+  // ============================================
+
+  .ResultsView {
+    &-status {
+      margin-bottom: 20px;
+    }
+  }
+
+  // ============================================
+  // CATEGORY CARD
+  // ============================================
+
+  .CategoryCard {
+    margin-bottom: 30px;
+    background: var(--control-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    scroll-margin-top: 20px;
+
+    &-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--body-bg);
+
+      h2 {
+        margin: 0 0 5px;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--heading-color);
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--muted-color);
+      }
+    }
+
+    &-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 20px;
+
+      @media (max-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+      }
+    }
+  }
+
+  // ============================================
+  // NOMINEE CARD - Clickable Full Card
+  // ============================================
+
+  .NomineeCard {
+    background: var(--body-bg);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+
+    // Clickable state
+    &--clickable {
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+    }
+
+    // Not clickable (guest or voting closed)
+    &:not(.NomineeCard--clickable) {
+      cursor: default;
+    }
+
+    // Voted/Selected state
+    &--voted {
+      border-color: var(--primary-color);
+      background: fade(@primary-color, 8%);
+
+      .NomineeCard-check {
+        display: flex;
+      }
+    }
+
+    // Loading state
+    &--loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    // Winner state (results)
+    &--winner {
+      border-color: @hf-awards-gold-color;
+      background: fade(@hf-awards-gold-color, 8%);
+    }
+
+    // Image container
+    &-image {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: var(--control-bg);
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    // Check icon overlay (voted)
+    &-check {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    // Placeholder when no image
+    &-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--control-bg);
+      color: var(--muted-color);
+      font-size: 48px;
+    }
+
+    // Content area
+    &-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    // Title
+    &-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+      line-height: 1.3;
+    }
+
+    // Description
+    &-description {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted-color);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    // Badge for winners (gold, silver, bronze)
+    &-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      z-index: 1;
+
+      &--gold {
+        background: linear-gradient(135deg, #ffd700, #ffb800);
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+      }
+
+      &--silver {
+        background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+        box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+      }
+
+      &--bronze {
+        background: linear-gradient(135deg, #cd7f32, #b87333);
+        box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+      }
+    }
+
+    // Stats (votes, percentage)
+    &-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 8px;
+    }
+
+    &-votes {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-color);
+    }
+
+    &-percentage {
+      font-size: 11px;
+      color: var(--muted-color);
+    }
+
+    // Loading indicator
+    &-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+  }
+
+  // ============================================
+  // OTHER CARD (Suggestion)
+  // ============================================
+
+  .OtherCard {
+    background: var(--body-bg);
+    border: 2px dashed var(--control-bg-shaded);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
 
-    strong {
-      font-size: 16px;
+    &:hover {
+      border-color: var(--primary-color);
+    }
+
+    &-icon {
+      font-size: 32px;
+      color: var(--muted-color);
+      margin-bottom: 10px;
+    }
+
+    &-title {
+      font-size: 14px;
+      font-weight: 600;
       color: var(--heading-color);
+      margin-bottom: 10px;
     }
   }
 
-  &-awardYear {
-    font-size: 12px;
+  // ============================================
+  // TAG LABELS
+  // ============================================
+
+  .HFAwardsTagLabel {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
+    &--success {
+      background: fade(@hf-awards-success-color, 15%);
+      color: @hf-awards-success-color;
+    }
+
+    &--warning {
+      background: fade(@hf-awards-warning-color, 15%);
+      color: @hf-awards-warning-color;
+    }
+
+    &--info {
+      background: fade(@hf-awards-info-color, 15%);
+      color: @hf-awards-info-color;
+    }
+
+    &--danger {
+      background: fade(#e74c3c, 15%);
+      color: #e74c3c;
+    }
+  }
+
+  // Legacy support for TagLabel
+  .TagLabel {
+    &.Label--success {
+      background: fade(@hf-awards-success-color, 15%);
+      color: @hf-awards-success-color;
+    }
+
+    &.Label--warning {
+      background: fade(@hf-awards-warning-color, 15%);
+      color: @hf-awards-warning-color;
+    }
+
+    &.Label--info {
+      background: fade(@hf-awards-info-color, 15%);
+      color: @hf-awards-info-color;
+    }
+
+    &.Label--danger {
+      background: fade(#e74c3c, 15%);
+      color: #e74c3c;
+    }
+  }
+
+  // ============================================
+  // EMPTY STATE
+  // ============================================
+
+  .HFAwardsEmptyState,
+  .EmptyState {
+    text-align: center;
+    padding: 50px 20px;
     color: var(--muted-color);
-  }
 
-  // Main content area
-  &-content {
-    flex: 1;
-    min-width: 0;
-  }
-}
-
-// ============================================
-// VOTING VIEW
-// ============================================
-
-.VotingView {
-  &-header {
-    margin-bottom: 30px;
-
-    &.Hero {
-      padding: 40px 0;
-      text-align: center;
-      background: var(--hero-bg);
-      border-radius: var(--border-radius);
-      margin-bottom: 30px;
+    i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+      display: block;
     }
-
-    .Hero-content {
-      h1 {
-        margin: 0 0 10px;
-        font-size: 32px;
-        font-weight: 700;
-        color: var(--heading-color);
-      }
-
-      .lead {
-        margin: 0 0 15px;
-        font-size: 16px;
-        color: var(--muted-color);
-      }
-    }
-  }
-
-  &-meta {
-    margin-top: 15px;
-  }
-
-  &-content {
-    // Content container
-  }
-}
-
-// ============================================
-// RESULTS VIEW
-// ============================================
-
-.ResultsView {
-  &-header {
-    margin-bottom: 30px;
-
-    &.Hero {
-      padding: 40px 0;
-      text-align: center;
-      background: var(--hero-bg);
-      border-radius: var(--border-radius);
-      margin-bottom: 30px;
-    }
-
-    .Hero-content {
-      h1 {
-        margin: 0 0 10px;
-        font-size: 32px;
-        font-weight: 700;
-        color: var(--heading-color);
-      }
-
-      .lead {
-        margin: 0 0 15px;
-        font-size: 16px;
-        color: var(--muted-color);
-      }
-    }
-  }
-
-  &-meta {
-    margin-top: 15px;
-  }
-
-  &-content {
-    // Content container
-  }
-}
-
-// ============================================
-// CATEGORY CARD
-// ============================================
-
-.CategoryCard {
-  margin-bottom: 30px;
-  background: var(--control-bg);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-
-  &-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--body-bg);
 
     h2 {
-      margin: 0 0 5px;
+      margin: 0 0 10px;
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--heading-color);
     }
 
     p {
       margin: 0;
       font-size: 14px;
-      color: var(--muted-color);
     }
   }
 
-  &-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 20px;
+  // ============================================
+  // MOBILE RESPONSIVE
+  // ============================================
 
-    @media (max-width: 1200px) {
-      grid-template-columns: repeat(3, 1fr);
+  @media (max-width: 767px) {
+    .AwardsPage-categoryNav {
+      margin: 0 -15px 20px;
+      padding: 12px 15px;
+      border-radius: 0;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        background: linear-gradient(to right, transparent, var(--body-bg) 90%);
+        pointer-events: none;
+      }
     }
 
-    @media (max-width: 900px) {
-      grid-template-columns: repeat(2, 1fr);
+    .CategoryCard {
+      margin-bottom: 20px;
+      border-radius: 0;
+      margin-left: -15px;
+      margin-right: -15px;
+
+      &-header {
+        padding: 15px;
+
+        h2 {
+          font-size: 18px;
+        }
+      }
+
+      &-grid {
+        padding: 15px;
+      }
     }
 
-    @media (max-width: 500px) {
-      grid-template-columns: 1fr;
-      gap: 12px;
-      padding: 15px;
+    .NomineeCard {
+      padding: 12px;
+
+      &-image {
+        margin-bottom: 10px;
+      }
+
+      &-title {
+        font-size: 13px;
+      }
+
+      &-description {
+        font-size: 11px;
+      }
+
+      &-placeholder {
+        font-size: 36px;
+      }
     }
   }
 }
 
-.CategoryResultCard {
-  // Extends CategoryCard styles
-}
-
 // ============================================
-// NOMINEE CARD
+// MODAL STYLES (Global - with HFAwards prefix)
 // ============================================
 
-.NomineeCard {
-  background: var(--body-bg);
-  border: 2px solid transparent;
-  border-radius: var(--border-radius);
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-  }
-
-  // Voted/Selected state
-  &--voted,
-  &--selected {
-    border-color: var(--primary-color);
-    background: fade(@primary-color, 5%);
-  }
-
-  // Winner state (results)
-  &--winner {
-    border-color: gold;
-    background: fade(gold, 8%);
-  }
-
-  // Image container
-  &-image {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 12px;
-    background: var(--control-bg);
-    position: relative;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  // Placeholder when no image
-  &-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--control-bg);
-    color: var(--muted-color);
-    font-size: 48px;
-  }
-
-  // Content area
-  &-content {
-    .TagLabel {
-      margin-bottom: 10px;
-    }
-  }
-
-  // Title
-  &-title {
-    margin: 0 0 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--heading-color);
-    line-height: 1.3;
-  }
-
-  // Badge for winners (gold, silver, bronze)
-  &-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    color: white;
-
-    &--gold {
-      background: linear-gradient(135deg, #ffd700, #ffb800);
-      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
-    }
-
-    &--silver {
-      background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
-      box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
-    }
-
-    &--bronze {
-      background: linear-gradient(135deg, #cd7f32, #b87333);
-      box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
-    }
-  }
-
-  // Stats (votes, percentage)
-  &-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-top: 8px;
-  }
-
-  &-votes {
-    font-size: 13px;
-    color: var(--muted-color);
-  }
-
-  &-percentage {
-    font-size: 12px;
-    color: var(--muted-color);
-  }
-
-  // Button styling
-  .Button {
-    width: 100%;
-  }
-}
-
-// ============================================
-// OTHER CARD (Suggestion)
-// ============================================
-
-.OtherCard {
-  background: var(--body-bg);
-  border: 2px dashed var(--control-bg);
-  border-radius: var(--border-radius);
-  padding: 16px;
-  text-align: center;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--primary-color);
-  }
-
-  &-icon {
-    font-size: 32px;
-    color: var(--muted-color);
-    margin-bottom: 10px;
-  }
-
-  &-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--heading-color);
-    margin-bottom: 10px;
-  }
-}
-
-// ============================================
-// TAG LABELS
-// ============================================
-
-.TagLabel {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-
-  &.Label--success {
-    background: fade(#27ae60, 15%);
-    color: #27ae60;
-  }
-
-  &.Label--warning {
-    background: fade(#f39c12, 15%);
-    color: #f39c12;
-  }
-
-  &.Label--info {
-    background: fade(#3498db, 15%);
-    color: #3498db;
-  }
-
-  &.Label--danger {
-    background: fade(#e74c3c, 15%);
-    color: #e74c3c;
-  }
-}
-
-// ============================================
-// EMPTY STATE
-// ============================================
-
-.EmptyState {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--muted-color);
-
-  i {
-    font-size: 48px;
-    margin-bottom: 15px;
-    opacity: 0.5;
-  }
-
-  h2 {
-    margin: 0 0 10px;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  p {
-    margin: 0;
-    font-size: 14px;
-  }
-}
-
-// ============================================
-// SUGGESTION MODAL
-// ============================================
-
-.SuggestionModal {
+.HFAwardsModal {
   .Modal-body {
     .Form-group {
       margin-bottom: 16px;
@@ -481,6 +566,16 @@
       .FormControl {
         width: 100%;
       }
+
+      .helpText {
+        font-size: 12px;
+        color: var(--muted-color);
+        margin-top: 4px;
+      }
     }
   }
+}
+
+.HFAwardsSuggestionModal {
+  // Additional styles specific to suggestion modal
 }

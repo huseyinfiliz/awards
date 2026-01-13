@@ -33,22 +33,16 @@ export default class VotingView extends Component {
 
     return (
       <div className="VotingView">
-        <div className="VotingView-header Hero">
-          <div className="Hero-content">
-            <h1>{award.name()}</h1>
-            <p className="lead">{award.description()}</p>
-            <div className="VotingView-meta">
-              {award.isVotingOpen() ? (
-                <span className="TagLabel Label--success">
-                  {this.formatEndDate(endsAt)}
-                </span>
-              ) : (
-                <span className="TagLabel Label--warning">
-                  {app.translator.trans('huseyinfiliz-awards.forum.error.voting_closed')}
-                </span>
-              )}
-            </div>
-          </div>
+        <div className="VotingView-status">
+          {award.isVotingOpen() ? (
+            <span className="TagLabel Label--success">
+              {this.formatEndDate(endsAt)}
+            </span>
+          ) : (
+            <span className="TagLabel Label--warning">
+              {app.translator.trans('huseyinfiliz-awards.forum.error.voting_closed')}
+            </span>
+          )}
         </div>
 
         <div className="VotingView-content">

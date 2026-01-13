@@ -13,6 +13,7 @@ class Nominee extends AbstractModel
     protected $fillable = [
         'category_id',
         'name',
+        'description',
         'slug',
         'image_url',
         'metadata',

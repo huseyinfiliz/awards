@@ -18,6 +18,14 @@ class AwardSerializer extends AbstractSerializer
             );
         }
 
+        $actor = $this->getActor();
+        
+        // Can view results:
+        // - Published: everyone with awards.view
+        // - Ended (not published): only awards.viewResults permission
+        $canViewResults = $award->isPublished() 
+            || ($award->hasEnded() && $actor->hasPermission('awards.viewResults'));
+
         return [
             'name' => $award->name,
             'slug' => $award->slug,
@@ -34,6 +42,7 @@ class AwardSerializer extends AbstractSerializer
             'isPublished' => $award->isPublished(),
             'isVotingOpen' => $award->isVotingOpen(),
             'canShowVotes' => $award->canShowVotes(),
+            'canViewResults' => $canViewResults,
         ];
     }
 

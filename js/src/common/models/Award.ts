@@ -1,4 +1,5 @@
 import Model from 'flarum/common/Model';
+import Category from './Category';
 
 export default class Award extends Model {
   name = Model.attribute<string>('name');
@@ -18,6 +19,8 @@ export default class Award extends Model {
   categoryCount = Model.attribute<number>('categoryCount');
   nomineeCount = Model.attribute<number>('nomineeCount');
   voteCount = Model.attribute<number>('voteCount');
+  
+  canViewResults = Model.attribute<boolean>('canViewResults');
 
   isDraft(): boolean {
     return this.status() === 'draft';
@@ -46,5 +49,3 @@ export default class Award extends Model {
     return this.isPublished() || (this.isActive() && this.showLiveVotes());
   }
 }
-
-import Category from './Category';

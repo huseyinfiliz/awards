@@ -28,6 +28,9 @@ class UpdateNomineeController extends AbstractShowController
         if (Arr::has($data, 'name')) {
             $nominee->name = Arr::get($data, 'name');
         }
+        if (Arr::has($data, 'description')) {
+            $nominee->description = Arr::get($data, 'description');
+        }
         if (Arr::has($data, 'slug')) {
             $nominee->slug = Arr::get($data, 'slug') ?: Str::slug($nominee->name);
         }

@@ -28,6 +28,7 @@ class CreateNomineeController extends AbstractCreateController
         $nominee = Nominee::create([
             'category_id' => $categoryId,
             'name' => Arr::get($data, 'name'),
+            'description' => Arr::get($data, 'description'),
             'slug' => Arr::get($data, 'slug') ?: Str::slug(Arr::get($data, 'name')),
             'image_url' => Arr::get($data, 'imageUrl'),
             'metadata' => Arr::get($data, 'metadata'),

@@ -76,13 +76,36 @@ export default class NomineesTab extends Component {
       const nominees = await app.store.find<Nominee[]>('award-nominees', {
         filter: { category: this.selectedCategoryId },
       });
-      this.nominees = nominees || [];
+      this.nominees = (nominees || []).sort((a, b) => (a.sortOrder() || 0) - (b.sortOrder() || 0));
     } catch (error) {
       console.error('Failed to load nominees:', error);
       this.nominees = [];
     }
 
     m.redraw();
+  }
+
+  async moveNominee(nominee: Nominee, direction: 'up' | 'down') {
+    const index = this.nominees.indexOf(nominee);
+    if (index === -1) return;
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= this.nominees.length) return;
+
+    // Swap positions in array
+    const temp = this.nominees[index];
+    this.nominees[index] = this.nominees[newIndex];
+    this.nominees[newIndex] = temp;
+
+    // Reassign sortOrder based on new array positions
+    try {
+      const promises = this.nominees.map((n, i) => n.save({ sortOrder: i }));
+      await Promise.all(promises);
+      await this.loadNominees();
+    } catch (error) {
+      console.error('Failed to reorder nominee:', error);
+      await this.loadNominees(); // Reload to restore original order
+    }
   }
 
   view() {
@@ -133,6 +156,7 @@ export default class NomineesTab extends Component {
         <table className="NomineesTab-table Table">
           <thead>
             <tr>
+              <th style={{ width: '80px' }}>{app.translator.trans('huseyinfiliz-awards.admin.nominees.sort_order')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.image')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.votes')}</th>
@@ -142,13 +166,29 @@ export default class NomineesTab extends Component {
           <tbody>
             {this.nominees.length === 0 ? (
               <tr>
-                <td colSpan={4} className="NomineesTab-empty">
+                <td colSpan={5} className="NomineesTab-empty">
                   {app.translator.trans('huseyinfiliz-awards.admin.nominees.empty')}
                 </td>
               </tr>
             ) : (
-              this.nominees.map((nominee) => (
+              this.nominees.map((nominee, index) => (
                 <tr key={nominee.id()}>
+                  <td className="NomineesTab-sort">
+                    <Button
+                      className="Button Button--icon"
+                      icon="fas fa-chevron-up"
+                      onclick={() => this.moveNominee(nominee, 'up')}
+                      disabled={index === 0}
+                      title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up')}
+                    />
+                    <Button
+                      className="Button Button--icon"
+                      icon="fas fa-chevron-down"
+                      onclick={() => this.moveNominee(nominee, 'down')}
+                      disabled={index === this.nominees.length - 1}
+                      title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down')}
+                    />
+                  </td>
                   <td>
                     {nominee.imageUrl() ? (
                       <img src={nominee.imageUrl()} alt={nominee.name()} className="NomineeImage" />
@@ -160,6 +200,9 @@ export default class NomineesTab extends Component {
                   </td>
                   <td>
                     <strong>{nominee.name()}</strong>
+                    {nominee.description() ? (
+                      <div className="helpText">{nominee.description()}</div>
+                    ) : null}
                   </td>
                   <td>
                     <span className="NomineeVotes">{nominee.voteCount?.() || 0}</span>

@@ -20,6 +20,7 @@ class NomineeSerializer extends AbstractSerializer
 
         $attributes = [
             'name' => $nominee->name,
+            'description' => $nominee->description,
             'slug' => $nominee->slug,
             'imageUrl' => $nominee->image_url,
             'metadata' => $nominee->metadata,

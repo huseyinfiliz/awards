@@ -37,7 +37,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
   }
 
   className() {
-    return 'AwardModal Modal--large';
+    return 'HFAwardsModal HFAwardsAwardModal Modal--large';
   }
 
   title() {

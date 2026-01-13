@@ -1,6 +1,5 @@
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
-import Button from 'flarum/common/components/Button';
 import Nominee from '../../common/models/Nominee';
 import Category from '../../common/models/Category';
 import Award from '../../common/models/Award';
@@ -14,103 +13,129 @@ export default class NomineeCard extends Component {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
 
-    // Check if user has voted for this nominee
-    // Use direct ID attributes for reliable comparison (relationships may not be loaded)
     const userVotes = app.store.all<Vote>('award-votes');
     const nomineeId = nominee.id();
     const categoryId = category.id();
 
-    const userVote = userVotes.find(v => {
-      // First try direct attributes (most reliable)
+    const userVote = userVotes.find((v) => {
       const vNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
       const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
       return String(vNomineeId) === String(nomineeId) && String(vCategoryId) === String(categoryId);
     });
+
     const isVoted = !!userVote;
     const canVote = award.isVotingOpen() && app.session.user;
+    const showVotes = award.canShowVotes();
+
+    // Tıklanabilir mi kontrolü
+    const isClickable = canVote && !this.loading;
 
     return (
-      <div className={`NomineeCard ${isVoted ? 'NomineeCard--voted' : ''}`}>
+      <div
+        className={`NomineeCard ${isVoted ? 'NomineeCard--voted' : ''} ${isClickable ? 'NomineeCard--clickable' : ''} ${this.loading ? 'NomineeCard--loading' : ''}`}
+        onclick={isClickable ? () => this.toggleVote(nominee, category, userVote) : undefined}
+        role={isClickable ? 'button' : undefined}
+        tabindex={isClickable ? 0 : undefined}
+        onkeydown={isClickable ? (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.toggleVote(nominee, category, userVote);
+          }
+        } : undefined}
+      >
         <div className="NomineeCard-image">
-            {nominee.imageUrl() ? (
-                <img src={nominee.imageUrl()} alt={nominee.name()} />
-            ) : (
-                <div className="NomineeCard-placeholder">
-                    <i className="fas fa-user" />
-                </div>
-            )}
+          {nominee.imageUrl() ? (
+            <img src={nominee.imageUrl()} alt={nominee.name()} loading="lazy" />
+          ) : (
+            <div className="NomineeCard-placeholder">
+              <i className="fas fa-user" />
+            </div>
+          )}
+          {isVoted ? (
+            <div className="NomineeCard-check">
+              <i className="fas fa-check" />
+            </div>
+          ) : null}
         </div>
 
         <div className="NomineeCard-content">
-            <h3 className="NomineeCard-title">{nominee.name()}</h3>
+          <h3 className="NomineeCard-title">{nominee.name()}</h3>
+          
+          {nominee.description() ? (
+            <p className="NomineeCard-description">{nominee.description()}</p>
+          ) : null}
 
-            <Button
-                className={`Button ${isVoted ? 'Button--primary' : 'Button--text'}`}
-                loading={this.loading}
-                disabled={!canVote || this.loading}
-                onclick={() => this.toggleVote(nominee, userVote)}
-            >
-                {isVoted
-                    ? app.translator.trans('huseyinfiliz-awards.forum.voting.voted')
-                    : app.translator.trans('huseyinfiliz-awards.forum.voting.select')}
-            </Button>
+          {showVotes ? (
+            <div className="NomineeCard-stats">
+              <span className="NomineeCard-votes">
+                {app.translator.trans('huseyinfiliz-awards.forum.results.votes', { count: nominee.voteCount() || 0 })}
+              </span>
+            </div>
+          ) : null}
+
+          {this.loading ? (
+            <div className="NomineeCard-loading">
+              <i className="fas fa-spinner fa-spin" />
+            </div>
+          ) : null}
         </div>
       </div>
     );
   }
 
-  toggleVote(nominee: Nominee, userVote?: Vote) {
-      if (!app.session.user) {
-          // Trigger login modal or alert
-          return;
-      }
+  toggleVote(nominee: Nominee, category: Category, userVote?: Vote) {
+    if (!app.session.user) {
+      return;
+    }
 
-      this.loading = true;
-      m.redraw();
+    this.loading = true;
+    m.redraw();
 
-      if (userVote) {
-          // Delete existing vote
-          userVote.delete().then(() => {
-              this.loading = false;
-              m.redraw();
-          }).catch((e: any) => {
-              this.loading = false;
-              m.redraw();
-              throw e;
+    const categoryId = category.id();
+
+    if (userVote) {
+      userVote
+        .delete()
+        .then(() => {
+          app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_removed'));
+          this.loading = false;
+          m.redraw();
+        })
+        .catch((e: any) => {
+          this.loading = false;
+          m.redraw();
+          throw e;
+        });
+    } else {
+      app
+        .request({
+          method: 'POST',
+          url: app.forum.attribute('apiUrl') + '/award-votes',
+          body: {
+            data: {
+              attributes: {
+                nomineeId: nominee.id(),
+              },
+            },
+          },
+        })
+        .then((response: any) => {
+          const existingVotes = app.store.all<Vote>('award-votes').filter((v) => {
+            const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+            return String(vCategoryId) === String(categoryId);
           });
-      } else {
-          // Create new vote
-          const category = this.attrs.category as Category;
-          const categoryId = category.id();
+          existingVotes.forEach((v) => app.store.remove(v));
 
-          app.request({
-              method: 'POST',
-              url: app.forum.attribute('apiUrl') + '/award-votes',
-              body: {
-                  data: {
-                      attributes: {
-                          nomineeId: nominee.id()
-                      }
-                  }
-              }
-          }).then((response: any) => {
-              // Remove any existing votes in this category from the store
-              // (backend deletes them when votes_per_category=1, but frontend store doesn't know)
-              const existingVotes = app.store.all<Vote>('award-votes').filter(v => {
-                  const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
-                  return String(vCategoryId) === String(categoryId);
-              });
-              existingVotes.forEach(v => app.store.remove(v));
-
-              // Add the new vote to the store
-              app.store.pushPayload(response);
-              this.loading = false;
-              m.redraw();
-          }).catch((e: any) => {
-              this.loading = false;
-              m.redraw();
-              throw e;
-          });
-      }
+          app.store.pushPayload(response);
+          app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_saved'));
+          this.loading = false;
+          m.redraw();
+        })
+        .catch((e: any) => {
+          this.loading = false;
+          m.redraw();
+          throw e;
+        });
+    }
   }
 }

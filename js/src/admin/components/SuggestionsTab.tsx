@@ -7,6 +7,7 @@ import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
 import Nominee from '../../common/models/Nominee';
 import OtherSuggestion from '../../common/models/OtherSuggestion';
+import MergeModal from './modals/MergeModal';
 
 export default class SuggestionsTab extends Component {
   loading: boolean = true;
@@ -72,14 +73,6 @@ export default class SuggestionsTab extends Component {
 
       const suggestions = await app.store.find<OtherSuggestion[]>('award-other-suggestions', params);
       this.suggestions = suggestions || [];
-
-      // Load nominees for merge dropdown
-      if (this.selectedCategoryId) {
-        const nominees = await app.store.find<Nominee[]>('award-nominees', {
-          filter: { category: this.selectedCategoryId },
-        });
-        this.nominees = nominees || [];
-      }
     } catch (error) {
       console.error('Failed to load suggestions:', error);
       this.suggestions = [];
@@ -160,7 +153,7 @@ export default class SuggestionsTab extends Component {
                     <Button className="Button" icon="fas fa-times" onclick={() => this.rejectSuggestion(suggestion)}>
                       {app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject')}
                     </Button>
-                    <Button className="Button" icon="fas fa-compress-arrows-alt" onclick={() => this.mergeSuggestion(suggestion)}>
+                    <Button className="Button" icon="fas fa-compress-arrows-alt" onclick={() => this.openMergeModal(suggestion)}>
                       {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
                     </Button>
                   </td>
@@ -174,6 +167,10 @@ export default class SuggestionsTab extends Component {
   }
 
   async approveSuggestion(suggestion: OtherSuggestion) {
+    if (!confirm(app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve_confirm') as string)) {
+      return;
+    }
+
     try {
       await app.request({
         method: 'PATCH',
@@ -203,46 +200,10 @@ export default class SuggestionsTab extends Component {
     }
   }
 
-  async mergeSuggestion(suggestion: OtherSuggestion) {
-    // Get nominees for this category
-    const categoryId = suggestion.category()?.id?.();
-    if (!categoryId) return;
-
-    try {
-      const nominees = await app.store.find<Nominee[]>('award-nominees', {
-        filter: { category: categoryId },
-      });
-
-      if (nominees.length === 0) {
-        alert(app.translator.trans('huseyinfiliz-awards.admin.suggestions.no_nominees') as string);
-        return;
-      }
-
-      const nomineeOptions = nominees.map((n) => `${n.id()}: ${n.name()}`).join('\n');
-      const selectedId = prompt(
-        `${app.translator.trans('huseyinfiliz-awards.admin.suggestions.select_nominee')}\n\n${nomineeOptions}`
-      );
-
-      if (!selectedId) return;
-
-      const nomineeId = parseInt(selectedId.split(':')[0], 10);
-      if (isNaN(nomineeId)) return;
-
-      await app.request({
-        method: 'PATCH',
-        url: app.forum.attribute('apiUrl') + '/award-other-suggestions/' + suggestion.id(),
-        body: {
-          data: {
-            attributes: {
-              action: 'merge',
-              mergeToNomineeId: nomineeId,
-            },
-          },
-        },
-      });
-      this.loadSuggestions();
-    } catch (error) {
-      console.error('Failed to merge suggestion:', error);
-    }
+  openMergeModal(suggestion: OtherSuggestion) {
+    app.modal.show(MergeModal, {
+      suggestion,
+      onmerge: () => this.loadSuggestions(),
+    });
   }
 }

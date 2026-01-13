@@ -1,6 +1,7 @@
 <?php
 
 use Flarum\Extend;
+use Flarum\Api\Serializer\ForumSerializer;
 use HuseyinFiliz\Awards\Api\Controller;
 use HuseyinFiliz\Awards\Notification;
 
@@ -17,12 +18,24 @@ return [
     new Extend\Locales(__DIR__ . '/resources/locale'),
 
     (new Extend\Settings())
-        ->default('huseyinfiliz-awards.allow_guest_view', false)
         ->default('huseyinfiliz-awards.votes_per_category', 1)
-        ->serializeToForum('awardsVotesPerCategory', 'huseyinfiliz-awards.votes_per_category'),
+        ->default('huseyinfiliz-awards.nav_title', 'Awards')
+        ->serializeToForum('awardsVotesPerCategory', 'huseyinfiliz-awards.votes_per_category')
+        ->serializeToForum('awardsNavTitle', 'huseyinfiliz-awards.nav_title'),
+
+    (new Extend\ApiSerializer(ForumSerializer::class))
+        ->attributes(function (ForumSerializer $serializer): array {
+            $actor = $serializer->getActor();
+            return [
+                'canViewAwards' => $actor->hasPermission('awards.view'),
+                'canVoteAwards' => $actor->hasPermission('awards.vote'),
+                'canViewAwardsResults' => $actor->hasPermission('awards.viewResults'),
+                'canManageAwards' => $actor->hasPermission('awards.manage'),
+            ];
+        }),
 
     (new Extend\Notification())
-        ->type(Notification\ResultsPublishedBlueprint::class, \HuseyinFiliz\Awards\Api\Serializer\AwardSerializer::class, ['alert', 'email']),
+        ->type(Notification\ResultsPublishedBlueprint::class, \HuseyinFiliz\Awards\Api\Serializer\AwardSerializer::class, ['alert']),
 
     (new Extend\Routes('api'))
         // Awards

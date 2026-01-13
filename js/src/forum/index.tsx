@@ -11,8 +11,8 @@ app.initializers.add('huseyinfiliz/awards', () => {
   app.routes.awards = { path: '/awards', component: AwardsPage };
 
   extend(IndexPage.prototype, 'navItems', function (items) {
-    if (app.forum.attribute('awards.canView') !== false) {
-      const navTitle = app.forum.attribute('huseyinfiliz-awards.nav_title') || 'Awards';
+    if (app.forum.attribute('canViewAwards') !== false) {
+      const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
       items.add(
         'awards',
         LinkButton.component(

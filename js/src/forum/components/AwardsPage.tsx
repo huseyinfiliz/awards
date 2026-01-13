@@ -2,8 +2,9 @@ import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Select from 'flarum/common/components/Select';
+import IndexPage from 'flarum/forum/components/IndexPage';
 import listItems from 'flarum/common/helpers/listItems';
-import ItemList from 'flarum/common/utils/ItemList';
+import extractText from 'flarum/common/utils/extractText';
 import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
 import Vote from '../../common/models/Vote';
@@ -14,11 +15,16 @@ export default class AwardsPage extends Page {
   loading: boolean = true;
   awards: Award[] = [];
   selectedAward: Award | null = null;
-  selectedCategoryId: string | null = null;
 
   oninit(vnode: any) {
     super.oninit(vnode);
     this.loadAwards();
+  }
+
+  oncreate(vnode: any) {
+    super.oncreate(vnode);
+    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
+    app.setTitle(extractText(navTitle));
   }
 
   async loadAwards() {
@@ -29,19 +35,11 @@ export default class AwardsPage extends Page {
       const awards = await app.store.find<Award[]>('awards', {
         include: 'categories,categories.nominees',
       });
-      // Filter to only show active or published awards to regular users
-      this.awards = (awards || []).filter(
-        (a) => a.isActive() || a.isPublished() || a.hasEnded()
-      );
+      this.awards = (awards || []).filter((a) => a.isActive() || a.isPublished() || a.hasEnded());
 
-      // Select the first active award, or first published, or first in list
       this.selectedAward =
-        this.awards.find((a) => a.isActive()) ||
-        this.awards.find((a) => a.isPublished()) ||
-        this.awards[0] ||
-        null;
+        this.awards.find((a) => a.isActive()) || this.awards.find((a) => a.isPublished()) || this.awards[0] || null;
 
-      // Load user's votes if logged in
       if (app.session.user) {
         await this.loadUserVotes();
       }
@@ -55,7 +53,6 @@ export default class AwardsPage extends Page {
 
   async loadUserVotes() {
     try {
-      // Load all user votes (they will be filtered by user on backend)
       await app.store.find<Vote[]>('award-votes');
     } catch (error) {
       console.error('Failed to load user votes:', error);
@@ -63,36 +60,20 @@ export default class AwardsPage extends Page {
   }
 
   view() {
-    if (this.loading) {
-      return (
-        <div className="AwardsPage">
-          <LoadingIndicator />
-        </div>
-      );
-    }
-
-    if (this.awards.length === 0) {
-      return (
-        <div className="AwardsPage">
-          <div className="container">
-            <div className="EmptyState">
-              <h2>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards')}</h2>
-              <p>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards_description')}</p>
-            </div>
-          </div>
-        </div>
-      );
-    }
+    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
 
     return (
-      <div className="AwardsPage">
+      <div className="IndexPage huseyinfiliz-awards">
+        {this.hero(navTitle)}
+
         <div className="container">
           <div className="sideNavContainer">
-            <nav className="AwardsPage-nav sideNav">
-              <ul>{listItems(this.sidebarItems().toArray())}</ul>
+            <nav className="IndexPage-nav sideNav">
+              <ul>{listItems(IndexPage.prototype.sidebarItems().toArray())}</ul>
             </nav>
-            <div className="AwardsPage-content sideNavOffset">
-              {this.selectedAward && this.renderAwardView()}
+
+            <div className="IndexPage-results sideNavOffset">
+              {this.loading ? <LoadingIndicator /> : this.content()}
             </div>
           </div>
         </div>
@@ -100,115 +81,101 @@ export default class AwardsPage extends Page {
     );
   }
 
-  sidebarItems(): ItemList<any> {
-    const items = new ItemList<any>();
-
-    // Award selector dropdown when there are multiple awards
-    if (this.awards.length > 1) {
-      const awardOptions: Record<string, string> = {};
-      this.awards.forEach((award) => {
-        awardOptions[String(award.id())] = `${award.name()} (${award.year()})`;
-      });
-
-      items.add(
-        'awardSelector',
-        <li className="Nav-item AwardsPage-selectorItem">
-          <Select
-            value={String(this.selectedAward?.id())}
-            options={awardOptions}
-            onchange={(value: string) => {
-              this.selectedAward = this.awards.find((a) => String(a.id()) === value) || null;
-              this.selectedCategoryId = null;
-              m.redraw();
-            }}
-          />
-        </li>,
-        100
-      );
-    }
-
-    // Show award info
-    if (this.selectedAward) {
-      items.add(
-        'awardInfo',
-        <li className="Nav-item AwardsPage-awardInfo">
-          <div className="AwardsPage-awardName">
-            <strong>{this.selectedAward.name()}</strong>
-            <span className="AwardsPage-awardYear">{this.selectedAward.year()}</span>
+  hero(navTitle: string) {
+    return (
+      <header className="Hero AwardsHero">
+        <div className="container">
+          <div className="containerNarrow">
+            <h1 className="Hero-title">
+              <i className="icon fas fa-trophy" /> {navTitle}
+            </h1>
+            {this.selectedAward ? (
+              <div className="Hero-subtitle">{this.selectedAward.description()}</div>
+            ) : null}
           </div>
-        </li>,
-        90
+        </div>
+      </header>
+    );
+  }
+
+  content() {
+    if (this.awards.length === 0) {
+      return (
+        <div className="EmptyState">
+          <i className="fas fa-trophy" />
+          <h2>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards')}</h2>
+          <p>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards_description')}</p>
+        </div>
       );
-
-      // Categories as nav items
-      const categories = (this.selectedAward.categories?.() || []) as Category[];
-      if (categories.length > 0) {
-        items.add(
-          'categoriesTitle',
-          <li className="Nav-item Nav-header">
-            <span>{app.translator.trans('huseyinfiliz-awards.forum.nav.categories')}</span>
-          </li>,
-          80
-        );
-
-        items.add(
-          'allCategories',
-          <li className="Nav-item">
-            <a
-              href="#"
-              className={!this.selectedCategoryId ? 'active' : ''}
-              onclick={(e: Event) => {
-                e.preventDefault();
-                this.selectedCategoryId = null;
-                m.redraw();
-              }}
-            >
-              <i className="fas fa-th-list"></i>
-              {app.translator.trans('huseyinfiliz-awards.forum.nav.all_categories')}
-            </a>
-          </li>,
-          70
-        );
-
-        categories.forEach((category, index) => {
-          items.add(
-            `category-${category.id()}`,
-            <li className="Nav-item">
-              <a
-                href="#"
-                className={this.selectedCategoryId === String(category.id()) ? 'active' : ''}
-                onclick={(e: Event) => {
-                  e.preventDefault();
-                  this.selectedCategoryId = String(category.id());
-                  m.redraw();
-                }}
-              >
-                {category.name()}
-              </a>
-            </li>,
-            60 - index
-          );
-        });
-      }
     }
 
-    return items;
+    return (
+      <div className="AwardsPage-content">
+        {this.awards.length > 1 ? this.renderAwardSelector() : null}
+        {this.selectedAward ? this.renderCategoryNav() : null}
+        {this.selectedAward ? this.renderAwardView() : null}
+      </div>
+    );
+  }
+
+  renderAwardSelector() {
+    const awardOptions: Record<string, string> = {};
+    this.awards.forEach((award) => {
+      awardOptions[String(award.id())] = `${award.name()} (${award.year()})`;
+    });
+
+    return (
+      <div className="AwardsPage-selector">
+        <Select
+          value={String(this.selectedAward?.id())}
+          options={awardOptions}
+          onchange={(value: string) => {
+            this.selectedAward = this.awards.find((a) => String(a.id()) === value) || null;
+            m.redraw();
+          }}
+        />
+      </div>
+    );
+  }
+
+  renderCategoryNav() {
+    const categories = (this.selectedAward?.categories?.() || []) as Category[];
+    if (categories.length === 0) return null;
+
+    return (
+      <div className="AwardsPage-categoryNav">
+        {categories.map((category) => (
+          <button
+            key={category.id()}
+            className="Button Button--text AwardsPage-categoryLink"
+            onclick={() => this.scrollToCategory(category.id())}
+          >
+            {category.name()}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  scrollToCategory(categoryId: string | number | undefined) {
+    if (!categoryId) return;
+    const element = document.getElementById(`category-${categoryId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   renderAwardView() {
     const award = this.selectedAward!;
 
-    // Show results view for published awards
-    if (award.isPublished()) {
-      return <ResultsView award={award} selectedCategoryId={this.selectedCategoryId} />;
+    if (award.canViewResults()) {
+      return <ResultsView award={award} />;
     }
 
-    // Show voting view for active or ended awards
     if (award.isActive() || award.hasEnded()) {
-      return <VotingView award={award} selectedCategoryId={this.selectedCategoryId} />;
+      return <VotingView award={award} />;
     }
 
-    // Draft awards shouldn't be visible, but just in case
     return (
       <div className="EmptyState">
         <p>{app.translator.trans('huseyinfiliz-awards.forum.error.not_available')}</p>

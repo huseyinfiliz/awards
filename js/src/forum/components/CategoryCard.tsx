@@ -12,7 +12,7 @@ export default class CategoryCard extends Component {
     const nominees = category.nominees() || [];
 
     return (
-      <div className="CategoryCard">
+      <div className="CategoryCard" id={`category-${category.id()}`}>
         <div className="CategoryCard-header">
             <h2>{category.name()}</h2>
             <p>{category.description()}</p>
@@ -23,7 +23,7 @@ export default class CategoryCard extends Component {
                 <NomineeCard nominee={nominee} category={category} award={award} />
             ))}
 
-            {category.allowOther() && award.isVotingOpen() && (
+            {category.allowOther() && award.isVotingOpen() && app.session.user && (
                 <OtherCard category={category} />
             )}
         </div>

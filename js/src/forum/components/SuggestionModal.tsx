@@ -15,7 +15,7 @@ export default class SuggestionModal extends Modal {
   }
 
   className() {
-    return 'SuggestionModal Modal--small';
+    return 'HFAwardsModal HFAwardsSuggestionModal Modal--small';
   }
 
   title() {

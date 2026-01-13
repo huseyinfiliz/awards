@@ -15,7 +15,7 @@ export default class CategoryResultCard extends Component {
     const canShowVotes = award.canShowVotes();
 
     return (
-      <div className="CategoryCard CategoryResultCard">
+      <div className="CategoryCard CategoryResultCard" id={`category-${category.id()}`}>
         <div className="CategoryCard-header">
             <h2>{category.name()}</h2>
             <p>{category.description()}</p>
@@ -45,6 +45,10 @@ export default class CategoryResultCard extends Component {
 
                         <div className="NomineeCard-content">
                             <h3 className="NomineeCard-title">{nominee.name()}</h3>
+
+                            {nominee.description() ? (
+                                <p className="NomineeCard-description">{nominee.description()}</p>
+                            ) : null}
 
                             {isWinner && (
                                 <div className="TagLabel Label--success">

@@ -10,16 +10,10 @@ export default class ResultsView extends Component {
 
     return (
       <div className="ResultsView">
-        <div className="ResultsView-header Hero">
-          <div className="Hero-content">
-            <h1>{award.name()}</h1>
-            <p className="lead">{award.description()}</p>
-            <div className="ResultsView-meta">
-              <span className="TagLabel Label--info">
-                {app.translator.trans('huseyinfiliz-awards.forum.page.results_published')}
-              </span>
-            </div>
-          </div>
+        <div className="ResultsView-status">
+          <span className="TagLabel Label--info">
+            {app.translator.trans('huseyinfiliz-awards.forum.page.results_published')}
+          </span>
         </div>
 
         <div className="ResultsView-content">

@@ -4,6 +4,11 @@ import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Category from '../../../common/models/Category';
 
+interface CategorySuggestion {
+  name: string;
+  description: string | null;
+}
+
 interface CategoryModalAttrs {
   category?: Category;
   awardId: string;
@@ -16,7 +21,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
   description: Stream<string>;
   sortOrder: Stream<number>;
   allowOther: Stream<boolean>;
-  nameSuggestions: Stream<string[]>;
+  suggestions: Stream<CategorySuggestion[]>;
   showSuggestions: Stream<boolean>;
 
   oninit(vnode: any) {
@@ -29,12 +34,12 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
     this.description = Stream(category?.description() || '');
     this.sortOrder = Stream(category?.sortOrder() || 0);
     this.allowOther = Stream(category?.allowOther() || false);
-    this.nameSuggestions = Stream<string[]>([]);
+    this.suggestions = Stream<CategorySuggestion[]>([]);
     this.showSuggestions = Stream(false);
   }
 
   className() {
-    return 'CategoryModal';
+    return 'HFAwardsModal HFAwardsCategoryModal';
   }
 
   title() {
@@ -45,7 +50,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
 
   async searchCategories(query: string) {
     if (query.length < 2) {
-      this.nameSuggestions([]);
+      this.suggestions([]);
       this.showSuggestions(false);
       m.redraw();
       return;
@@ -58,25 +63,36 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
         params: { 'filter[q]': query }
       });
 
-      const names = (response.data || [])
-        .map((c: any) => c.attributes?.name)
-        .filter((name: string) => name && name.toLowerCase() !== query.toLowerCase());
+      const items: CategorySuggestion[] = (response.data || [])
+        .map((c: any) => ({
+          name: c.attributes?.name || '',
+          description: c.attributes?.description || null,
+        }))
+        .filter((item: CategorySuggestion) => item.name && item.name.toLowerCase() !== query.toLowerCase());
 
-      this.nameSuggestions([...new Set(names)] as string[]);
-      this.showSuggestions(names.length > 0);
+      // Remove duplicates by name
+      const uniqueItems = items.filter((item, index, self) =>
+        index === self.findIndex((t) => t.name === item.name)
+      );
+
+      this.suggestions(uniqueItems);
+      this.showSuggestions(uniqueItems.length > 0);
     } catch (error) {
       console.error('Autocomplete error:', error);
-      this.nameSuggestions([]);
+      this.suggestions([]);
       this.showSuggestions(false);
     }
 
     m.redraw();
   }
 
-  selectSuggestion(name: string) {
-    this.name(name);
+  selectSuggestion(suggestion: CategorySuggestion) {
+    this.name(suggestion.name);
+    if (suggestion.description) {
+      this.description(suggestion.description);
+    }
     this.showSuggestions(false);
-    this.nameSuggestions([]);
+    this.suggestions([]);
     m.redraw();
   }
 
@@ -95,7 +111,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
                 this.searchCategories(value);
               }}
               onfocus={() => {
-                if (this.nameSuggestions().length > 0) {
+                if (this.suggestions().length > 0) {
                   this.showSuggestions(true);
                   m.redraw();
                 }
@@ -107,7 +123,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
                 }, 200);
               }}
             />
-            {this.showSuggestions() && this.nameSuggestions().length > 0 ? (
+            {this.showSuggestions() && this.suggestions().length > 0 ? (
               <ul className="Dropdown-menu" style={{
                 position: 'absolute',
                 top: '100%',
@@ -118,21 +134,20 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
                 maxHeight: '200px',
                 overflowY: 'auto'
               }}>
-                {this.nameSuggestions().map((suggestion: string) => (
-                  <li>
-                    <button
-                      type="button"
-                      className="Button Button--link"
-                      onclick={(e: Event) => {
-                        e.preventDefault();
-                        this.selectSuggestion(suggestion);
-                      }}
-                      style={{ width: '100%', textAlign: 'left' }}
-                    >
-                      {suggestion}
-                    </button>
-                  </li>
-                ))}
+                {this.suggestions().map((suggestion: CategorySuggestion, index: number) => {
+                  return (
+                    <li key={index}>
+                      <button
+                        type="button"
+                        className="Button Button--link"
+                        onclick={() => this.selectSuggestion(suggestion)}
+                        style={{ width: '100%', textAlign: 'left', padding: '8px 12px' }}
+                      >
+                        {String(suggestion.name)}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             ) : null}
           </div>

@@ -47,13 +47,36 @@ export default class CategoriesTab extends Component {
       const categories = await app.store.find<Category[]>('award-categories', {
         filter: { award: this.selectedAwardId },
       });
-      this.categories = categories || [];
+      this.categories = (categories || []).sort((a, b) => (a.sortOrder() || 0) - (b.sortOrder() || 0));
     } catch (error) {
       console.error('Failed to load categories:', error);
       this.categories = [];
     }
 
     m.redraw();
+  }
+
+  async moveCategory(category: Category, direction: 'up' | 'down') {
+    const index = this.categories.indexOf(category);
+    if (index === -1) return;
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= this.categories.length) return;
+
+    // Swap positions in array
+    const temp = this.categories[index];
+    this.categories[index] = this.categories[newIndex];
+    this.categories[newIndex] = temp;
+
+    // Reassign sortOrder based on new array positions
+    try {
+      const promises = this.categories.map((c, i) => c.save({ sortOrder: i }));
+      await Promise.all(promises);
+      await this.loadCategories();
+    } catch (error) {
+      console.error('Failed to reorder category:', error);
+      await this.loadCategories(); // Reload to restore original order
+    }
   }
 
   view() {
@@ -90,6 +113,7 @@ export default class CategoriesTab extends Component {
         <table className="CategoriesTab-table Table">
           <thead>
             <tr>
+              <th style={{ width: '80px' }}>{app.translator.trans('huseyinfiliz-awards.admin.categories.sort_order')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')}</th>
               <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.votes')}</th>
@@ -100,13 +124,29 @@ export default class CategoriesTab extends Component {
           <tbody>
             {this.categories.length === 0 ? (
               <tr>
-                <td colSpan={5} className="CategoriesTab-empty">
+                <td colSpan={6} className="CategoriesTab-empty">
                   {app.translator.trans('huseyinfiliz-awards.admin.categories.empty')}
                 </td>
               </tr>
             ) : (
-              this.categories.map((category) => (
+              this.categories.map((category, index) => (
                 <tr key={category.id()}>
+                  <td className="CategoriesTab-sort">
+                    <Button
+                      className="Button Button--icon"
+                      icon="fas fa-chevron-up"
+                      onclick={() => this.moveCategory(category, 'up')}
+                      disabled={index === 0}
+                      title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_up')}
+                    />
+                    <Button
+                      className="Button Button--icon"
+                      icon="fas fa-chevron-down"
+                      onclick={() => this.moveCategory(category, 'down')}
+                      disabled={index === this.categories.length - 1}
+                      title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_down')}
+                    />
+                  </td>
                   <td>
                     <strong>{category.name()}</strong>
                     <div className="helpText">{category.description()}</div>

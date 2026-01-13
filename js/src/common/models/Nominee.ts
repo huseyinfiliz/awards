@@ -3,6 +3,7 @@ import Category from './Category';
 
 export default class Nominee extends Model {
   name = Model.attribute<string>('name');
+  description = Model.attribute<string>('description');
   slug = Model.attribute<string>('slug');
   imageUrl = Model.attribute<string>('imageUrl');
   metadata = Model.attribute<Record<string, any>>('metadata');
