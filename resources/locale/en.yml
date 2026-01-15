@@ -142,8 +142,13 @@ huseyinfiliz-awards:
     my_votes:
       title: Your Votes
       summary: "You voted in {voted}/{total} categories"
+      total_votes: "{count} total votes"
       last_vote: "Last vote: {time}"
+      votes_used: "{used}/{limit} votes used"
+      votes_unlimited: "{count} votes"
       change: Change
+      remove: Remove
+      add_vote: Add Vote
       vote_now: Vote Now
       no_votes: You haven't voted yet
       categories_remaining: Categories Without Votes
@@ -170,6 +175,8 @@ huseyinfiliz-awards:
       wrong: "Wrong:"
     category:
       nominees_count: "{count} nominees"
+      votes_used: "{used}/{limit} votes"
+      votes_unlimited: "{count} votes"
     other:
       suggest: Suggest Other
       placeholder: "Enter nominee name..."
@@ -186,6 +193,7 @@ huseyinfiliz-awards:
       rate_limit: Too many votes. Please wait a moment.
       other_not_allowed: This category doesn't accept suggestions.
       vote_limit_reached: "You can only vote for {limit} nominees in this category."
+      suggestion_limit_reached: "You can only submit {limit} suggestions per category."
       not_available: This award is not available yet.
 
   lib:

@@ -49,17 +49,21 @@ class CreateOtherSuggestionController extends AbstractCreateController
             ]);
         }
 
-        // Check if user already submitted for this category
-        $existing = OtherSuggestion::where('category_id', $categoryId)
-            ->where('user_id', $actor->id)
-            ->first();
+        // Get suggestion limit from settings (default: 1, 0 = unlimited)
+        $suggestionLimit = (int) resolve('flarum.settings')->get('huseyinfiliz-awards.suggestions_per_category', 1);
 
-        if ($existing) {
-            // Update existing suggestion
-            $existing->name = $name;
-            $existing->status = 'pending';
-            $existing->save();
-            return $existing;
+        // Count existing suggestions by this user for this category
+        $existingCount = OtherSuggestion::where('category_id', $categoryId)
+            ->where('user_id', $actor->id)
+            ->count();
+
+        // Check if user has reached the suggestion limit (0 = unlimited)
+        if ($suggestionLimit > 0 && $existingCount >= $suggestionLimit) {
+            throw new ValidationException([
+                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.suggestion_limit_reached', [
+                    '{limit}' => $suggestionLimit
+                ])
+            ]);
         }
 
         return OtherSuggestion::create([

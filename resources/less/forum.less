@@ -228,6 +228,13 @@
       flex: 1;
     }
 
+    &-badges {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
     &-badge {
       flex-shrink: 0;
       padding: 4px 10px;
@@ -237,6 +244,23 @@
       background: var(--body-bg);
       border-radius: 12px;
       white-space: nowrap;
+    }
+
+    &-voteBadge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: @hf-awards-success-color;
+      background: fade(@hf-awards-success-color, 10%);
+      border-radius: 12px;
+      white-space: nowrap;
+
+      i {
+        font-size: 10px;
+      }
     }
 
     &-grid {
@@ -254,7 +278,6 @@
       }
 
       @media (max-width: 500px) {
-        grid-template-columns: 1fr;
         gap: 12px;
         padding: 15px;
       }
@@ -658,7 +681,49 @@
     &-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 16px;
+    }
+
+    // Multi-vote category grouping
+    &-categoryGroup {
+      background: var(--control-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    &-categoryHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.03);
+      border-bottom: 1px solid var(--body-bg);
+    }
+
+    &-categoryName {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+
+    &-categoryVoteCount {
+      font-size: 12px;
+      color: var(--muted-color);
+    }
+
+    &-addMore {
+      padding: 10px 16px;
+      border-top: 1px solid var(--body-bg);
+
+      .Button {
+        font-size: 13px;
+        color: var(--primary-color);
+      }
+    }
+
+    &-summary-totalVotes {
+      font-size: 13px;
+      color: var(--muted-color);
     }
 
     &-item {
@@ -667,8 +732,11 @@
       align-items: center;
       gap: 16px;
       padding: 12px 16px;
-      background: var(--control-bg);
-      border-radius: var(--border-radius);
+      border-bottom: 1px solid var(--body-bg);
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       @media (max-width: 600px) {
         grid-template-columns: 40px 1fr;
@@ -787,7 +855,7 @@
 
   .VotingProgressBar {
     position: fixed;
-    bottom: 0;
+    bottom: calc(var(--mobile-tab-height, 0px) + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     z-index: 100;

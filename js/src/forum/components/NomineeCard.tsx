@@ -88,12 +88,14 @@ export default class NomineeCard extends Component {
       return;
     }
 
-    this.loading = true;
-    m.redraw();
-
     const categoryId = category.id();
+    const votesLimit = parseInt(app.forum.attribute('awardsVotesPerCategory') || '1', 10);
 
+    // If user already voted for this nominee, remove the vote
     if (userVote) {
+      this.loading = true;
+      m.redraw();
+
       userVote
         .delete()
         .then(() => {
@@ -112,27 +114,43 @@ export default class NomineeCard extends Component {
           m.redraw();
           throw e;
         });
-    } else {
-      app
-        .request({
-          method: 'POST',
-          url: app.forum.attribute('apiUrl') + '/award-votes',
-          body: {
-            data: {
-              attributes: {
-                nomineeId: nominee.id(),
-              },
+      return;
+    }
+
+    // Adding a new vote - check limits for multi-vote mode
+    const existingVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
+      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      return String(vCategoryId) === String(categoryId);
+    });
+
+    // Check if at limit (votesLimit > 0 means there's a limit, 0 = unlimited)
+    if (votesLimit > 0 && existingVotesInCategory.length >= votesLimit && votesLimit !== 1) {
+      app.alerts.show(
+        { type: 'error' },
+        app.translator.trans('huseyinfiliz-awards.forum.error.vote_limit_reached', { limit: votesLimit })
+      );
+      return;
+    }
+
+    this.loading = true;
+    m.redraw();
+
+    app
+      .request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/award-votes',
+        body: {
+          data: {
+            attributes: {
+              nomineeId: nominee.id(),
             },
           },
-        })
-        .then((response: any) => {
-          const existingVotes = app.store.all<Vote>('award-votes').filter((v) => {
-            const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
-            return String(vCategoryId) === String(categoryId);
-          });
-
-          // Decrement vote count for previously voted nominee (if any)
-          existingVotes.forEach((v) => {
+        },
+      })
+      .then((response: any) => {
+        // Only remove existing votes in single-vote mode (votesLimit === 1)
+        if (votesLimit === 1) {
+          existingVotesInCategory.forEach((v) => {
             const prevNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
             if (prevNomineeId && String(prevNomineeId) !== String(nominee.id())) {
               const prevNominee = app.store.getById('award-nominees', String(prevNomineeId));
@@ -145,21 +163,21 @@ export default class NomineeCard extends Component {
             }
             app.store.remove(v);
           });
+        }
 
-          // Increment vote count for newly voted nominee
-          const currentVoteCount = nominee.voteCount?.() || 0;
-          nominee.pushData({ attributes: { voteCount: currentVoteCount + 1 } });
+        // Increment vote count for newly voted nominee
+        const currentVoteCount = nominee.voteCount?.() || 0;
+        nominee.pushData({ attributes: { voteCount: currentVoteCount + 1 } });
 
-          app.store.pushPayload(response);
-          app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_saved'));
-          this.loading = false;
-          m.redraw();
-        })
-        .catch((e: any) => {
-          this.loading = false;
-          m.redraw();
-          throw e;
-        });
-    }
+        app.store.pushPayload(response);
+        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_saved'));
+        this.loading = false;
+        m.redraw();
+      })
+      .catch((e: any) => {
+        this.loading = false;
+        m.redraw();
+        throw e;
+      });
   }
 }
