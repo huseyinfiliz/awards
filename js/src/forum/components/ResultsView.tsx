@@ -18,12 +18,6 @@ export default class ResultsView extends Component {
 
     return (
       <div className="ResultsView">
-        <div className="ResultsView-status">
-          <span className="TagLabel Label--info">
-            {app.translator.trans('huseyinfiliz-awards.forum.page.results_published')}
-          </span>
-        </div>
-
         {/* Prediction Summary - only shown when viewing all categories */}
         {app.session.user && !selectedCategoryId ? (
           <PredictionSummary award={award} categories={allCategories} />
