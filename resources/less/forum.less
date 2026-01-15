@@ -254,7 +254,6 @@
       }
 
       @media (max-width: 500px) {
-        grid-template-columns: 1fr;
         gap: 12px;
         padding: 15px;
       }
@@ -787,7 +786,7 @@
 
   .VotingProgressBar {
     position: fixed;
-    bottom: 0;
+    bottom: calc(var(--mobile-tab-height, 0px) + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     z-index: 100;
