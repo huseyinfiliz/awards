@@ -97,6 +97,12 @@ export default class NomineeCard extends Component {
       userVote
         .delete()
         .then(() => {
+          // Decrement vote count for the nominee
+          const currentVoteCount = nominee.voteCount?.() || 0;
+          if (currentVoteCount > 0) {
+            nominee.pushData({ attributes: { voteCount: currentVoteCount - 1 } });
+          }
+
           app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_removed'));
           this.loading = false;
           m.redraw();
@@ -124,7 +130,25 @@ export default class NomineeCard extends Component {
             const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
             return String(vCategoryId) === String(categoryId);
           });
-          existingVotes.forEach((v) => app.store.remove(v));
+
+          // Decrement vote count for previously voted nominee (if any)
+          existingVotes.forEach((v) => {
+            const prevNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+            if (prevNomineeId && String(prevNomineeId) !== String(nominee.id())) {
+              const prevNominee = app.store.getById('award-nominees', String(prevNomineeId));
+              if (prevNominee) {
+                const currentCount = (prevNominee as any).voteCount?.() || 0;
+                if (currentCount > 0) {
+                  (prevNominee as any).pushData({ attributes: { voteCount: currentCount - 1 } });
+                }
+              }
+            }
+            app.store.remove(v);
+          });
+
+          // Increment vote count for newly voted nominee
+          const currentVoteCount = nominee.voteCount?.() || 0;
+          nominee.pushData({ attributes: { voteCount: currentVoteCount + 1 } });
 
           app.store.pushPayload(response);
           app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_saved'));

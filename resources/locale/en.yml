@@ -117,6 +117,10 @@ huseyinfiliz-awards:
       title: Awards
       categories: Categories
       all_categories: All Categories
+    tabs:
+      categories: Categories
+      my_votes: My Votes
+      results: Results
     page:
       voting_ends: "Voting ends {time}"
       voting_ended: "Voting ended {time}"
@@ -135,11 +139,37 @@ huseyinfiliz-awards:
       ends_soon: Voting ends soon
       vote_saved: Your vote has been saved!
       vote_removed: Your vote has been removed.
+    my_votes:
+      title: Your Votes
+      summary: "You voted in {voted}/{total} categories"
+      last_vote: "Last vote: {time}"
+      change: Change
+      vote_now: Vote Now
+      no_votes: You haven't voted yet
+      categories_remaining: Categories Without Votes
+    progress:
+      voted: "{count}/{total} categories voted"
+      complete: "Complete!"
+      prev: Prev
+      next: Next
+    hero:
+      countdown: "Voting ends in: {time}"
+      voting_ended: Voting has ended
+      results_published: Results Published
     results:
       winner: Winner
       runner_up: Runner Up
       votes: "{count} votes"
       percentage: "{percent}%"
+      view_all: View All Results
+      full_results: Full Results
+    prediction:
+      title: Your Prediction Score
+      score: "{correct}/{total} correct predictions!"
+      correct: "Correct:"
+      wrong: "Wrong:"
+    category:
+      nominees_count: "{count} nominees"
     other:
       suggest: Suggest Other
       placeholder: "Enter nominee name..."

@@ -93,7 +93,7 @@ export default class SuggestionsTab extends Component {
 
     const categoryOptions: Record<string, string> = { '': 'All Categories' };
     this.categories.forEach((category) => {
-      categoryOptions[String(category.id())] = category.name();
+      categoryOptions[String(category.id())] = category.name() as string;
     });
 
     return (
@@ -118,50 +118,58 @@ export default class SuggestionsTab extends Component {
           />
         </div>
 
-        <table className="SuggestionsTab-table Table">
-          <thead>
-            <tr>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.name')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.category')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.user')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.suggestions.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="SuggestionsTab-empty">
-                  {app.translator.trans('huseyinfiliz-awards.admin.suggestions.empty')}
-                </td>
-              </tr>
-            ) : (
-              this.suggestions.map((suggestion) => (
-                <tr key={suggestion.id()}>
-                  <td>
-                    <strong>{suggestion.name()}</strong>
-                  </td>
-                  <td>{suggestion.category()?.name?.()}</td>
-                  <td>{suggestion.user()?.displayName?.()}</td>
-                  <td className="SuggestionsTab-actions">
-                    <Button
-                      className="Button Button--primary"
-                      icon="fas fa-check"
-                      onclick={() => this.approveSuggestion(suggestion)}
-                    >
-                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve')}
-                    </Button>
-                    <Button className="Button" icon="fas fa-times" onclick={() => this.rejectSuggestion(suggestion)}>
-                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject')}
-                    </Button>
-                    <Button className="Button" icon="fas fa-compress-arrows-alt" onclick={() => this.openMergeModal(suggestion)}>
-                      {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="CardList">
+          <div className="CardList-header">
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.name')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.category')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.user')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.actions')}</div>
+          </div>
+
+          {this.suggestions.length === 0 ? (
+            <div className="EmptyState">
+              <i className="fas fa-lightbulb" />
+              <p>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.empty')}</p>
+            </div>
+          ) : (
+            this.suggestions.map((suggestion) => (
+              <div className="CardList-item" key={suggestion.id()}>
+                <div className="CardList-item-cell CardList-item-cell--primary">
+                  <div className="CardList-item-name">{suggestion.name()}</div>
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--muted">
+                  {suggestion.category()?.name?.() || '-'}
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--muted">
+                  {suggestion.user()?.displayName?.() || '-'}
+                </div>
+                <div className="CardList-item-actions">
+                  <Button
+                    className="Button Button--success"
+                    icon="fas fa-check"
+                    onclick={() => this.approveSuggestion(suggestion)}
+                  >
+                    {app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve')}
+                  </Button>
+                  <Button
+                    className="Button Button--danger"
+                    icon="fas fa-times"
+                    onclick={() => this.rejectSuggestion(suggestion)}
+                  >
+                    {app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject')}
+                  </Button>
+                  <Button
+                    className="Button"
+                    icon="fas fa-compress-arrows-alt"
+                    onclick={() => this.openMergeModal(suggestion)}
+                  >
+                    {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     );
   }

@@ -43,58 +43,64 @@ export default class AwardsTab extends Component {
           </Button>
         </div>
 
-        <table className="AwardsTab-table Table">
-          <thead>
-            <tr>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.name')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.year')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.status')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.categories')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.votes')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.awards.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.awards.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="AwardsTab-empty">
-                  {app.translator.trans('huseyinfiliz-awards.admin.awards.empty')}
-                </td>
-              </tr>
-            ) : (
-              this.awards.map((award) => (
-                <tr key={award.id()}>
-                  <td>
-                    <strong>{award.name()}</strong>
-                    <div className="helpText">{award.slug()}</div>
-                  </td>
-                  <td>{award.year()}</td>
-                  <td>
-                    <span className={'AwardStatus AwardStatus--' + award.status()}>{this.statusLabel(award.status())}</span>
-                  </td>
-                  <td>{award.categoryCount?.() || 0}</td>
-                  <td>{award.voteCount?.() || 0}</td>
-                  <td className="AwardsTab-actions">
-                    <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(award)} />
-                    {award.status() === 'ended' && (
-                      <Button
-                        className="Button Button--icon Button--primary"
-                        icon="fas fa-bullhorn"
-                        onclick={() => this.publishResults(award)}
-                        title={app.translator.trans('huseyinfiliz-awards.admin.awards.publish')}
-                      />
-                    )}
+        <div className="CardList">
+          <div className="CardList-header">
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.name')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.status')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.categories')} / {app.translator.trans('huseyinfiliz-awards.admin.awards.votes')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.actions')}</div>
+          </div>
+
+          {this.awards.length === 0 ? (
+            <div className="EmptyState">
+              <i className="fas fa-trophy" />
+              <p>{app.translator.trans('huseyinfiliz-awards.admin.awards.empty')}</p>
+            </div>
+          ) : (
+            this.awards.map((award) => (
+              <div className="CardList-item" key={award.id()}>
+                <div className="CardList-item-cell CardList-item-cell--primary">
+                  <div>
+                    <div className="CardList-item-name">{award.name()}</div>
+                    <div className="CardList-item-meta">
+                      <span className="CardList-item-slug">{award.slug()}</span>
+                      <span className="CardList-item-year">{award.year()}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="CardList-item-cell">
+                  <span className={`StatusBadge StatusBadge--${award.status()}`}>
+                    {this.statusLabel(award.status())}
+                  </span>
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--muted">
+                  <span title={app.translator.trans('huseyinfiliz-awards.admin.awards.categories') as string}>
+                    <i className="fas fa-folder" /> {award.categoryCount?.() || 0}
+                  </span>
+                  <span title={app.translator.trans('huseyinfiliz-awards.admin.awards.votes') as string}>
+                    <i className="fas fa-vote-yea" /> {award.voteCount?.() || 0}
+                  </span>
+                </div>
+                <div className="CardList-item-actions">
+                  <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(award)} />
+                  {award.status() === 'ended' ? (
                     <Button
-                      className="Button Button--icon Button--danger"
-                      icon="fas fa-trash"
-                      onclick={() => this.deleteAward(award)}
+                      className="Button Button--icon Button--success"
+                      icon="fas fa-bullhorn"
+                      onclick={() => this.publishResults(award)}
+                      title={app.translator.trans('huseyinfiliz-awards.admin.awards.publish') as string}
                     />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                  ) : null}
+                  <Button
+                    className="Button Button--icon Button--danger"
+                    icon="fas fa-trash"
+                    onclick={() => this.deleteAward(award)}
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     );
   }

@@ -110,63 +110,71 @@ export default class CategoriesTab extends Component {
           </Button>
         </div>
 
-        <table className="CategoriesTab-table Table">
-          <thead>
-            <tr>
-              <th style={{ width: '80px' }}>{app.translator.trans('huseyinfiliz-awards.admin.categories.sort_order')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.votes')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.allow_other')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.categories.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.categories.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="CategoriesTab-empty">
-                  {app.translator.trans('huseyinfiliz-awards.admin.categories.empty')}
-                </td>
-              </tr>
-            ) : (
-              this.categories.map((category, index) => (
-                <tr key={category.id()}>
-                  <td className="CategoriesTab-sort">
-                    <Button
-                      className="Button Button--icon"
-                      icon="fas fa-chevron-up"
-                      onclick={() => this.moveCategory(category, 'up')}
-                      disabled={index === 0}
-                      title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_up')}
-                    />
-                    <Button
-                      className="Button Button--icon"
-                      icon="fas fa-chevron-down"
-                      onclick={() => this.moveCategory(category, 'down')}
-                      disabled={index === this.categories.length - 1}
-                      title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_down')}
-                    />
-                  </td>
-                  <td>
-                    <strong>{category.name()}</strong>
-                    <div className="helpText">{category.description()}</div>
-                  </td>
-                  <td>{category.nomineeCount?.() || 0}</td>
-                  <td>{category.voteCount?.() || 0}</td>
-                  <td>{category.allowOther() ? 'Yes' : 'No'}</td>
-                  <td className="CategoriesTab-actions">
-                    <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(category)} />
-                    <Button
-                      className="Button Button--icon Button--danger"
-                      icon="fas fa-trash"
-                      onclick={() => this.deleteCategory(category)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="CardList">
+          <div className="CardList-header">
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.sort_order')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')} / {app.translator.trans('huseyinfiliz-awards.admin.categories.votes')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.actions')}</div>
+          </div>
+
+          {this.categories.length === 0 ? (
+            <div className="EmptyState">
+              <i className="fas fa-folder" />
+              <p>{app.translator.trans('huseyinfiliz-awards.admin.categories.empty')}</p>
+            </div>
+          ) : (
+            this.categories.map((category, index) => (
+              <div className="CardList-item" key={category.id()}>
+                <div className="CardList-item-cell CardList-item-sort">
+                  <Button
+                    className="Button Button--icon"
+                    icon="fas fa-chevron-up"
+                    onclick={() => this.moveCategory(category, 'up')}
+                    disabled={index === 0}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_up') as string}
+                  />
+                  <Button
+                    className="Button Button--icon"
+                    icon="fas fa-chevron-down"
+                    onclick={() => this.moveCategory(category, 'down')}
+                    disabled={index === this.categories.length - 1}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.categories.move_down') as string}
+                  />
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--primary">
+                  <div>
+                    <div className="CardList-item-name">{category.name()}</div>
+                    {category.description() ? (
+                      <div className="CardList-item-meta">{category.description()}</div>
+                    ) : null}
+                    {category.allowOther() ? (
+                      <span className="StatusBadge StatusBadge--active" style={{ marginTop: '4px' }}>
+                        <i className="fas fa-lightbulb" /> Suggestions
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--muted">
+                  <span title={app.translator.trans('huseyinfiliz-awards.admin.categories.nominees') as string}>
+                    <i className="fas fa-users" /> {category.nomineeCount?.() || 0}
+                  </span>
+                  <span title={app.translator.trans('huseyinfiliz-awards.admin.categories.votes') as string}>
+                    <i className="fas fa-vote-yea" /> {category.voteCount?.() || 0}
+                  </span>
+                </div>
+                <div className="CardList-item-actions">
+                  <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(category)} />
+                  <Button
+                    className="Button Button--icon Button--danger"
+                    icon="fas fa-trash"
+                    onclick={() => this.deleteCategory(category)}
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     );
   }
