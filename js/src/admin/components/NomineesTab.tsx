@@ -120,7 +120,7 @@ export default class NomineesTab extends Component {
 
     const categoryOptions: Record<string, string> = {};
     this.categories.forEach((category) => {
-      categoryOptions[String(category.id())] = category.name();
+      categoryOptions[String(category.id())] = category.name() as string;
     });
 
     return (
@@ -153,79 +153,76 @@ export default class NomineesTab extends Component {
           </Button>
         </div>
 
-        <table className="NomineesTab-table Table">
-          <thead>
-            <tr>
-              <th style={{ width: '80px' }}>{app.translator.trans('huseyinfiliz-awards.admin.nominees.sort_order')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.image')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.votes')}</th>
-              <th>{app.translator.trans('huseyinfiliz-awards.admin.nominees.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.nominees.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="NomineesTab-empty">
-                  {app.translator.trans('huseyinfiliz-awards.admin.nominees.empty')}
-                </td>
-              </tr>
-            ) : (
-              this.nominees.map((nominee, index) => (
-                <tr key={nominee.id()}>
-                  <td className="NomineesTab-sort">
-                    <Button
-                      className="Button Button--icon"
-                      icon="fas fa-chevron-up"
-                      onclick={() => this.moveNominee(nominee, 'up')}
-                      disabled={index === 0}
-                      title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up')}
-                    />
-                    <Button
-                      className="Button Button--icon"
-                      icon="fas fa-chevron-down"
-                      onclick={() => this.moveNominee(nominee, 'down')}
-                      disabled={index === this.nominees.length - 1}
-                      title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down')}
-                    />
-                  </td>
-                  <td>
+        <div className="CardList">
+          <div className="CardList-header">
+            <div style={{ width: '60px' }}></div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.votes')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.actions')}</div>
+          </div>
+
+          {this.nominees.length === 0 ? (
+            <div className="EmptyState">
+              <i className="fas fa-user" />
+              <p>{app.translator.trans('huseyinfiliz-awards.admin.nominees.empty')}</p>
+            </div>
+          ) : (
+            this.nominees.map((nominee, index) => (
+              <div className="CardList-item" key={nominee.id()}>
+                <div className="CardList-item-cell CardList-item-sort">
+                  <Button
+                    className="Button Button--icon"
+                    icon="fas fa-chevron-up"
+                    onclick={() => this.moveNominee(nominee, 'up')}
+                    disabled={index === 0}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up') as string}
+                  />
+                  <Button
+                    className="Button Button--icon"
+                    icon="fas fa-chevron-down"
+                    onclick={() => this.moveNominee(nominee, 'down')}
+                    disabled={index === this.nominees.length - 1}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down') as string}
+                  />
+                </div>
+                <div className="CardList-item-cell CardList-item-cell--primary">
+                  <div className="CardList-item-nominee">
                     {nominee.imageUrl() ? (
-                      <img src={nominee.imageUrl()} alt={nominee.name()} className="NomineeImage" />
+                      <img src={nominee.imageUrl()} alt={nominee.name() as string} className="NomineeImage" />
                     ) : (
                       <div className="NomineeImage NomineeImage--placeholder">
-                        <i className="fas fa-image"></i>
+                        <i className="fas fa-image" />
                       </div>
                     )}
-                  </td>
-                  <td>
-                    <strong>{nominee.name()}</strong>
-                    {nominee.description() ? (
-                      <div className="helpText">{nominee.description()}</div>
-                    ) : null}
-                  </td>
-                  <td>
-                    <span className="NomineeVotes">{nominee.voteCount?.() || 0}</span>
-                    <Button
-                      className="Button Button--icon Button--link"
-                      icon="fas fa-edit"
-                      onclick={() => this.editVotes(nominee)}
-                      title={app.translator.trans('huseyinfiliz-awards.admin.nominees.edit_votes')}
-                    />
-                  </td>
-                  <td className="NomineesTab-actions">
-                    <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
-                    <Button
-                      className="Button Button--icon Button--danger"
-                      icon="fas fa-trash"
-                      onclick={() => this.deleteNominee(nominee)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    <div>
+                      <div className="CardList-item-name">{nominee.name()}</div>
+                      {nominee.description() ? (
+                        <div className="CardList-item-meta">{nominee.description()}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <div className="CardList-item-cell">
+                  <span className="NomineeVotes">{nominee.voteCount?.() || 0}</span>
+                  <Button
+                    className="Button Button--icon Button--link"
+                    icon="fas fa-edit"
+                    onclick={() => this.editVotes(nominee)}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.edit_votes') as string}
+                  />
+                </div>
+                <div className="CardList-item-actions">
+                  <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
+                  <Button
+                    className="Button Button--icon Button--danger"
+                    icon="fas fa-trash"
+                    onclick={() => this.deleteNominee(nominee)}
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     );
   }
