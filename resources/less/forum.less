@@ -254,7 +254,7 @@
       font-size: 12px;
       font-weight: 600;
       color: @hf-awards-success-color;
-      background: rgba(39, 174, 96, 0.1);
+      background: fade(@hf-awards-success-color, 10%);
       border-radius: 12px;
       white-space: nowrap;
 
@@ -351,7 +351,7 @@
     // Winner state (results)
     &--winner {
       border-color: @hf-awards-gold-color;
-      background: rgba(255, 215, 0, 0.08);
+      background: fade(@hf-awards-gold-color, 8%);
     }
 
     // Image container
@@ -538,22 +538,22 @@
     letter-spacing: 0.3px;
 
     &--success {
-      background: rgba(39, 174, 96, 0.15);
+      background: fade(@hf-awards-success-color, 15%);
       color: @hf-awards-success-color;
     }
 
     &--warning {
-      background: rgba(243, 156, 18, 0.15);
+      background: fade(@hf-awards-warning-color, 15%);
       color: @hf-awards-warning-color;
     }
 
     &--info {
-      background: rgba(52, 152, 219, 0.15);
+      background: fade(@hf-awards-info-color, 15%);
       color: @hf-awards-info-color;
     }
 
     &--danger {
-      background: rgba(231, 76, 60, 0.15);
+      background: fade(#e74c3c, 15%);
       color: #e74c3c;
     }
   }
@@ -561,22 +561,22 @@
   // Legacy support for TagLabel
   .TagLabel {
     &.Label--success {
-      background: rgba(39, 174, 96, 0.15);
+      background: fade(@hf-awards-success-color, 15%);
       color: @hf-awards-success-color;
     }
 
     &.Label--warning {
-      background: rgba(243, 156, 18, 0.15);
+      background: fade(@hf-awards-warning-color, 15%);
       color: @hf-awards-warning-color;
     }
 
     &.Label--info {
-      background: rgba(52, 152, 219, 0.15);
+      background: fade(@hf-awards-info-color, 15%);
       color: @hf-awards-info-color;
     }
 
     &.Label--danger {
-      background: rgba(231, 76, 60, 0.15);
+      background: fade(#e74c3c, 15%);
       color: #e74c3c;
     }
   }
@@ -855,7 +855,7 @@
 
   .VotingProgressBar {
     position: fixed;
-    bottom: ~"calc(var(--mobile-tab-height, 0px) + env(safe-area-inset-bottom, 0px))";
+    bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
@@ -863,6 +863,10 @@
     border-top: 1px solid var(--control-bg-shaded);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     padding: 12px 20px;
+
+    @media (max-width: 767px) {
+      bottom: ~"calc(var(--mobile-tab-height, 0px) + env(safe-area-inset-bottom, 0px))";
+    }
 
     &-content {
       display: flex;
@@ -1251,7 +1255,7 @@
     }
 
     &--winner {
-      background: rgba(255, 215, 0, 0.08);
+      background: fade(@hf-awards-gold-color, 8%);
     }
 
     &-rank {

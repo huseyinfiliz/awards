@@ -145,7 +145,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(39, 174, 96, 0.1);
+        background: fade(@hf-awards-status-active, 10%);
         border-radius: 6px;
         color: var(--primary-color);
         font-size: 14px;
@@ -305,13 +305,13 @@
         i { font-size: 12px; margin-right: 4px; }
 
         &--danger {
-          background: rgba(231, 76, 60, 0.1);
+          background: fade(@hf-awards-status-ended, 10%);
           color: @hf-awards-status-ended;
           &:hover { background: @hf-awards-status-ended; color: white; }
         }
 
         &--success {
-          background: rgba(39, 174, 96, 0.1);
+          background: fade(@hf-awards-status-active, 10%);
           color: @hf-awards-status-active;
           &:hover { background: @hf-awards-status-active; color: white; }
         }
@@ -379,10 +379,10 @@
     letter-spacing: 0.3px;
     white-space: nowrap;
 
-    &--active { background: rgba(39, 174, 96, 0.15); color: @hf-awards-status-active; }
+    &--active { background: fade(@hf-awards-status-active, 15%); color: @hf-awards-status-active; }
     &--draft { background: rgba(0,0,0,0.05); color: var(--text-color); border: 1px solid rgba(0,0,0,0.1); }
-    &--published { background: rgba(52, 152, 219, 0.15); color: @hf-awards-status-published; }
-    &--ended { background: rgba(231, 76, 60, 0.15); color: @hf-awards-status-ended; }
+    &--published { background: fade(@hf-awards-status-published, 15%); color: @hf-awards-status-published; }
+    &--ended { background: fade(@hf-awards-status-ended, 15%); color: @hf-awards-status-ended; }
   }
 
   .LoadMore {
