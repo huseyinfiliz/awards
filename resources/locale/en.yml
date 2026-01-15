@@ -29,6 +29,10 @@ huseyinfiliz-awards:
       show_live_votes: Show Live Vote Counts
       show_live_votes_help: Display vote counts while voting is active
       image_url: Cover Image URL
+      image_url_help: Cover image displayed in the hero section. Upload or paste URL.
+      upload_image: Upload Image
+      upload_success: Image uploaded successfully
+      upload_error: Failed to upload image
       categories: Categories
       votes: Votes
       actions: Actions
@@ -104,6 +108,8 @@ huseyinfiliz-awards:
       title: Settings
       nav_title: Navigation Title
       nav_title_help: Text shown in the sidebar navigation
+      nav_icon: Navigation Icon
+      nav_icon_help: "FontAwesome icon class (e.g., fas fa-trophy, fas fa-award, fas fa-star)"
       votes_per_category: Votes Per Category
       votes_per_category_help: "0 for unlimited, 1 for single vote (replace), >1 for multiple votes."
     permissions:

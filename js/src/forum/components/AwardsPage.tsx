@@ -23,6 +23,7 @@ export default class AwardsPage extends Page {
   currentView: ViewType = 'categories';
   countdownInterval: number | null = null;
   countdownText: string = '';
+  refreshInterval: number | null = null;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -41,6 +42,7 @@ export default class AwardsPage extends Page {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
+    this.stopAutoRefresh();
   }
 
   startCountdown() {
@@ -113,7 +115,40 @@ export default class AwardsPage extends Page {
     }
 
     this.loading = false;
+    this.startAutoRefresh();
     m.redraw();
+  }
+
+  startAutoRefresh() {
+    if (!this.selectedAward) return;
+
+    // Only refresh if voting is open and live votes are shown
+    if (this.selectedAward.isVotingOpen() && this.selectedAward.showLiveVotes()) {
+      this.stopAutoRefresh(); // Clear any existing interval
+      this.refreshInterval = window.setInterval(() => {
+        this.refreshVoteCounts();
+      }, 60000); // 60 seconds
+    }
+  }
+
+  stopAutoRefresh() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
+  }
+
+  async refreshVoteCounts() {
+    if (!this.selectedAward) return;
+
+    try {
+      await app.store.find('awards', this.selectedAward.id(), {
+        include: 'categories,categories.nominees',
+      });
+      m.redraw();
+    } catch (error) {
+      console.error('Failed to refresh vote counts:', error);
+    }
   }
 
   async loadUserVotes() {
@@ -126,10 +161,11 @@ export default class AwardsPage extends Page {
 
   view() {
     const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
+    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
 
     return (
       <div className="IndexPage huseyinfiliz-awards">
-        {this.hero(navTitle)}
+        {this.hero(navTitle, navIcon)}
 
         <div className="container">
           <div className="sideNavContainer">
@@ -146,7 +182,7 @@ export default class AwardsPage extends Page {
     );
   }
 
-  hero(navTitle: string) {
+  hero(navTitle: string, navIcon: string) {
     const imageUrl = this.selectedAward?.imageUrl?.();
     const hasImage = imageUrl && imageUrl.length > 0;
 
@@ -159,7 +195,7 @@ export default class AwardsPage extends Page {
         <div className="container">
           <div className="containerNarrow">
             <h1 className="Hero-title">
-              <i className="icon fas fa-trophy" /> {navTitle}
+              <i className={`icon ${navIcon}`} /> {navTitle}
             </h1>
             {this.selectedAward ? (
               <div className="Hero-subtitle">{this.selectedAward.description()}</div>
@@ -186,10 +222,12 @@ export default class AwardsPage extends Page {
   }
 
   content() {
+    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
+
     if (this.awards.length === 0) {
       return (
         <div className="EmptyState">
-          <i className="fas fa-trophy" />
+          <i className={navIcon} />
           <h2>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards')}</h2>
           <p>{app.translator.trans('huseyinfiliz-awards.forum.empty.no_awards_description')}</p>
         </div>

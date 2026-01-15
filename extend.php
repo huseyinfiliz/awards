@@ -20,8 +20,10 @@ return [
     (new Extend\Settings())
         ->default('huseyinfiliz-awards.votes_per_category', 1)
         ->default('huseyinfiliz-awards.nav_title', 'Awards')
+        ->default('huseyinfiliz-awards.nav_icon', 'fas fa-trophy')
         ->serializeToForum('awardsVotesPerCategory', 'huseyinfiliz-awards.votes_per_category')
-        ->serializeToForum('awardsNavTitle', 'huseyinfiliz-awards.nav_title'),
+        ->serializeToForum('awardsNavTitle', 'huseyinfiliz-awards.nav_title')
+        ->serializeToForum('awardsNavIcon', 'huseyinfiliz-awards.nav_icon'),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attributes(function (ForumSerializer $serializer): array {

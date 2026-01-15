@@ -13,12 +13,13 @@ app.initializers.add('huseyinfiliz/awards', () => {
   extend(IndexPage.prototype, 'navItems', function (items) {
     if (app.forum.attribute('canViewAwards') !== false) {
       const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
+      const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
       items.add(
         'awards',
         LinkButton.component(
           {
             href: app.route('awards'),
-            icon: 'fas fa-trophy',
+            icon: navIcon,
           },
           navTitle
         ),

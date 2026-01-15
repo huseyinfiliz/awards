@@ -5,12 +5,14 @@ import Stream from 'flarum/common/utils/Stream';
 
 export default class SettingsTab extends Component {
   navTitle: Stream<string>;
+  navIcon: Stream<string>;
   votesPerCategory: Stream<number>;
   loading: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
     this.navTitle = Stream(app.data.settings['huseyinfiliz-awards.nav_title'] || 'Awards');
+    this.navIcon = Stream(app.data.settings['huseyinfiliz-awards.nav_icon'] || 'fas fa-trophy');
     this.votesPerCategory = Stream(parseInt(app.data.settings['huseyinfiliz-awards.votes_per_category'] || '1'));
   }
 
@@ -28,6 +30,19 @@ export default class SettingsTab extends Component {
             <input className="FormControl" bidi={this.navTitle} />
             <div className="helpText">
               {app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title_help')}
+            </div>
+          </div>
+
+          <div className="Form-group">
+            <label>{app.translator.trans('huseyinfiliz-awards.admin.settings.nav_icon')}</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <input className="FormControl" bidi={this.navIcon} style={{ flex: 1 }} />
+              <span style={{ fontSize: '20px' }}>
+                <i className={this.navIcon()} />
+              </span>
+            </div>
+            <div className="helpText">
+              {app.translator.trans('huseyinfiliz-awards.admin.settings.nav_icon_help')}
             </div>
           </div>
 
@@ -60,6 +75,7 @@ export default class SettingsTab extends Component {
       url: app.forum.attribute('apiUrl') + '/settings',
       body: {
         'huseyinfiliz-awards.nav_title': this.navTitle(),
+        'huseyinfiliz-awards.nav_icon': this.navIcon(),
         'huseyinfiliz-awards.votes_per_category': this.votesPerCategory()
       }
     }).then(() => {
