@@ -34,6 +34,7 @@ class AwardSerializer extends AbstractSerializer
             'startsAt' => $this->formatDate($award->starts_at),
             'endsAt' => $this->formatDate($award->ends_at),
             'status' => $award->status,
+            'effectiveStatus' => $award->getEffectiveStatus(),
             'showLiveVotes' => (bool) $award->show_live_votes,
             'imageUrl' => $award->image_url,
             'isDraft' => $award->isDraft(),

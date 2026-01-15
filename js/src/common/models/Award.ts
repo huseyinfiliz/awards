@@ -9,6 +9,7 @@ export default class Award extends Model {
   startsAt = Model.attribute('startsAt', Model.transformDate);
   endsAt = Model.attribute('endsAt', Model.transformDate);
   status = Model.attribute<string>('status');
+  effectiveStatus = Model.attribute<string>('effectiveStatus');
   showLiveVotes = Model.attribute<boolean>('showLiveVotes');
   imageUrl = Model.attribute<string>('imageUrl');
   createdAt = Model.attribute('createdAt', Model.transformDate);
@@ -47,5 +48,13 @@ export default class Award extends Model {
 
   canShowVotes(): boolean {
     return this.isPublished() || (this.isActive() && this.showLiveVotes());
+  }
+
+  /**
+   * Check if award has effectively ended (status or date-based)
+   */
+  hasEffectivelyEnded(): boolean {
+    const status = this.effectiveStatus() || this.status();
+    return status === 'ended' || status === 'published';
   }
 }

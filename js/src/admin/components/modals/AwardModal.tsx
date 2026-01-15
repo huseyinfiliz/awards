@@ -19,6 +19,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
   status: Stream<string>;
   showLiveVotes: Stream<boolean>;
   imageUrl: Stream<string>;
+  uploadLoading: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -34,6 +35,39 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
     this.status = Stream(award?.status() || 'draft');
     this.showLiveVotes = Stream(award?.showLiveVotes() || false);
     this.imageUrl = Stream(award?.imageUrl() || '');
+  }
+
+  async handleUpload(e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (!target.files || target.files.length === 0) return;
+
+    const file = target.files[0];
+    const formData = new FormData();
+    formData.append('files[]', file);
+
+    this.uploadLoading = true;
+    m.redraw();
+
+    try {
+      const response: any = await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/fof/upload',
+        body: formData,
+        serialize: (raw: any) => raw,
+      });
+
+      if (response && response.data && response.data[0] && response.data[0].attributes) {
+        this.imageUrl(response.data[0].attributes.url);
+        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.admin.awards.upload_success'));
+      }
+    } catch (error: any) {
+      console.error('Image upload failed:', error);
+      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.admin.awards.upload_error'));
+    } finally {
+      this.uploadLoading = false;
+      target.value = '';
+      m.redraw();
+    }
   }
 
   className() {
@@ -103,7 +137,10 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
 
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.image_url')}</label>
-            <input className="FormControl" bidi={this.imageUrl} />
+            {this.renderImageUpload()}
+            <div className="helpText">
+              {app.translator.trans('huseyinfiliz-awards.admin.awards.image_url_help')}
+            </div>
           </div>
 
           <div className="Form-group">
@@ -112,6 +149,67 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
             </Button>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  renderImageUpload() {
+    const hasFofUpload = 'fof-upload' in (flarum.extensions || {});
+
+    return (
+      <div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            className="FormControl"
+            value={this.imageUrl()}
+            oninput={(e: InputEvent) => {
+              this.imageUrl((e.target as HTMLInputElement).value);
+            }}
+            placeholder="https://example.com/cover.jpg"
+            style={{ flex: 1 }}
+          />
+          {hasFofUpload ? (
+            <span>
+              <input
+                id="award-image-upload"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onchange={this.handleUpload.bind(this)}
+              />
+              <Button
+                className="Button Button--icon"
+                icon="fas fa-cloud-upload-alt"
+                loading={this.uploadLoading}
+                onclick={() => {
+                  const fileInput = document.getElementById('award-image-upload');
+                  if (fileInput) fileInput.click();
+                }}
+                title={app.translator.trans('huseyinfiliz-awards.admin.awards.upload_image')}
+                type="button"
+              />
+            </span>
+          ) : null}
+        </div>
+        {this.imageUrl() ? (
+          <div style={{ marginTop: '10px' }}>
+            <img
+              src={this.imageUrl()}
+              alt="Preview"
+              style={{
+                maxWidth: '200px',
+                maxHeight: '120px',
+                border: '1px solid #ddd',
+                padding: '5px',
+                borderRadius: '4px',
+                objectFit: 'cover',
+              }}
+              onerror={(e: any) => {
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+        ) : null}
       </div>
     );
   }

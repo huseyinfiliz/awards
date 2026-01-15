@@ -66,4 +66,23 @@ class Award extends AbstractModel
     {
         return Carbon::now()->gte($this->starts_at);
     }
+
+    /**
+     * Get effective status based on current date.
+     * If active but end date passed, treat as ended.
+     */
+    public function getEffectiveStatus(): string
+    {
+        // If manually set to ended or published, respect that
+        if (in_array($this->status, ['ended', 'published'])) {
+            return $this->status;
+        }
+
+        // If active but end date passed, treat as ended
+        if ($this->status === 'active' && $this->ends_at && Carbon::now()->gt($this->ends_at)) {
+            return 'ended';
+        }
+
+        return $this->status;
+    }
 }
