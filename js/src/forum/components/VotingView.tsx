@@ -55,7 +55,7 @@ export default class VotingView extends Component {
           )}
         </div>
 
-        {award.isVotingOpen() && app.session.user ? (
+        {award.isVotingOpen() && app.session.user && !selectedCategoryId ? (
           <VotingProgressBar
             votedCount={votedCount}
             totalCount={totalCategories}
