@@ -4,11 +4,15 @@ import IndexPage from 'flarum/forum/components/IndexPage';
 import LinkButton from 'flarum/common/components/LinkButton';
 import commonExtenders from '../common/extend';
 import AwardsPage from './components/AwardsPage';
+import ResultsPublishedNotification from './components/ResultsPublishedNotification';
 
 app.initializers.add('huseyinfiliz/awards', () => {
   commonExtenders.forEach((extender) => extender.extend(app));
 
   app.routes.awards = { path: '/awards', component: AwardsPage };
+
+  // Register notification component
+  app.notificationComponents.awardsResultsPublished = ResultsPublishedNotification;
 
   extend(IndexPage.prototype, 'navItems', function (items) {
     if (app.forum.attribute('canViewAwards') !== false) {

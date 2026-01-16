@@ -206,6 +206,8 @@ huseyinfiliz-awards:
       no_awards_description: There are no awards available at this time. Check back later!
       no_categories: No categories in this award yet.
       no_nominees: No nominees in this category yet.
+    notification:
+      results_published: "Results for {awardName} have been published!"
     error:
       voting_closed: Voting is closed.
       rate_limit: Too many votes. Please wait a moment.
