@@ -48,4 +48,9 @@ class Category extends AbstractModel
     {
         return $this->votes()->count();
     }
+
+    public function getNomineeCountAttribute(): int
+    {
+        return $this->nominees()->count();
+    }
 }

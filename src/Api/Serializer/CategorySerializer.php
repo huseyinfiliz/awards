@@ -24,6 +24,8 @@ class CategorySerializer extends AbstractSerializer
             'description' => $category->description,
             'sortOrder' => (int) $category->sort_order,
             'totalVotes' => $category->total_votes,
+            'voteCount' => $category->total_votes,
+            'nomineeCount' => $category->nominee_count,
             'allowOther' => (bool) $category->allow_other,
             'pendingSuggestionsCount' => $category->pendingSuggestions()->count(),
         ];

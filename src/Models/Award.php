@@ -29,6 +29,21 @@ class Award extends AbstractModel
         return $this->hasMany(Category::class)->orderBy('sort_order');
     }
 
+    public function getCategoryCountAttribute(): int
+    {
+        return $this->categories()->count();
+    }
+
+    public function getNomineeCountAttribute(): int
+    {
+        return Nominee::whereIn('category_id', $this->categories()->pluck('id'))->count();
+    }
+
+    public function getVoteCountAttribute(): int
+    {
+        return Vote::whereIn('category_id', $this->categories()->pluck('id'))->count();
+    }
+
     public function isDraft(): bool
     {
         return $this->status === 'draft';
