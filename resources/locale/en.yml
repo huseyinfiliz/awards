@@ -185,6 +185,7 @@ huseyinfiliz-awards:
       votes_unlimited: "{count} votes"
     other:
       suggest: Suggest Other
+      click_to_suggest: Click to suggest a nominee
       placeholder: "Enter nominee name..."
       submit: Submit Suggestion
       success: Suggestion submitted! It will be reviewed by moderators.
