@@ -121,8 +121,7 @@ export default class AwardsPage extends Page {
 
       // Fallback to default selection if route award not found
       if (!this.selectedAward) {
-        this.selectedAward =
-          this.awards.find((a) => a.isActive()) || this.awards.find((a) => a.isPublished()) || this.awards[0] || null;
+        this.selectedAward = this.awards.find((a) => a.isActive()) || this.awards.find((a) => a.isPublished()) || this.awards[0] || null;
       }
 
       // Set default view based on award status
@@ -216,9 +215,7 @@ export default class AwardsPage extends Page {
               <ul>{listItems(IndexPage.prototype.sidebarItems().toArray())}</ul>
             </nav>
 
-            <div className="IndexPage-results sideNavOffset">
-              {this.loading ? <LoadingIndicator /> : this.content()}
-            </div>
+            <div className="IndexPage-results sideNavOffset">{this.loading ? <LoadingIndicator /> : this.content()}</div>
           </div>
         </div>
       </div>
@@ -240,9 +237,7 @@ export default class AwardsPage extends Page {
             <h1 className="Hero-title">
               <i className={`icon ${navIcon}`} /> {navTitle}
             </h1>
-            {this.selectedAward ? (
-              <div className="Hero-subtitle">{this.selectedAward.description()}</div>
-            ) : null}
+            {this.selectedAward ? <div className="Hero-subtitle">{this.selectedAward.description()}</div> : null}
             {this.selectedAward && this.selectedAward.isVotingOpen() && this.countdownText ? (
               <div className="AwardsHero-countdown">
                 <i className="fas fa-clock" /> {this.countdownText}
@@ -293,7 +288,7 @@ export default class AwardsPage extends Page {
     // Build category filter options with 'cat_' prefix to prevent numeric key sorting
     // (JS objects sort integer-index keys first, so "1", "2" would come before "all")
     const categoryOptions: Record<string, string> = {
-      'all': app.translator.trans('huseyinfiliz-awards.forum.nav.all_categories') as string,
+      all: app.translator.trans('huseyinfiliz-awards.forum.nav.all_categories') as string,
     };
     categories.forEach((cat) => {
       categoryOptions[`cat_${cat.id()}`] = cat.name() as string;
@@ -325,7 +320,7 @@ export default class AwardsPage extends Page {
           {/* Tab buttons */}
           <div className="AwardsPage-tabs">
             <Button
-              className={`Button ${this.currentView === 'categories' || this.currentView === 'results' && !showResultsTab ? 'Button--primary' : ''}`}
+              className={`Button ${this.currentView === 'categories' || (this.currentView === 'results' && !showResultsTab) ? 'Button--primary' : ''}`}
               onclick={() => {
                 this.currentView = showResultsTab ? 'results' : 'categories';
                 m.redraw();
@@ -333,8 +328,7 @@ export default class AwardsPage extends Page {
             >
               {showResultsTab
                 ? app.translator.trans('huseyinfiliz-awards.forum.tabs.results')
-                : app.translator.trans('huseyinfiliz-awards.forum.tabs.categories')
-              }
+                : app.translator.trans('huseyinfiliz-awards.forum.tabs.categories')}
             </Button>
 
             {showMyVotesTab ? (

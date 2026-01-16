@@ -101,12 +101,7 @@ export default class SuggestionModal extends Modal {
               <input className="FormControl" bidi={this.name} required />
             </div>
             <div className="Form-group">
-              <Button
-                className="Button Button--primary"
-                type="submit"
-                loading={this.loading}
-                disabled={!this.name()}
-              >
+              <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={!this.name()}>
                 {app.translator.trans('huseyinfiliz-awards.forum.other.submit')}
               </Button>
               {!isUnlimited && (
@@ -126,18 +121,12 @@ export default class SuggestionModal extends Modal {
 
         {/* User's Suggestions List */}
         <div className="SuggestionModal-list">
-          <h4 className="SuggestionModal-listTitle">
-            {app.translator.trans('huseyinfiliz-awards.forum.other.my_suggestions')}
-          </h4>
+          <h4 className="SuggestionModal-listTitle">{app.translator.trans('huseyinfiliz-awards.forum.other.my_suggestions')}</h4>
 
           {this.suggestions.length === 0 ? (
-            <p className="SuggestionModal-empty">
-              {app.translator.trans('huseyinfiliz-awards.forum.other.no_suggestions')}
-            </p>
+            <p className="SuggestionModal-empty">{app.translator.trans('huseyinfiliz-awards.forum.other.no_suggestions')}</p>
           ) : (
-            <ul className="SuggestionModal-suggestions">
-              {this.suggestions.map((suggestion) => this.renderSuggestionItem(suggestion))}
-            </ul>
+            <ul className="SuggestionModal-suggestions">{this.suggestions.map((suggestion) => this.renderSuggestionItem(suggestion))}</ul>
           )}
         </div>
       </div>
@@ -156,9 +145,7 @@ export default class SuggestionModal extends Modal {
     return (
       <li className="SuggestionModal-item" key={suggestion.id()}>
         <span className="SuggestionModal-itemName">{suggestion.name()}</span>
-        <span className={`SuggestionModal-itemStatus SuggestionModal-itemStatus--${status}`}>
-          {statusLabels[status] || status}
-        </span>
+        <span className={`SuggestionModal-itemStatus SuggestionModal-itemStatus--${status}`}>{statusLabels[status] || status}</span>
         {suggestion.isPending() && (
           <Button
             className="Button Button--icon Button--link SuggestionModal-itemCancel"
@@ -203,19 +190,20 @@ export default class SuggestionModal extends Modal {
     e.preventDefault();
     this.loading = true;
 
-    app.request({
-      method: 'POST',
-      url: app.forum.attribute('apiUrl') + '/award-other-suggestions',
-      body: {
-        data: {
-          attributes: {
-            categoryId: this.category.id(),
-            name: this.name(),
+    app
+      .request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/award-other-suggestions',
+        body: {
+          data: {
+            attributes: {
+              categoryId: this.category.id(),
+              name: this.name(),
+            },
           },
         },
-      },
-      errorHandler: this.onerror.bind(this),
-    })
+        errorHandler: this.onerror.bind(this),
+      })
       .then((response: any) => {
         // Add to local list
         const newSuggestion = app.store.pushObject(response.data);

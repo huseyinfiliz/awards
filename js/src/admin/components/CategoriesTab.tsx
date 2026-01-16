@@ -100,12 +100,7 @@ export default class CategoriesTab extends Component {
               this.loadCategories();
             }}
           />
-          <Button
-            className="Button Button--primary"
-            icon="fas fa-plus"
-            onclick={() => this.openModal()}
-            disabled={!this.selectedAwardId}
-          >
+          <Button className="Button Button--primary" icon="fas fa-plus" onclick={() => this.openModal()} disabled={!this.selectedAwardId}>
             {app.translator.trans('huseyinfiliz-awards.admin.categories.create')}
           </Button>
         </div>
@@ -114,7 +109,10 @@ export default class CategoriesTab extends Component {
           <div className="CardList-header">
             <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.sort_order')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')} / {app.translator.trans('huseyinfiliz-awards.admin.categories.votes')}</div>
+            <div>
+              {app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')} /{' '}
+              {app.translator.trans('huseyinfiliz-awards.admin.categories.votes')}
+            </div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.actions')}</div>
           </div>
 
@@ -145,9 +143,7 @@ export default class CategoriesTab extends Component {
                 <div className="CardList-item-cell CardList-item-cell--primary">
                   <div>
                     <div className="CardList-item-name">{category.name()}</div>
-                    {category.description() ? (
-                      <div className="CardList-item-meta">{category.description()}</div>
-                    ) : null}
+                    {category.description() ? <div className="CardList-item-meta">{category.description()}</div> : null}
                     {category.allowOther() ? (
                       <span className="StatusBadge StatusBadge--active" style={{ marginTop: '4px' }}>
                         <i className="fas fa-lightbulb" /> Suggestions
@@ -165,11 +161,7 @@ export default class CategoriesTab extends Component {
                 </div>
                 <div className="CardList-item-actions">
                   <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(category)} />
-                  <Button
-                    className="Button Button--icon Button--danger"
-                    icon="fas fa-trash"
-                    onclick={() => this.deleteCategory(category)}
-                  />
+                  <Button className="Button Button--icon Button--danger" icon="fas fa-trash" onclick={() => this.deleteCategory(category)} />
                 </div>
               </div>
             ))

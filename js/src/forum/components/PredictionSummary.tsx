@@ -36,9 +36,7 @@ export default class PredictionSummary extends Component {
       }
 
       // Find winner (nominee with highest vote count)
-      const winner = nominees.length > 0
-        ? nominees.reduce((a, b) => ((b.voteCount() || 0) > (a.voteCount() || 0) ? b : a))
-        : null;
+      const winner = nominees.length > 0 ? nominees.reduce((a, b) => ((b.voteCount() || 0) > (a.voteCount() || 0) ? b : a)) : null;
 
       // Check if user predicted correctly
       const isCorrect = userVotedNominee && winner && String(userVotedNominee.id()) === String(winner.id());
@@ -83,10 +81,7 @@ export default class PredictionSummary extends Component {
         <div className="PredictionSummary-content">
           <div className="PredictionSummary-progress">
             <div className="PredictionSummary-progressTrack">
-              <div
-                className="PredictionSummary-progressFill"
-                style={{ width: `${progressPercent}%` }}
-              />
+              <div className="PredictionSummary-progressFill" style={{ width: `${progressPercent}%` }} />
             </div>
             <span className="PredictionSummary-score">
               {app.translator.trans('huseyinfiliz-awards.forum.prediction.score', {
@@ -104,9 +99,13 @@ export default class PredictionSummary extends Component {
             }}
           >
             {this.showDetails ? (
-              <span><i className="fas fa-chevron-up" /> Hide details</span>
+              <span>
+                <i className="fas fa-chevron-up" /> Hide details
+              </span>
             ) : (
-              <span><i className="fas fa-chevron-down" /> Show details</span>
+              <span>
+                <i className="fas fa-chevron-down" /> Show details
+              </span>
             )}
           </button>
 

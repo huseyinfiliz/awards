@@ -137,32 +137,16 @@ export default class SuggestionsTab extends Component {
                 <div className="CardList-item-cell CardList-item-cell--primary">
                   <div className="CardList-item-name">{suggestion.name()}</div>
                 </div>
-                <div className="CardList-item-cell CardList-item-cell--muted">
-                  {suggestion.category()?.name?.() || '-'}
-                </div>
-                <div className="CardList-item-cell CardList-item-cell--muted">
-                  {suggestion.user()?.displayName?.() || '-'}
-                </div>
+                <div className="CardList-item-cell CardList-item-cell--muted">{suggestion.category()?.name?.() || '-'}</div>
+                <div className="CardList-item-cell CardList-item-cell--muted">{suggestion.user()?.displayName?.() || '-'}</div>
                 <div className="CardList-item-actions">
-                  <Button
-                    className="Button Button--success"
-                    icon="fas fa-check"
-                    onclick={() => this.approveSuggestion(suggestion)}
-                  >
+                  <Button className="Button Button--success" icon="fas fa-check" onclick={() => this.approveSuggestion(suggestion)}>
                     {app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve')}
                   </Button>
-                  <Button
-                    className="Button Button--danger"
-                    icon="fas fa-times"
-                    onclick={() => this.rejectSuggestion(suggestion)}
-                  >
+                  <Button className="Button Button--danger" icon="fas fa-times" onclick={() => this.rejectSuggestion(suggestion)}>
                     {app.translator.trans('huseyinfiliz-awards.admin.suggestions.reject')}
                   </Button>
-                  <Button
-                    className="Button"
-                    icon="fas fa-compress-arrows-alt"
-                    onclick={() => this.openMergeModal(suggestion)}
-                  >
+                  <Button className="Button" icon="fas fa-compress-arrows-alt" onclick={() => this.openMergeModal(suggestion)}>
                     {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
                   </Button>
                 </div>

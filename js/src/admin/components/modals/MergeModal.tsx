@@ -64,9 +64,7 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
     if (this.nominees.length === 0) {
       return (
         <div className="Modal-body">
-          <p className="MergeModal-empty">
-            {app.translator.trans('huseyinfiliz-awards.admin.suggestions.no_nominees')}
-          </p>
+          <p className="MergeModal-empty">{app.translator.trans('huseyinfiliz-awards.admin.suggestions.no_nominees')}</p>
         </div>
       );
     }
@@ -93,9 +91,7 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
                 this.selectedNomineeId((e.target as HTMLSelectElement).value);
               }}
             >
-              <option value="">
-                {app.translator.trans('huseyinfiliz-awards.admin.suggestions.select_nominee_placeholder')}
-              </option>
+              <option value="">{app.translator.trans('huseyinfiliz-awards.admin.suggestions.select_nominee_placeholder')}</option>
               {this.nominees.map((nominee) => (
                 <option key={nominee.id()} value={String(nominee.id())}>
                   {nominee.name()}
@@ -105,12 +101,7 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.loading}
-              disabled={!this.selectedNomineeId()}
-            >
+            <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={!this.selectedNomineeId()}>
               {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
             </Button>
           </div>

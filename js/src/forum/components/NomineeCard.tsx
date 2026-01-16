@@ -36,12 +36,16 @@ export default class NomineeCard extends Component {
         onclick={isClickable ? () => this.toggleVote(nominee, category, userVote) : undefined}
         role={isClickable ? 'button' : undefined}
         tabindex={isClickable ? 0 : undefined}
-        onkeydown={isClickable ? (e: KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.toggleVote(nominee, category, userVote);
-          }
-        } : undefined}
+        onkeydown={
+          isClickable
+            ? (e: KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  this.toggleVote(nominee, category, userVote);
+                }
+              }
+            : undefined
+        }
       >
         <div className="NomineeCard-image">
           {nominee.imageUrl() ? (
@@ -60,10 +64,8 @@ export default class NomineeCard extends Component {
 
         <div className="NomineeCard-content">
           <h3 className="NomineeCard-title">{nominee.name()}</h3>
-          
-          {nominee.description() ? (
-            <p className="NomineeCard-description">{nominee.description()}</p>
-          ) : null}
+
+          {nominee.description() ? <p className="NomineeCard-description">{nominee.description()}</p> : null}
 
           {showVotes ? (
             <div className="NomineeCard-stats">
@@ -91,9 +93,11 @@ export default class NomineeCard extends Component {
       return String(vCategoryId) === String(categoryId);
     });
 
-    const userVoteIds = userVotesInCategory.map((v) => {
-      return v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
-    }).filter(Boolean);
+    const userVoteIds = userVotesInCategory
+      .map((v) => {
+        return v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+      })
+      .filter(Boolean);
 
     category.pushData({
       attributes: {
@@ -147,10 +151,7 @@ export default class NomineeCard extends Component {
 
     // Check if at limit (votesLimit > 0 means there's a limit, 0 = unlimited)
     if (votesLimit > 0 && existingVotesInCategory.length >= votesLimit && votesLimit !== 1) {
-      app.alerts.show(
-        { type: 'error' },
-        app.translator.trans('huseyinfiliz-awards.forum.error.vote_limit_reached', { limit: votesLimit })
-      );
+      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.forum.error.vote_limit_reached', { limit: votesLimit }));
       return;
     }
 

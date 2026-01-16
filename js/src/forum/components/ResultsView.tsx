@@ -12,16 +12,12 @@ export default class ResultsView extends Component {
     const allCategories = (award.categories() || []) as Category[];
 
     // Filter categories if a specific category is selected
-    const categories = selectedCategoryId
-      ? allCategories.filter((cat) => String(cat.id()) === selectedCategoryId)
-      : allCategories;
+    const categories = selectedCategoryId ? allCategories.filter((cat) => String(cat.id()) === selectedCategoryId) : allCategories;
 
     return (
       <div className="ResultsView">
         {/* Prediction Summary - only shown when viewing all categories */}
-        {app.session.user && !selectedCategoryId ? (
-          <PredictionSummary award={award} categories={allCategories} />
-        ) : null}
+        {app.session.user && !selectedCategoryId ? <PredictionSummary award={award} categories={allCategories} /> : null}
 
         <div className="ResultsView-content">
           {categories.length === 0 ? (

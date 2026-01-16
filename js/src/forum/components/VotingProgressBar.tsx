@@ -46,16 +46,15 @@ export default class VotingProgressBar extends Component {
     const isFilterMode = !!selectedCategoryId && !!onCategoryChange;
 
     return (
-      <div className={`VotingProgressBar ${isComplete ? 'VotingProgressBar--complete' : ''} ${this.showConfetti ? 'VotingProgressBar--confetti' : ''}`}>
+      <div
+        className={`VotingProgressBar ${isComplete ? 'VotingProgressBar--complete' : ''} ${this.showConfetti ? 'VotingProgressBar--confetti' : ''}`}
+      >
         {this.showConfetti ? this.renderConfetti() : null}
 
         <div className="VotingProgressBar-content">
           <div className="VotingProgressBar-progress">
             <div className="VotingProgressBar-progressTrack">
-              <div
-                className="VotingProgressBar-progressFill"
-                style={{ width: `${progressPercent}%` }}
-              />
+              <div className="VotingProgressBar-progressFill" style={{ width: `${progressPercent}%` }} />
             </div>
             <span className="VotingProgressBar-text">
               {isComplete
@@ -63,8 +62,7 @@ export default class VotingProgressBar extends Component {
                 : app.translator.trans('huseyinfiliz-awards.forum.progress.voted', {
                     count: votedCount,
                     total: totalCount,
-                  })
-              }
+                  })}
             </span>
           </div>
 
