@@ -18,6 +18,8 @@ class NomineeSerializer extends AbstractSerializer
             );
         }
 
+        $actor = $this->getActor();
+
         $attributes = [
             'name' => $nominee->name,
             'description' => $nominee->description,
@@ -31,6 +33,13 @@ class NomineeSerializer extends AbstractSerializer
         if ($award && $award->canShowVotes()) {
             $attributes['voteCount'] = $nominee->vote_count;
             $attributes['votePercentage'] = $nominee->vote_percentage;
+        }
+
+        // Include adjustment info for admins
+        if ($actor->hasPermission('awards.manage')) {
+            $attributes['realVoteCount'] = $nominee->real_vote_count;
+            $attributes['voteAdjustment'] = $nominee->vote_adjustment ?? 0;
+            $attributes['voteCount'] = $nominee->vote_count; // Always show for admins
         }
 
         return $attributes;

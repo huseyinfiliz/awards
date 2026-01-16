@@ -15,6 +15,8 @@ export default class Nominee extends Model {
 
   voteCount = Model.attribute<number>('voteCount');
   votePercentage = Model.attribute<number>('votePercentage');
+  realVoteCount = Model.attribute<number>('realVoteCount');
+  voteAdjustment = Model.attribute<number>('voteAdjustment');
   rank = Model.attribute<number>('rank');
   isWinner = Model.attribute<boolean>('isWinner');
   isRunnerUp = Model.attribute<boolean>('isRunnerUp');
