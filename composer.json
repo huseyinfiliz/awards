@@ -102,8 +102,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
-    "flarum/phpstan": "*",
+    "flarum/phpstan": "^1.0",
     "flarum/testing": "^1.0",
-    "friendsofphp/php-cs-fixer": "^3.64"
+    "friendsofphp/php-cs-fixer": "^3.0"
   }
 }
