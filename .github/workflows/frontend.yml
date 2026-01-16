@@ -13,4 +13,3 @@ jobs:
       frontend_directory: ./js
       backend_directory: .
       js_package_manager: npm
-      main_git_branch: main
