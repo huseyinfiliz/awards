@@ -1,88 +1,104 @@
-# Awards
+![](https://i.ibb.co/PLACEHOLDER/awards-demo.gif)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards) [![Total Downloads](https://img.shields.io/packagist/dt/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards)
 
-A community awards and voting extension for [Flarum](https://flarum.org) forums. Create annual awards, let your community vote for nominees, and publish results with winner badges.
+# Awards
+
+A comprehensive community awards and voting extension for [Flarum](https://flarum.org) forums. Create annual awards, let your community vote for nominees, and publish results with beautiful winner badges.
 
 ## Features
 
-- **Create Awards**: Set up annual or event-based awards (e.g., "Game Awards 2025", "Community Choice Awards")
-- **Categories & Nominees**: Organize awards into categories with multiple nominees each
-- **Voting System**: Users vote for their favorite nominees with configurable vote limits
-- **Vote Management**: Single vote (replace), multiple votes, or unlimited voting per category
-- **User Suggestions**: Allow users to suggest nominees (with admin approval)
-- **Live Vote Counts**: Optionally show vote counts during active voting
-- **Results Publishing**: Publish results with automatic notifications to voters
-- **Winner Badges**: Display gold/silver/bronze badges for top 3 nominees
-- **Admin Vote Editing**: Manually adjust vote counts when needed
-- **Rate Limiting**: Built-in protection against vote spam (10 votes/minute)
+- 🏆 **Award Ceremonies**: Create annual or event-based awards (e.g., "Game Awards 2025", "Community Choice")
+- 📂 **Categories & Nominees**: Organize awards into categories with images and descriptions
+- 🗳️ **Flexible Voting**: Single vote, multiple votes, or unlimited voting per category
+- 💡 **User Suggestions**: Let users suggest nominees (with admin approval)
+- 📊 **Live Vote Counts**: Optionally show real-time vote counts during voting
+- 🔔 **Notifications**: Automatic alerts when results are published
+- 🥇 **Winner Badges**: Gold, silver, and bronze badges for top 3 nominees
+- 📱 **Responsive Design**: Beautiful card-based layout optimized for all devices
 
-## Screenshots
+### 🗳️ Voting Interface
+![Voting Demo](https://i.ibb.co/PLACEHOLDER/voting.png)
 
-<!-- Add your screenshots here -->
-*Screenshots coming soon*
+### 🏆 Results & Winners
+![Results Demo](https://i.ibb.co/PLACEHOLDER/results.png)
+
+### 📊 My Votes Dashboard
+![My Votes Demo](https://i.ibb.co/PLACEHOLDER/my-votes.png)
+
+### ⚙️ Admin Management
+![Admin Demo](https://i.ibb.co/PLACEHOLDER/admin.png)
 
 ## Installation
-
-Install via Composer:
 
 ```bash
 composer require huseyinfiliz/awards:"*"
 ```
 
-Or install using Extension Manager: `huseyinfiliz/awards`
+You can also install with Extension Manager: `huseyinfiliz/awards`
 
 ## Updating
 
-```bash
+```sh
 composer update huseyinfiliz/awards
-php flarum migrate
-php flarum cache:clear
 ```
 
-## Removal
+To remove simply run `composer remove huseyinfiliz/awards`
 
-```bash
-composer remove huseyinfiliz/awards
-```
+## Quick Start
 
-## Configuration
+### For Users
 
-### Admin Panel
+1. Navigate to the **Awards** page from the sidebar
+2. Browse categories and click **Select** to vote for your favorite
+3. Visit **My Votes** tab to track your voting progress
+4. Suggest nominees where the category allows it
+5. View **Results** after voting ends to see the winners
 
-Navigate to **Admin -> Awards** to manage your awards:
+### For Admins
+
+Navigate to **Admin → Awards** to configure the system:
 
 #### Awards Tab
-- Create awards with name, year, description, and dates
-- Set award status: Draft -> Active -> Ended -> Published
-- Toggle "Show Live Votes" to display counts during voting
+- Create awards with name, year, and voting period
+- Set cover images for the hero section
+- Control award status: Draft → Active → Ended → Published
+- Toggle "Show Live Votes" for real-time counts
 - Publish results to notify all voters
 
 #### Categories Tab
 - Add categories to awards (e.g., "Best RPG", "Game of the Year")
 - Enable "Allow User Suggestions" for community input
-- Set sort order for display
+- Drag to reorder categories
 
 #### Nominees Tab
-- Add nominees with name and image URL
-- View and edit vote counts
-- Filter by award and category
+- Add nominees with name, description, and image
+- Adjust vote counts manually when needed
+- Supports image upload (requires FoF Upload) or external URLs
 
 #### Suggestions Tab
 - Review pending user suggestions
-- Approve (creates new nominee)
+- Approve to create as new nominee
 - Reject or merge into existing nominee
 
 #### Settings Tab
-- **Navigation Title**: Text shown in sidebar (default: "Awards")
-- **Votes Per Category**:
-  - `0` = Unlimited votes
-  - `1` = Single vote (clicking another replaces previous)
-  - `N` = Maximum N votes per category
+- **Navigation Title**: Customize sidebar text
+- **Votes Per Category**: 0 = unlimited, 1 = single vote, N = max N votes
 
-### Permissions
+## Award Status Flow
 
-Configure in **Admin -> Permissions**:
+```
+Draft → Active → Ended → Published
+```
+
+| Status | Description |
+|--------|-------------|
+| **Draft** | Setting up the award (not visible to users) |
+| **Active** | Voting is open between start and end dates |
+| **Ended** | Voting closed, admin reviews before publishing |
+| **Published** | Results visible, all voters notified |
+
+## Permissions
 
 | Permission | Description |
 |------------|-------------|
@@ -91,59 +107,22 @@ Configure in **Admin -> Permissions**:
 | View Results Early | See results before publishing |
 | Manage Awards | Full admin access |
 
-## Award Status Flow
+## 🌍 Translations
 
-```
-Draft -> Active -> Ended -> Published
-```
+This extension comes with English translations. Community translations are welcome!
 
-1. **Draft**: Admin is setting up the award (not visible to users)
-2. **Active**: Voting is open (between start and end dates)
-3. **Ended**: Voting closed, admin reviews before publishing
-4. **Published**: Results visible, all voters receive notifications
+## 💖 Support & Contributing
 
-## User Guide
+If you find this extension useful, consider:
 
-### Voting
-1. Navigate to the Awards page from the sidebar
-2. Select an award (if multiple are active)
-3. Browse categories and click "Select" on your choice
-4. Click "Voted" to remove your vote
-5. Suggest nominees where allowed (pending admin approval)
-
-### Viewing Results
-- Published awards show winners with badges
-- Gold for 1st place, Silver for 2nd, Bronze for 3rd
-- Vote counts and percentages displayed
-
-## Technical Details
-
-### Database Tables
-- `awards` - Main award records
-- `award_categories` - Categories within awards
-- `award_nominees` - Nominees in categories
-- `award_votes` - User votes
-- `award_other_suggestions` - User-submitted suggestions
-
-### API Endpoints
-- `GET/POST /api/awards` - List/create awards
-- `GET/PATCH/DELETE /api/awards/{id}` - Show/update/delete award
-- `POST /api/awards/{id}/publish` - Publish results
-- Similar CRUD for categories, nominees, votes, suggestions
-
-## Translations
-
-This extension includes English translations. Community translations welcome!
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/huseyinfiliz/awards/issues)
-- **Discussion**: [Flarum Discuss](https://discuss.flarum.org)
+- ⭐ Starring the repository on GitHub
+- 💬 Leaving feedback on the [Flarum discussion](https://discuss.flarum.org)
+- 🐛 Reporting issues on [GitHub](https://github.com/huseyinfiliz/awards/issues)
 
 ## License
 
 MIT License - see [LICENSE.md](LICENSE.md)
 
-## Credits
+---
 
-Developed by [Huseyin Filiz](https://github.com/huseyinfiliz)
+Developed with ❤️ by [Huseyin Filiz](https://github.com/huseyinfiliz)
