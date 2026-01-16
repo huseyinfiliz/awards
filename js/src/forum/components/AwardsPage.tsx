@@ -372,7 +372,16 @@ export default class AwardsPage extends Page {
 
     // Voting view
     if (award.isActive() || award.hasEnded()) {
-      return <VotingView award={award} selectedCategoryId={this.selectedCategoryId} />;
+      return (
+        <VotingView
+          award={award}
+          selectedCategoryId={this.selectedCategoryId}
+          onCategoryChange={(categoryId: string | null) => {
+            this.selectedCategoryId = categoryId;
+            m.redraw();
+          }}
+        />
+      );
     }
 
     return (

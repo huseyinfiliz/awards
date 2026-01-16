@@ -38,9 +38,12 @@ export default class VotingProgressBar extends Component {
     const totalCount = this.attrs.totalCount as number;
     const categoryIds = this.attrs.categoryIds as string[];
     const onNavigate = this.attrs.onNavigate as (categoryId: string) => void;
+    const selectedCategoryId = this.attrs.selectedCategoryId as string | null;
+    const onCategoryChange = this.attrs.onCategoryChange as ((categoryId: string | null) => void) | undefined;
 
     const isComplete = votedCount === totalCount && totalCount > 0;
     const progressPercent = totalCount > 0 ? (votedCount / totalCount) * 100 : 0;
+    const isFilterMode = !!selectedCategoryId && !!onCategoryChange;
 
     return (
       <div className={`VotingProgressBar ${isComplete ? 'VotingProgressBar--complete' : ''} ${this.showConfetti ? 'VotingProgressBar--confetti' : ''}`}>
@@ -69,7 +72,7 @@ export default class VotingProgressBar extends Component {
             <Button
               className="Button Button--icon"
               icon="fas fa-chevron-left"
-              onclick={() => this.navigate(-1, categoryIds, onNavigate)}
+              onclick={() => this.navigate(-1, categoryIds, onNavigate, selectedCategoryId, onCategoryChange)}
               disabled={categoryIds.length === 0}
               title={app.translator.trans('huseyinfiliz-awards.forum.progress.prev') as string}
             >
@@ -78,7 +81,7 @@ export default class VotingProgressBar extends Component {
             <Button
               className="Button Button--icon"
               icon="fas fa-chevron-right"
-              onclick={() => this.navigate(1, categoryIds, onNavigate)}
+              onclick={() => this.navigate(1, categoryIds, onNavigate, selectedCategoryId, onCategoryChange)}
               disabled={categoryIds.length === 0}
               title={app.translator.trans('huseyinfiliz-awards.forum.progress.next') as string}
             >
@@ -90,10 +93,29 @@ export default class VotingProgressBar extends Component {
     );
   }
 
-  navigate(direction: number, categoryIds: string[], onNavigate: (categoryId: string) => void) {
+  navigate(
+    direction: number,
+    categoryIds: string[],
+    onNavigate: (categoryId: string) => void,
+    selectedCategoryId?: string | null,
+    onCategoryChange?: (categoryId: string | null) => void
+  ) {
     if (categoryIds.length === 0) return;
 
-    // Find current visible category
+    // Filter navigation mode: navigate between category filters
+    if (selectedCategoryId && onCategoryChange) {
+      const currentIndex = categoryIds.indexOf(selectedCategoryId);
+      if (currentIndex === -1) return;
+
+      let newIndex = currentIndex + direction;
+      if (newIndex < 0) newIndex = categoryIds.length - 1;
+      if (newIndex >= categoryIds.length) newIndex = 0;
+
+      onCategoryChange(categoryIds[newIndex]);
+      return;
+    }
+
+    // Scroll mode: scroll between categories on the page
     let visibleCategoryId: string | null = null;
     for (const id of categoryIds) {
       const element = document.getElementById(`category-${id}`);
@@ -106,11 +128,9 @@ export default class VotingProgressBar extends Component {
       }
     }
 
-    // Find current index
     let currentIndex = visibleCategoryId ? categoryIds.indexOf(visibleCategoryId) : 0;
     if (currentIndex === -1) currentIndex = 0;
 
-    // Calculate new index
     let newIndex = currentIndex + direction;
     if (newIndex < 0) newIndex = categoryIds.length - 1;
     if (newIndex >= categoryIds.length) newIndex = 0;
