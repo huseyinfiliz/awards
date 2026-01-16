@@ -10,7 +10,3 @@ parameters:
         - tests
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
-    treatPhpDocTypesAsCertain: false
-    reportUnmatchedIgnoredErrors: false
-    ignoreErrors:
-        - '#Call to an undefined method Flarum\\Database\\AbstractModel::#'
