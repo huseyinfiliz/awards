@@ -24,9 +24,26 @@ export default class AwardsPage extends Page {
   countdownInterval: number | null = null;
   countdownText: string = '';
   refreshInterval: number | null = null;
+  routeAwardId: string | null = null;
+  routeCategoryId: string | null = null;
 
   oninit(vnode: any) {
     super.oninit(vnode);
+
+    // Parse route params (format: /awards/{id}-{slug} or /awards/{id}-{slug}/{category})
+    const idParam = m.route.param('id');
+    const categoryParam = m.route.param('category');
+
+    if (idParam) {
+      // Extract numeric ID from "{id}-{slug}" format
+      const match = idParam.match(/^(\d+)/);
+      this.routeAwardId = match ? match[1] : null;
+    }
+
+    if (categoryParam) {
+      this.routeCategoryId = categoryParam;
+    }
+
     this.loadAwards();
   }
 
@@ -97,14 +114,31 @@ export default class AwardsPage extends Page {
       });
       this.awards = (awards || []).filter((a) => a.isActive() || a.isPublished() || a.hasEnded());
 
-      this.selectedAward =
-        this.awards.find((a) => a.isActive()) || this.awards.find((a) => a.isPublished()) || this.awards[0] || null;
+      // If route has award ID, select that award; otherwise use default selection
+      if (this.routeAwardId) {
+        this.selectedAward = this.awards.find((a) => String(a.id()) === this.routeAwardId) || null;
+      }
+
+      // Fallback to default selection if route award not found
+      if (!this.selectedAward) {
+        this.selectedAward =
+          this.awards.find((a) => a.isActive()) || this.awards.find((a) => a.isPublished()) || this.awards[0] || null;
+      }
 
       // Set default view based on award status
       if (this.selectedAward?.canViewResults()) {
         this.currentView = 'results';
       } else {
         this.currentView = 'categories';
+      }
+
+      // If route has category ID, set the category filter
+      if (this.routeCategoryId && this.selectedAward) {
+        const categories = (this.selectedAward.categories?.() || []) as Category[];
+        const categoryExists = categories.some((c) => String(c.id()) === this.routeCategoryId);
+        if (categoryExists) {
+          this.selectedCategoryId = this.routeCategoryId;
+        }
       }
 
       if (app.session.user) {
@@ -117,6 +151,11 @@ export default class AwardsPage extends Page {
     this.loading = false;
     this.startAutoRefresh();
     m.redraw();
+
+    // Scroll to category after DOM updates if category was specified in route
+    if (this.routeCategoryId && this.selectedCategoryId) {
+      setTimeout(() => this.scrollToCategory(this.routeCategoryId), 100);
+    }
   }
 
   startAutoRefresh() {

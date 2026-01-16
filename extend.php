@@ -9,7 +9,9 @@ return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__ . '/js/dist/forum.js')
         ->css(__DIR__ . '/resources/less/forum.less')
-        ->route('/awards', 'awards', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class),
+        ->route('/awards', 'awards', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class)
+        ->route('/awards/{id:[0-9]+}-{slug}', 'awards.show', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class)
+        ->route('/awards/{id:[0-9]+}-{slug}/{category:[0-9]+}', 'awards.category', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class),
 
     (new Extend\Frontend('admin'))
         ->js(__DIR__ . '/js/dist/admin.js')

@@ -39,6 +39,7 @@ class ResultsPublishedBlueprint implements BlueprintInterface
         return [
             'awardId' => $this->award->id,
             'awardName' => $this->award->name,
+            'awardSlug' => $this->award->slug,
         ];
     }
 
