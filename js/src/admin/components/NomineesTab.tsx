@@ -212,9 +212,9 @@ export default class NomineesTab extends Component {
                   />
                   <Button
                     className="Button Button--icon Button--link"
-                    icon="fas fa-undo"
-                    onclick={() => this.resetVotes(nominee)}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.reset_votes') as string}
+                    icon="fas fa-sync"
+                    onclick={() => this.recountVotes(nominee)}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.recount_votes') as string}
                   />
                 </div>
                 <div className="CardList-item-actions">
@@ -268,19 +268,15 @@ export default class NomineesTab extends Component {
     }
   }
 
-  async resetVotes(nominee: Nominee) {
-    if (!confirm(app.translator.trans('huseyinfiliz-awards.admin.nominees.reset_votes_confirm') as string)) {
-      return;
-    }
-
+  async recountVotes(nominee: Nominee) {
     try {
       await app.request({
-        method: 'DELETE',
-        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/votes',
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/recount',
       });
       this.loadNominees();
     } catch (error) {
-      console.error('Failed to reset votes:', error);
+      console.error('Failed to recount votes:', error);
     }
   }
 

@@ -9,9 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use HuseyinFiliz\Awards\Api\Serializer\NomineeSerializer;
 use HuseyinFiliz\Awards\Models\Nominee;
-use HuseyinFiliz\Awards\Models\Vote;
 
-class ResetNomineeVotesController extends AbstractShowController
+class RecountNomineeVotesController extends AbstractShowController
 {
     public $serializer = NomineeSerializer::class;
 
@@ -23,9 +22,8 @@ class ResetNomineeVotesController extends AbstractShowController
         $id = Arr::get($request->getQueryParams(), 'id');
         $nominee = Nominee::findOrFail($id);
 
-        // Delete all votes for this nominee
-        Vote::where('nominee_id', $nominee->id)->delete();
-
+        // Just return fresh nominee - voteCount is calculated from award_votes table
+        // This forces a recount from the database
         return $nominee->fresh();
     }
 }
