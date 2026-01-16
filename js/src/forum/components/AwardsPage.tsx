@@ -247,13 +247,15 @@ export default class AwardsPage extends Page {
     const showResultsTab = this.selectedAward?.isPublished();
     const showMyVotesTab = app.session.user;
 
-    // Build category filter options
+    // Build category filter options - build categories first, then prepend 'all' to ensure order
+    const categoryOnlyOptions: Record<string, string> = {};
+    categories.forEach((cat) => {
+      categoryOnlyOptions[String(cat.id())] = cat.name() as string;
+    });
     const categoryOptions: Record<string, string> = {
       'all': app.translator.trans('huseyinfiliz-awards.forum.nav.all_categories') as string,
+      ...categoryOnlyOptions,
     };
-    categories.forEach((cat) => {
-      categoryOptions[String(cat.id())] = cat.name() as string;
-    });
 
     return (
       <div className="AwardsPage-filterBar">
