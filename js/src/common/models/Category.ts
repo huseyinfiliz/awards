@@ -21,6 +21,7 @@ export default class Category extends Model {
   nomineeCount = Model.attribute<number>('nomineeCount');
   voteCount = Model.attribute<number>('voteCount');
   userVoteIds = Model.attribute<number[]>('userVoteIds');
+  userPendingSuggestionsCount = Model.attribute<number>('userPendingSuggestionsCount');
 
   hasUserVoted(): boolean {
     const ids = this.userVoteIds();

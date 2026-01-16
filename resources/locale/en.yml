@@ -190,6 +190,17 @@ huseyinfiliz-awards:
       submit: Submit Suggestion
       success: Suggestion submitted! It will be reviewed by moderators.
       already_submitted: You already submitted a suggestion for this category.
+      pending_count: "{count} pending suggestion(s)"
+      remaining: "{count} suggestion(s) remaining"
+      no_remaining: No suggestion slots remaining
+      my_suggestions: My Suggestions
+      no_suggestions: You haven't submitted any suggestions yet.
+      cancel: Cancel
+      status_pending: Pending
+      status_approved: Approved
+      status_rejected: Rejected
+      status_merged: Merged
+      cancel_confirm: Cancel this suggestion?
     empty:
       no_awards: No Active Awards
       no_awards_description: There are no awards available at this time. Check back later!
