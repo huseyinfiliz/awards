@@ -110,8 +110,7 @@ export default class CategoriesTab extends Component {
             <div>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</div>
             <div>
-              {app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')} /{' '}
-              {app.translator.trans('huseyinfiliz-awards.lib.votes')}
+              {app.translator.trans('huseyinfiliz-awards.admin.categories.nominees')} / {app.translator.trans('huseyinfiliz-awards.lib.votes')}
             </div>
             <div>{app.translator.trans('huseyinfiliz-awards.lib.actions')}</div>
           </div>
