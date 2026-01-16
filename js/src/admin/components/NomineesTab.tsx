@@ -210,6 +210,12 @@ export default class NomineesTab extends Component {
                     onclick={() => this.editVotes(nominee)}
                     title={app.translator.trans('huseyinfiliz-awards.admin.nominees.edit_votes') as string}
                   />
+                  <Button
+                    className="Button Button--icon Button--link"
+                    icon="fas fa-sync"
+                    onclick={() => this.recountVotes(nominee)}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.recount_votes') as string}
+                  />
                 </div>
                 <div className="CardList-item-actions">
                   <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
@@ -259,6 +265,18 @@ export default class NomineesTab extends Component {
       this.loadNominees();
     } catch (error) {
       console.error('Failed to update votes:', error);
+    }
+  }
+
+  async recountVotes(nominee: Nominee) {
+    try {
+      await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/recount',
+      });
+      this.loadNominees();
+    } catch (error) {
+      console.error('Failed to recount votes:', error);
     }
   }
 

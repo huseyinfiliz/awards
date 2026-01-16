@@ -81,6 +81,7 @@ huseyinfiliz-awards:
       edit_votes_title: Adjust Vote Count
       enter_votes: Enter new vote count
       invalid_votes: Please enter a valid number
+      recount_votes: Recount Votes
       actions: Actions
       delete_confirm: Are you sure you want to delete this nominee?
       empty: No nominees found.

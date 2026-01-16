@@ -28,20 +28,20 @@ class UpdateNomineeVotesController extends AbstractShowController
         $currentCount = $nominee->votes()->count();
 
         if ($newVoteCount > $currentCount) {
-            // Add dummy votes (user_id = 0 for admin-added)
+            // Add admin votes using the actor's user_id
             $toAdd = $newVoteCount - $currentCount;
             for ($i = 0; $i < $toAdd; $i++) {
                 Vote::create([
                     'nominee_id' => $nominee->id,
                     'category_id' => $nominee->category_id,
-                    'user_id' => 0, // System/admin added
+                    'user_id' => $actor->id,
                 ]);
             }
         } elseif ($newVoteCount < $currentCount) {
-            // Remove votes (prefer removing admin-added first)
+            // Remove votes (prefer removing most recent first)
             $toRemove = $currentCount - $newVoteCount;
             Vote::where('nominee_id', $nominee->id)
-                ->orderBy('user_id', 'asc') // user_id = 0 first
+                ->orderBy('created_at', 'desc')
                 ->limit($toRemove)
                 ->delete();
         }
