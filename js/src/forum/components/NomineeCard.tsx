@@ -83,6 +83,25 @@ export default class NomineeCard extends Component {
     );
   }
 
+  updateCategoryUserVoteIds(category: Category) {
+    // Update the category's userVoteIds based on current votes in store
+    const categoryId = category.id();
+    const userVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
+      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      return String(vCategoryId) === String(categoryId);
+    });
+
+    const userVoteIds = userVotesInCategory.map((v) => {
+      return v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+    }).filter(Boolean);
+
+    category.pushData({
+      attributes: {
+        userVoteIds: userVoteIds,
+      },
+    });
+  }
+
   toggleVote(nominee: Nominee, category: Category, userVote?: Vote) {
     if (!app.session.user) {
       return;
@@ -104,6 +123,9 @@ export default class NomineeCard extends Component {
           if (currentVoteCount > 0) {
             nominee.pushData({ attributes: { voteCount: currentVoteCount - 1 } });
           }
+
+          // Update category's userVoteIds
+          this.updateCategoryUserVoteIds(category);
 
           app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_removed'));
           this.loading = false;
@@ -170,6 +192,10 @@ export default class NomineeCard extends Component {
         nominee.pushData({ attributes: { voteCount: currentVoteCount + 1 } });
 
         app.store.pushPayload(response);
+
+        // Update category's userVoteIds
+        this.updateCategoryUserVoteIds(category);
+
         app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.forum.voting.vote_saved'));
         this.loading = false;
         m.redraw();
