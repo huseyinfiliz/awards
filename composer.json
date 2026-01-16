@@ -104,6 +104,7 @@
   "require-dev": {
     "flarum/phpstan": "^1.0",
     "flarum/testing": "^1.0",
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "mockery/mockery": "^1.0"
   }
 }
