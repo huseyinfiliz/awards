@@ -5,6 +5,7 @@ namespace HuseyinFiliz\Awards\Api\Serializer;
 use Flarum\Api\Serializer\AbstractSerializer;
 use HuseyinFiliz\Awards\Models\Category;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
+use HuseyinFiliz\Awards\Models\Vote;
 use InvalidArgumentException;
 
 class CategorySerializer extends AbstractSerializer
@@ -21,12 +22,18 @@ class CategorySerializer extends AbstractSerializer
 
         $actor = $this->getActor();
         $userPendingSuggestionsCount = 0;
+        $userVoteIds = [];
 
         if ($actor && $actor->id) {
             $userPendingSuggestionsCount = OtherSuggestion::where('category_id', $category->id)
                 ->where('user_id', $actor->id)
                 ->where('status', 'pending')
                 ->count();
+
+            $userVoteIds = Vote::where('category_id', $category->id)
+                ->where('user_id', $actor->id)
+                ->pluck('nominee_id')
+                ->toArray();
         }
 
         return [
@@ -40,6 +47,7 @@ class CategorySerializer extends AbstractSerializer
             'allowOther' => (bool) $category->allow_other,
             'pendingSuggestionsCount' => $category->pendingSuggestions()->count(),
             'userPendingSuggestionsCount' => $userPendingSuggestionsCount,
+            'userVoteIds' => $userVoteIds,
         ];
     }
 
