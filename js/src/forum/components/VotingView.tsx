@@ -32,9 +32,7 @@ export default class VotingView extends Component {
     const allCategories = (award.categories() || []) as Category[];
 
     // Filter categories if a specific category is selected
-    const categories = selectedCategoryId
-      ? allCategories.filter((cat) => String(cat.id()) === selectedCategoryId)
-      : allCategories;
+    const categories = selectedCategoryId ? allCategories.filter((cat) => String(cat.id()) === selectedCategoryId) : allCategories;
 
     // Calculate voting progress
     const votedCategoryIds = this.getVotedCategoryIds(allCategories);

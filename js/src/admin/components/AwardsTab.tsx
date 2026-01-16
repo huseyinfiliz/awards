@@ -47,7 +47,9 @@ export default class AwardsTab extends Component {
           <div className="CardList-header">
             <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.name')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.status')}</div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.categories')} / {app.translator.trans('huseyinfiliz-awards.admin.awards.votes')}</div>
+            <div>
+              {app.translator.trans('huseyinfiliz-awards.admin.awards.categories')} / {app.translator.trans('huseyinfiliz-awards.admin.awards.votes')}
+            </div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.actions')}</div>
           </div>
 
@@ -69,9 +71,7 @@ export default class AwardsTab extends Component {
                   </div>
                 </div>
                 <div className="CardList-item-cell">
-                  <span className={`StatusBadge StatusBadge--${award.status()}`}>
-                    {this.statusLabel(award.status())}
-                  </span>
+                  <span className={`StatusBadge StatusBadge--${award.status()}`}>{this.statusLabel(award.status())}</span>
                 </div>
                 <div className="CardList-item-cell CardList-item-cell--muted">
                   <span title={app.translator.trans('huseyinfiliz-awards.admin.awards.categories') as string}>
@@ -91,11 +91,7 @@ export default class AwardsTab extends Component {
                       title={app.translator.trans('huseyinfiliz-awards.admin.awards.publish') as string}
                     />
                   ) : null}
-                  <Button
-                    className="Button Button--icon Button--danger"
-                    icon="fas fa-trash"
-                    onclick={() => this.deleteAward(award)}
-                  />
+                  <Button className="Button Button--icon Button--danger" icon="fas fa-trash" onclick={() => this.deleteAward(award)} />
                 </div>
               </div>
             ))

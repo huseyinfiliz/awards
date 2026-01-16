@@ -60,7 +60,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
       const response = await app.request<any>({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/award-categories/autocomplete',
-        params: { 'filter[q]': query }
+        params: { 'filter[q]': query },
       });
 
       const items: CategorySuggestion[] = (response.data || [])
@@ -71,9 +71,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
         .filter((item: CategorySuggestion) => item.name && item.name.toLowerCase() !== query.toLowerCase());
 
       // Remove duplicates by name
-      const uniqueItems = items.filter((item, index, self) =>
-        index === self.findIndex((t) => t.name === item.name)
-      );
+      const uniqueItems = items.filter((item, index, self) => index === self.findIndex((t) => t.name === item.name));
 
       this.suggestions(uniqueItems);
       this.showSuggestions(uniqueItems.length > 0);
@@ -124,16 +122,19 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
               }}
             />
             {this.showSuggestions() && this.suggestions().length > 0 ? (
-              <ul className="Dropdown-menu" style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                zIndex: 1000,
-                display: 'block',
-                maxHeight: '200px',
-                overflowY: 'auto'
-              }}>
+              <ul
+                className="Dropdown-menu"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  zIndex: 1000,
+                  display: 'block',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                }}
+              >
                 {this.suggestions().map((suggestion: CategorySuggestion, index: number) => {
                   return (
                     <li key={index}>
@@ -169,16 +170,10 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
 
           <div className="Form-group">
             <label className="checkbox">
-              <input
-                type="checkbox"
-                checked={this.allowOther()}
-                onchange={(e: Event) => this.allowOther((e.target as HTMLInputElement).checked)}
-              />
+              <input type="checkbox" checked={this.allowOther()} onchange={(e: Event) => this.allowOther((e.target as HTMLInputElement).checked)} />
               {app.translator.trans('huseyinfiliz-awards.admin.categories.allow_other')}
             </label>
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.categories.allow_other_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.categories.allow_other_help')}</div>
           </div>
 
           <div className="Form-group">

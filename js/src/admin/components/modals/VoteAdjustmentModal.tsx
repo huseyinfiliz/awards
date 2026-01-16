@@ -59,9 +59,7 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
                 {app.translator.trans('huseyinfiliz-awards.admin.nominees.reset')}
               </Button>
             </div>
-            <p className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.nominees.adjustment_help')}
-            </p>
+            <p className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.adjustment_help')}</p>
           </div>
 
           <div className="Form-group">
@@ -70,19 +68,15 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
               {Math.max(0, displayedVotes)}
               {this.adjustment !== 0 && (
                 <span className={`VoteAdjustment-badge ${this.adjustment > 0 ? 'positive' : 'negative'}`}>
-                  {this.adjustment > 0 ? '+' : ''}{this.adjustment}
+                  {this.adjustment > 0 ? '+' : ''}
+                  {this.adjustment}
                 </span>
               )}
             </div>
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.loading}
-              disabled={this.loading}
-            >
+            <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={this.loading}>
               {app.translator.trans('huseyinfiliz-awards.admin.nominees.save')}
             </Button>
           </div>

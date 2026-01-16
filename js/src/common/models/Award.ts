@@ -20,7 +20,7 @@ export default class Award extends Model {
   categoryCount = Model.attribute<number>('categoryCount');
   nomineeCount = Model.attribute<number>('nomineeCount');
   voteCount = Model.attribute<number>('voteCount');
-  
+
   canViewResults = Model.attribute<boolean>('canViewResults');
 
   isDraft(): boolean {

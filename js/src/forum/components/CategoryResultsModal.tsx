@@ -42,10 +42,7 @@ export default class CategoryResultsModal extends Modal {
             const isThird = index === 2;
 
             return (
-              <div
-                className={`CategoryResultsModal-item ${isWinner ? 'CategoryResultsModal-item--winner' : ''}`}
-                key={nominee.id()}
-              >
+              <div className={`CategoryResultsModal-item ${isWinner ? 'CategoryResultsModal-item--winner' : ''}`} key={nominee.id()}>
                 <div className="CategoryResultsModal-item-rank">
                   {isWinner ? (
                     <span className="CategoryResultsModal-medal CategoryResultsModal-medal--gold">
@@ -66,11 +63,7 @@ export default class CategoryResultsModal extends Modal {
 
                 <div className="CategoryResultsModal-item-nominee">
                   {nominee.imageUrl() ? (
-                    <img
-                      className="CategoryResultsModal-item-image"
-                      src={nominee.imageUrl()}
-                      alt={nominee.name() as string}
-                    />
+                    <img className="CategoryResultsModal-item-image" src={nominee.imageUrl()} alt={nominee.name() as string} />
                   ) : (
                     <div className="CategoryResultsModal-item-placeholder">
                       <i className="fas fa-user" />
@@ -83,10 +76,7 @@ export default class CategoryResultsModal extends Modal {
                   <div className="CategoryResultsModal-item-stats">
                     <span className="CategoryResultsModal-item-votes">{voteCount}</span>
                     <div className="CategoryResultsModal-item-bar">
-                      <div
-                        className="CategoryResultsModal-item-barFill"
-                        style={{ width: `${percentage}%` }}
-                      />
+                      <div className="CategoryResultsModal-item-barFill" style={{ width: `${percentage}%` }} />
                     </div>
                     <span className="CategoryResultsModal-item-percentage">{percentage}%</span>
                   </div>

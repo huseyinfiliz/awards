@@ -37,9 +37,7 @@ export default class OtherCard extends Component {
         </div>
 
         <div className="NomineeCard-content">
-          <h3 className="NomineeCard-title">
-            {app.translator.trans('huseyinfiliz-awards.forum.other.suggest')}
-          </h3>
+          <h3 className="NomineeCard-title">{app.translator.trans('huseyinfiliz-awards.forum.other.suggest')}</h3>
           <p className="NomineeCard-description">
             {userPendingCount > 0
               ? app.translator.trans('huseyinfiliz-awards.forum.other.pending_count', { count: userPendingCount })
@@ -47,8 +45,7 @@ export default class OtherCard extends Component {
                 ? app.translator.trans('huseyinfiliz-awards.forum.other.no_remaining')
                 : isUnlimited
                   ? app.translator.trans('huseyinfiliz-awards.forum.other.click_to_suggest')
-                  : app.translator.trans('huseyinfiliz-awards.forum.other.remaining', { count: remainingSlots })
-            }
+                  : app.translator.trans('huseyinfiliz-awards.forum.other.remaining', { count: remainingSlots })}
           </p>
         </div>
       </div>

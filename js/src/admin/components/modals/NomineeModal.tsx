@@ -73,9 +73,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
         }))
         .filter((item: NomineeSuggestion) => item.name && item.name.toLowerCase() !== query.toLowerCase());
 
-      const uniqueItems = items.filter(
-        (item, index, self) => index === self.findIndex((t) => t.name === item.name)
-      );
+      const uniqueItems = items.filter((item, index, self) => index === self.findIndex((t) => t.name === item.name));
 
       this.suggestions(uniqueItems);
       this.showSuggestions(uniqueItems.length > 0);
@@ -205,9 +203,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                 this.description((e.target as HTMLTextAreaElement).value);
               }}
             />
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.nominees.description_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.description_help')}</div>
           </div>
 
           <div className="Form-group">
@@ -229,13 +225,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
               />
               {hasFofUpload ? (
                 <span>
-                  <input
-                    id="nominee-image-upload"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onchange={this.handleUpload.bind(this)}
-                  />
+                  <input id="nominee-image-upload" type="file" accept="image/*" style={{ display: 'none' }} onchange={this.handleUpload.bind(this)} />
                   <Button
                     className="Button Button--icon"
                     icon="fas fa-cloud-upload-alt"
@@ -268,9 +258,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                 />
               </div>
             ) : null}
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.nominees.image_url_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.image_url_help')}</div>
           </div>
 
           <div className="Form-group">

@@ -144,12 +144,7 @@ export default class NomineesTab extends Component {
             }}
             disabled={this.categories.length === 0}
           />
-          <Button
-            className="Button Button--primary"
-            icon="fas fa-plus"
-            onclick={() => this.openModal()}
-            disabled={!this.selectedCategoryId}
-          >
+          <Button className="Button Button--primary" icon="fas fa-plus" onclick={() => this.openModal()} disabled={!this.selectedCategoryId}>
             {app.translator.trans('huseyinfiliz-awards.admin.nominees.create')}
           </Button>
         </div>
@@ -209,9 +204,7 @@ export default class NomineesTab extends Component {
             )}
             <div>
               <div className="CardList-item-name">{nominee.name()}</div>
-              {nominee.description() ? (
-                <div className="CardList-item-meta">{nominee.description()}</div>
-              ) : null}
+              {nominee.description() ? <div className="CardList-item-meta">{nominee.description()}</div> : null}
             </div>
           </div>
         </div>
@@ -220,7 +213,8 @@ export default class NomineesTab extends Component {
             {displayedVotes}
             {adjustment !== 0 && (
               <span className={`VoteAdjustment-badge ${adjustment > 0 ? 'positive' : 'negative'}`}>
-                {adjustment > 0 ? '+' : ''}{adjustment}
+                {adjustment > 0 ? '+' : ''}
+                {adjustment}
               </span>
             )}
           </span>
@@ -233,11 +227,7 @@ export default class NomineesTab extends Component {
         </div>
         <div className="CardList-item-actions">
           <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
-          <Button
-            className="Button Button--icon Button--danger"
-            icon="fas fa-trash"
-            onclick={() => this.deleteNominee(nominee)}
-          />
+          <Button className="Button Button--icon Button--danger" icon="fas fa-trash" onclick={() => this.deleteNominee(nominee)} />
         </div>
       </div>
     );

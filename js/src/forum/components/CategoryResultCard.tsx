@@ -11,9 +11,7 @@ export default class CategoryResultCard extends Component {
     const award = this.attrs.award as Award;
     const allNominees = category.nominees() || [];
     // Sort by vote count and show only top 3
-    const nominees = [...allNominees]
-      .sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0))
-      .slice(0, 3);
+    const nominees = [...allNominees].sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0)).slice(0, 3);
 
     const canShowVotes = award.canShowVotes();
     const hasMoreNominees = allNominees.length > 3;
@@ -54,27 +52,33 @@ export default class CategoryResultCard extends Component {
                     </div>
                   )}
 
-                  {isWinner ? <div className="NomineeCard-badge NomineeCard-badge--gold"><i className="fas fa-medal" /></div> : null}
-                  {isRunnerUp ? <div className="NomineeCard-badge NomineeCard-badge--silver"><i className="fas fa-medal" /></div> : null}
-                  {isThird ? <div className="NomineeCard-badge NomineeCard-badge--bronze"><i className="fas fa-medal" /></div> : null}
+                  {isWinner ? (
+                    <div className="NomineeCard-badge NomineeCard-badge--gold">
+                      <i className="fas fa-medal" />
+                    </div>
+                  ) : null}
+                  {isRunnerUp ? (
+                    <div className="NomineeCard-badge NomineeCard-badge--silver">
+                      <i className="fas fa-medal" />
+                    </div>
+                  ) : null}
+                  {isThird ? (
+                    <div className="NomineeCard-badge NomineeCard-badge--bronze">
+                      <i className="fas fa-medal" />
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="NomineeCard-content">
                   <h3 className="NomineeCard-title">{nominee.name()}</h3>
 
-                  {nominee.description() ? (
-                    <p className="NomineeCard-description">{nominee.description()}</p>
-                  ) : null}
+                  {nominee.description() ? <p className="NomineeCard-description">{nominee.description()}</p> : null}
 
                   {isWinner ? (
-                    <div className="TagLabel Label--success">
-                      {app.translator.trans('huseyinfiliz-awards.forum.results.winner')}
-                    </div>
+                    <div className="TagLabel Label--success">{app.translator.trans('huseyinfiliz-awards.forum.results.winner')}</div>
                   ) : null}
                   {isRunnerUp ? (
-                    <div className="TagLabel Label--info">
-                      {app.translator.trans('huseyinfiliz-awards.forum.results.runner_up')}
-                    </div>
+                    <div className="TagLabel Label--info">{app.translator.trans('huseyinfiliz-awards.forum.results.runner_up')}</div>
                   ) : null}
 
                   {canShowVotes ? (

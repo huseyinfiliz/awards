@@ -138,9 +138,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.image_url')}</label>
             {this.renderImageUpload()}
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.awards.image_url_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.awards.image_url_help')}</div>
           </div>
 
           <div className="Form-group">
@@ -170,13 +168,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
           />
           {hasFofUpload ? (
             <span>
-              <input
-                id="award-image-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onchange={this.handleUpload.bind(this)}
-              />
+              <input id="award-image-upload" type="file" accept="image/*" style={{ display: 'none' }} onchange={this.handleUpload.bind(this)} />
               <Button
                 className="Button Button--icon"
                 icon="fas fa-cloud-upload-alt"

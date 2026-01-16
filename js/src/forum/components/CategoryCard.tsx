@@ -59,9 +59,7 @@ export default class CategoryCard extends Component {
             <NomineeCard nominee={nominee} category={category} award={award} />
           ))}
 
-          {category.allowOther() && award.isVotingOpen() && app.session.user ? (
-            <OtherCard category={category} />
-          ) : null}
+          {category.allowOther() && award.isVotingOpen() && app.session.user ? <OtherCard category={category} /> : null}
         </div>
 
         {nominees.length === 0 && !category.allowOther() ? (

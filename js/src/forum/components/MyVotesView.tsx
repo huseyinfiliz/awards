@@ -149,9 +149,7 @@ export default class MyVotesView extends Component {
         {/* Voted Categories */}
         {votedCategories.length > 0 ? (
           <div className="MyVotesView-section">
-            <h3 className="MyVotesView-section-title">
-              {app.translator.trans('huseyinfiliz-awards.forum.my_votes.title')}
-            </h3>
+            <h3 className="MyVotesView-section-title">{app.translator.trans('huseyinfiliz-awards.forum.my_votes.title')}</h3>
             <div className="MyVotesView-list">
               {votedCategories.map(({ category, votes, votesLimit, canAddMore }) => (
                 <div className="MyVotesView-categoryGroup" key={category.id()}>
@@ -172,11 +170,7 @@ export default class MyVotesView extends Component {
                     <div className="MyVotesView-item" key={vote.id()}>
                       <div className="MyVotesView-item-nominee">
                         {nominee.imageUrl() ? (
-                          <img
-                            className="MyVotesView-item-image"
-                            src={nominee.imageUrl()}
-                            alt={nominee.name() as string}
-                          />
+                          <img className="MyVotesView-item-image" src={nominee.imageUrl()} alt={nominee.name() as string} />
                         ) : (
                           <div className="MyVotesView-item-placeholder">
                             <i className="fas fa-user" />
@@ -187,9 +181,7 @@ export default class MyVotesView extends Component {
                         <div className="MyVotesView-item-name">{nominee.name()}</div>
                       </div>
                       <div className="MyVotesView-item-meta">
-                        {vote.createdAt?.() ? (
-                          <span className="MyVotesView-item-date">{humanTime(vote.createdAt())}</span>
-                        ) : null}
+                        {vote.createdAt?.() ? <span className="MyVotesView-item-date">{humanTime(vote.createdAt())}</span> : null}
                       </div>
                       <div className="MyVotesView-item-actions">
                         {isVotingOpen ? (
@@ -207,11 +199,7 @@ export default class MyVotesView extends Component {
                   {/* Add more votes button if allowed */}
                   {isVotingOpen && canAddMore ? (
                     <div className="MyVotesView-addMore">
-                      <Button
-                        className="Button Button--text"
-                        icon="fas fa-plus"
-                        onclick={() => onNavigateToCategory(String(category.id()))}
-                      >
+                      <Button className="Button Button--text" icon="fas fa-plus" onclick={() => onNavigateToCategory(String(category.id()))}>
                         {app.translator.trans('huseyinfiliz-awards.forum.my_votes.add_vote')}
                       </Button>
                     </div>
@@ -249,10 +237,7 @@ export default class MyVotesView extends Component {
                 {unvoted.map((category) => (
                   <div className="MyVotesView-unvotedItem" key={category.id()}>
                     <span className="MyVotesView-unvotedItem-name">{category.name()}</span>
-                    <Button
-                      className="Button Button--primary Button--small"
-                      onclick={() => onNavigateToCategory(String(category.id()))}
-                    >
+                    <Button className="Button Button--primary Button--small" onclick={() => onNavigateToCategory(String(category.id()))}>
                       {app.translator.trans('huseyinfiliz-awards.forum.my_votes.vote_now')}
                     </Button>
                   </div>

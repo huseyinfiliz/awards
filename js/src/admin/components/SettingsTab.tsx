@@ -24,13 +24,11 @@ export default class SettingsTab extends Component {
             <i className="fas fa-cogs" />
             {app.translator.trans('huseyinfiliz-awards.admin.tabs.settings')}
           </h3>
-          
+
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title')}</label>
             <input className="FormControl" bidi={this.navTitle} />
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.settings.nav_title_help')}</div>
           </div>
 
           <div className="Form-group">
@@ -41,25 +39,17 @@ export default class SettingsTab extends Component {
                 <i className={this.navIcon()} />
               </span>
             </div>
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.settings.nav_icon_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.settings.nav_icon_help')}</div>
           </div>
 
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.settings.votes_per_category')}</label>
             <input className="FormControl" type="number" min="0" bidi={this.votesPerCategory} />
-            <div className="helpText">
-              {app.translator.trans('huseyinfiliz-awards.admin.settings.votes_per_category_help')}
-            </div>
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.settings.votes_per_category_help')}</div>
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              loading={this.loading}
-              onclick={this.saveSettings.bind(this)}
-            >
+            <Button className="Button Button--primary" loading={this.loading} onclick={this.saveSettings.bind(this)}>
               {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
             </Button>
           </div>
@@ -70,18 +60,20 @@ export default class SettingsTab extends Component {
 
   saveSettings() {
     this.loading = true;
-    app.request({
-      method: 'POST',
-      url: app.forum.attribute('apiUrl') + '/settings',
-      body: {
-        'huseyinfiliz-awards.nav_title': this.navTitle(),
-        'huseyinfiliz-awards.nav_icon': this.navIcon(),
-        'huseyinfiliz-awards.votes_per_category': this.votesPerCategory()
-      }
-    }).then(() => {
-      this.loading = false;
-      m.redraw();
-      app.alerts.show({ type: 'success' }, app.translator.trans('core.lib.success_message'));
-    });
+    app
+      .request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/settings',
+        body: {
+          'huseyinfiliz-awards.nav_title': this.navTitle(),
+          'huseyinfiliz-awards.nav_icon': this.navIcon(),
+          'huseyinfiliz-awards.votes_per_category': this.votesPerCategory(),
+        },
+      })
+      .then(() => {
+        this.loading = false;
+        m.redraw();
+        app.alerts.show({ type: 'success' }, app.translator.trans('core.lib.success_message'));
+      });
   }
 }
