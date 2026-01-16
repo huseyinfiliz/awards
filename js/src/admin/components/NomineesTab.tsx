@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import NomineeModal from './modals/NomineeModal';
+import VoteAdjustmentModal from './modals/VoteAdjustmentModal';
 import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
 import Nominee from '../../common/models/Nominee';
@@ -167,67 +168,76 @@ export default class NomineesTab extends Component {
               <p>{app.translator.trans('huseyinfiliz-awards.admin.nominees.empty')}</p>
             </div>
           ) : (
-            this.nominees.map((nominee, index) => (
-              <div className="CardList-item" key={nominee.id()}>
-                <div className="CardList-item-cell CardList-item-sort">
-                  <Button
-                    className="Button Button--icon"
-                    icon="fas fa-chevron-up"
-                    onclick={() => this.moveNominee(nominee, 'up')}
-                    disabled={index === 0}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up') as string}
-                  />
-                  <Button
-                    className="Button Button--icon"
-                    icon="fas fa-chevron-down"
-                    onclick={() => this.moveNominee(nominee, 'down')}
-                    disabled={index === this.nominees.length - 1}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down') as string}
-                  />
-                </div>
-                <div className="CardList-item-cell CardList-item-cell--primary">
-                  <div className="CardList-item-nominee">
-                    {nominee.imageUrl() ? (
-                      <img src={nominee.imageUrl()} alt={nominee.name() as string} className="NomineeImage" />
-                    ) : (
-                      <div className="NomineeImage NomineeImage--placeholder">
-                        <i className="fas fa-image" />
-                      </div>
-                    )}
-                    <div>
-                      <div className="CardList-item-name">{nominee.name()}</div>
-                      {nominee.description() ? (
-                        <div className="CardList-item-meta">{nominee.description()}</div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-                <div className="CardList-item-cell">
-                  <span className="NomineeVotes">{nominee.voteCount?.() || 0}</span>
-                  <Button
-                    className="Button Button--icon Button--link"
-                    icon="fas fa-edit"
-                    onclick={() => this.editVotes(nominee)}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.edit_votes') as string}
-                  />
-                  <Button
-                    className="Button Button--icon Button--link"
-                    icon="fas fa-sync"
-                    onclick={() => this.recountVotes(nominee)}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.recount_votes') as string}
-                  />
-                </div>
-                <div className="CardList-item-actions">
-                  <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
-                  <Button
-                    className="Button Button--icon Button--danger"
-                    icon="fas fa-trash"
-                    onclick={() => this.deleteNominee(nominee)}
-                  />
-                </div>
-              </div>
-            ))
+            this.nominees.map((nominee, index) => this.renderNomineeRow(nominee, index))
           )}
+        </div>
+      </div>
+    );
+  }
+
+  renderNomineeRow(nominee: Nominee, index: number) {
+    const realVotes = nominee.realVoteCount?.() ?? 0;
+    const adjustment = nominee.voteAdjustment?.() ?? 0;
+    const displayedVotes = nominee.voteCount?.() ?? 0;
+
+    return (
+      <div className="CardList-item" key={nominee.id()}>
+        <div className="CardList-item-cell CardList-item-sort">
+          <Button
+            className="Button Button--icon"
+            icon="fas fa-chevron-up"
+            onclick={() => this.moveNominee(nominee, 'up')}
+            disabled={index === 0}
+            title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up') as string}
+          />
+          <Button
+            className="Button Button--icon"
+            icon="fas fa-chevron-down"
+            onclick={() => this.moveNominee(nominee, 'down')}
+            disabled={index === this.nominees.length - 1}
+            title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down') as string}
+          />
+        </div>
+        <div className="CardList-item-cell CardList-item-cell--primary">
+          <div className="CardList-item-nominee">
+            {nominee.imageUrl() ? (
+              <img src={nominee.imageUrl()} alt={nominee.name() as string} className="NomineeImage" />
+            ) : (
+              <div className="NomineeImage NomineeImage--placeholder">
+                <i className="fas fa-image" />
+              </div>
+            )}
+            <div>
+              <div className="CardList-item-name">{nominee.name()}</div>
+              {nominee.description() ? (
+                <div className="CardList-item-meta">{nominee.description()}</div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        <div className="CardList-item-cell">
+          <span className="NomineeVotes">
+            {displayedVotes}
+            {adjustment !== 0 && (
+              <span className={`VoteAdjustment-badge ${adjustment > 0 ? 'positive' : 'negative'}`}>
+                {adjustment > 0 ? '+' : ''}{adjustment}
+              </span>
+            )}
+          </span>
+          <Button
+            className="Button Button--icon Button--link"
+            icon="fas fa-sliders-h"
+            onclick={() => this.openVoteAdjustmentModal(nominee)}
+            title={app.translator.trans('huseyinfiliz-awards.admin.nominees.adjust_votes') as string}
+          />
+        </div>
+        <div className="CardList-item-actions">
+          <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
+          <Button
+            className="Button Button--icon Button--danger"
+            icon="fas fa-trash"
+            onclick={() => this.deleteNominee(nominee)}
+          />
         </div>
       </div>
     );
@@ -241,43 +251,11 @@ export default class NomineesTab extends Component {
     });
   }
 
-  async editVotes(nominee: Nominee) {
-    const currentVotes = nominee.voteCount?.() || 0;
-    const newVotes = prompt(
-      app.translator.trans('huseyinfiliz-awards.admin.nominees.enter_votes') as string,
-      String(currentVotes)
-    );
-
-    if (newVotes === null) return;
-
-    const votes = parseInt(newVotes, 10);
-    if (isNaN(votes) || votes < 0) {
-      alert(app.translator.trans('huseyinfiliz-awards.admin.nominees.invalid_votes') as string);
-      return;
-    }
-
-    try {
-      await app.request({
-        method: 'PATCH',
-        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/votes',
-        body: { data: { attributes: { voteCount: votes } } },
-      });
-      this.loadNominees();
-    } catch (error) {
-      console.error('Failed to update votes:', error);
-    }
-  }
-
-  async recountVotes(nominee: Nominee) {
-    try {
-      await app.request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/recount',
-      });
-      this.loadNominees();
-    } catch (error) {
-      console.error('Failed to recount votes:', error);
-    }
+  openVoteAdjustmentModal(nominee: Nominee) {
+    app.modal.show(VoteAdjustmentModal, {
+      nominee,
+      onsubmit: () => this.loadNominees(),
+    });
   }
 
   async deleteNominee(nominee: Nominee) {

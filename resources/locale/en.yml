@@ -77,11 +77,15 @@ huseyinfiliz-awards:
       upload_error: Failed to upload image
       sort_order: Order
       votes: Votes
-      edit_votes: Edit Votes
-      edit_votes_title: Adjust Vote Count
-      enter_votes: Enter new vote count
-      invalid_votes: Please enter a valid number
-      recount_votes: Recount Votes
+      adjust_votes: Adjust Votes
+      vote_adjustment_title: Vote Adjustment
+      real_votes: Real Votes
+      adjustment: Adjustment
+      adjustment_help: Enter a positive or negative number to adjust the displayed vote count.
+      displayed_votes: Displayed Votes
+      reset: Reset
+      reset_adjustment: Reset adjustment to 0
+      save: Save
       actions: Actions
       delete_confirm: Are you sure you want to delete this nominee?
       empty: No nominees found.

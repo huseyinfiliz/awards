@@ -18,10 +18,12 @@ class Nominee extends AbstractModel
         'image_url',
         'metadata',
         'sort_order',
+        'vote_adjustment',
     ];
 
     protected $casts = [
         'metadata' => 'array',
+        'vote_adjustment' => 'integer',
     ];
 
     public function category(): BelongsTo
@@ -34,9 +36,20 @@ class Nominee extends AbstractModel
         return $this->hasMany(Vote::class);
     }
 
-    public function getVoteCountAttribute(): int
+    /**
+     * Get the real vote count from database (without adjustment)
+     */
+    public function getRealVoteCountAttribute(): int
     {
         return $this->votes()->count();
+    }
+
+    /**
+     * Get the displayed vote count (real votes + adjustment)
+     */
+    public function getVoteCountAttribute(): int
+    {
+        return max(0, $this->real_vote_count + ($this->vote_adjustment ?? 0));
     }
 
     public function getVotePercentageAttribute(): float

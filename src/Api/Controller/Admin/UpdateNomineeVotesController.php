@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use HuseyinFiliz\Awards\Api\Serializer\NomineeSerializer;
 use HuseyinFiliz\Awards\Models\Nominee;
-use HuseyinFiliz\Awards\Models\Vote;
 
 class UpdateNomineeVotesController extends AbstractShowController
 {
@@ -22,28 +21,13 @@ class UpdateNomineeVotesController extends AbstractShowController
 
         $id = Arr::get($request->getQueryParams(), 'id');
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
-        $newVoteCount = (int) Arr::get($data, 'voteCount');
 
         $nominee = Nominee::findOrFail($id);
-        $currentCount = $nominee->votes()->count();
 
-        if ($newVoteCount > $currentCount) {
-            // Add admin votes using the actor's user_id
-            $toAdd = $newVoteCount - $currentCount;
-            for ($i = 0; $i < $toAdd; $i++) {
-                Vote::create([
-                    'nominee_id' => $nominee->id,
-                    'category_id' => $nominee->category_id,
-                    'user_id' => $actor->id,
-                ]);
-            }
-        } elseif ($newVoteCount < $currentCount) {
-            // Remove votes (prefer removing most recent first)
-            $toRemove = $currentCount - $newVoteCount;
-            Vote::where('nominee_id', $nominee->id)
-                ->orderBy('created_at', 'desc')
-                ->limit($toRemove)
-                ->delete();
+        // Update vote adjustment
+        if (Arr::has($data, 'voteAdjustment')) {
+            $nominee->vote_adjustment = (int) Arr::get($data, 'voteAdjustment');
+            $nominee->save();
         }
 
         return $nominee->fresh();
