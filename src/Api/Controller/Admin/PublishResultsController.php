@@ -36,17 +36,17 @@ class PublishResultsController extends AbstractShowController
         $award->status = 'published';
         $award->save();
 
-        // Notify all users who voted
+        // Notify all users who voted (single batch notification)
         $userIds = Vote::whereHas('category', function ($q) use ($award) {
             $q->where('award_id', $award->id);
-        })->distinct()->pluck('user_id');
+        })->distinct('user_id')->pluck('user_id');
 
         $users = \Flarum\User\User::whereIn('id', $userIds)->get();
 
-        foreach ($users as $user) {
+        if ($users->isNotEmpty()) {
             $this->notifications->sync(
                 new ResultsPublishedBlueprint($award),
-                [$user]
+                $users->all()
             );
         }
 

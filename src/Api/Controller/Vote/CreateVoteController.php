@@ -10,11 +10,10 @@ use Tobscure\JsonApi\Document;
 use HuseyinFiliz\Awards\Api\Serializer\VoteSerializer;
 use HuseyinFiliz\Awards\Models\Vote;
 use HuseyinFiliz\Awards\Models\Nominee;
-use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use Flarum\Foundation\ValidationException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Illuminate\Cache\RateLimiter;
-use Flarum\Settings\SettingsRepositoryInterface;
+use HuseyinFiliz\Awards\Service\VoteLimitService;
 
 class CreateVoteController extends AbstractCreateController
 {
@@ -22,13 +21,16 @@ class CreateVoteController extends AbstractCreateController
 
     protected $translator;
     protected $limiter;
-    protected $settings;
+    protected $voteLimitService;
 
-    public function __construct(TranslatorInterface $translator, RateLimiter $limiter, SettingsRepositoryInterface $settings)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        RateLimiter $limiter,
+        VoteLimitService $voteLimitService
+    ) {
         $this->translator = $translator;
         $this->limiter = $limiter;
-        $this->settings = $settings;
+        $this->voteLimitService = $voteLimitService;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -59,33 +61,21 @@ class CreateVoteController extends AbstractCreateController
             ]);
         }
 
-        $limit = (int) $this->settings->get('huseyinfiliz-awards.votes_per_category', 1);
-
-        if ($limit === 1) {
-            // Delete existing vote in this category (replace)
+        // Single vote mode: replace existing vote
+        if ($this->voteLimitService->isSingleVoteMode()) {
             Vote::where('category_id', $categoryId)
                 ->where('user_id', $actor->id)
                 ->delete();
-        } elseif ($limit > 1) {
-            // Check vote count + pending suggestions count against limit
-            $currentVotes = Vote::where('category_id', $categoryId)
-                ->where('user_id', $actor->id)
-                ->count();
-
-            $pendingSuggestions = OtherSuggestion::where('category_id', $categoryId)
-                ->where('user_id', $actor->id)
-                ->where('status', 'pending')
-                ->count();
-
-            $totalUsed = $currentVotes + $pendingSuggestions;
-
-            if ($totalUsed >= $limit) {
+        } elseif (!$this->voteLimitService->isUnlimited()) {
+            // Multi-vote mode with limit: check available slots
+            if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
+                $limit = $this->voteLimitService->getVotesPerCategory();
                 throw new ValidationException([
                     'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_limit_reached', ['limit' => $limit])
                 ]);
             }
         }
-        // If limit is 0, unlimited votes allowed
+        // Unlimited mode: no restrictions
 
         $vote = Vote::create([
             'nominee_id' => $nomineeId,

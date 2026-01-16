@@ -218,7 +218,6 @@ huseyinfiliz-awards:
       rate_limit: Too many votes. Please wait a moment.
       other_not_allowed: This category doesn't accept suggestions.
       vote_limit_reached: "You can only vote for {limit} nominees in this category."
-      suggestion_limit_reached: "You can only submit {limit} suggestions per category."
       vote_quota_exhausted: You have used all your available votes/suggestions for this category.
       cannot_delete_processed_suggestion: Only pending suggestions can be cancelled.
       not_available: This award is not available yet.

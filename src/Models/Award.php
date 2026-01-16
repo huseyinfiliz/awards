@@ -31,16 +31,25 @@ class Award extends AbstractModel
 
     public function getCategoryCountAttribute(): int
     {
-        return $this->categories()->count();
+        // Use pre-loaded count from withCount('categories') if available
+        return $this->attributes['categories_count'] ?? $this->categories()->count();
     }
 
     public function getNomineeCountAttribute(): int
     {
+        // If categories are already loaded, calculate from them to avoid N+1
+        if ($this->relationLoaded('categories')) {
+            return $this->categories->sum(fn($cat) => $cat->nominees_count ?? $cat->nominees()->count());
+        }
         return Nominee::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
 
     public function getVoteCountAttribute(): int
     {
+        // If categories are already loaded, calculate from them to avoid N+1
+        if ($this->relationLoaded('categories')) {
+            return $this->categories->sum('total_votes');
+        }
         return Vote::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
 

@@ -12,6 +12,11 @@ class CategorySerializer extends AbstractSerializer
 {
     protected $type = 'award-categories';
 
+    // Static cache for user data to avoid N+1 queries within same request
+    protected static $userVotesCache = [];
+    protected static $userSuggestionsCache = [];
+    protected static $cacheUserId = null;
+
     protected function getDefaultAttributes($category): array
     {
         if (!($category instanceof Category)) {
@@ -25,15 +30,39 @@ class CategorySerializer extends AbstractSerializer
         $userVoteIds = [];
 
         if ($actor && $actor->id) {
-            $userPendingSuggestionsCount = OtherSuggestion::where('category_id', $category->id)
-                ->where('user_id', $actor->id)
-                ->where('status', 'pending')
-                ->count();
+            // Reset cache if user changed
+            if (self::$cacheUserId !== $actor->id) {
+                self::$userVotesCache = [];
+                self::$userSuggestionsCache = [];
+                self::$cacheUserId = $actor->id;
+            }
 
-            $userVoteIds = Vote::where('category_id', $category->id)
-                ->where('user_id', $actor->id)
-                ->pluck('nominee_id')
-                ->toArray();
+            // Load all user votes at once if not cached
+            if (empty(self::$userVotesCache)) {
+                $votes = Vote::where('user_id', $actor->id)
+                    ->select('category_id', 'nominee_id')
+                    ->get();
+
+                foreach ($votes as $vote) {
+                    self::$userVotesCache[$vote->category_id][] = $vote->nominee_id;
+                }
+            }
+
+            // Load all user pending suggestions at once if not cached
+            if (empty(self::$userSuggestionsCache)) {
+                $suggestions = OtherSuggestion::where('user_id', $actor->id)
+                    ->where('status', 'pending')
+                    ->select('category_id')
+                    ->get()
+                    ->groupBy('category_id');
+
+                foreach ($suggestions as $catId => $items) {
+                    self::$userSuggestionsCache[$catId] = $items->count();
+                }
+            }
+
+            $userVoteIds = self::$userVotesCache[$category->id] ?? [];
+            $userPendingSuggestionsCount = self::$userSuggestionsCache[$category->id] ?? 0;
         }
 
         return [

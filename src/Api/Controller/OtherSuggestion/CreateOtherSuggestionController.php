@@ -10,19 +10,21 @@ use Tobscure\JsonApi\Document;
 use HuseyinFiliz\Awards\Api\Serializer\OtherSuggestionSerializer;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use HuseyinFiliz\Awards\Models\Category;
-use HuseyinFiliz\Awards\Models\Vote;
 use Flarum\Foundation\ValidationException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use HuseyinFiliz\Awards\Service\VoteLimitService;
 
 class CreateOtherSuggestionController extends AbstractCreateController
 {
     public $serializer = OtherSuggestionSerializer::class;
 
     protected $translator;
+    protected $voteLimitService;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, VoteLimitService $voteLimitService)
     {
         $this->translator = $translator;
+        $this->voteLimitService = $voteLimitService;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -64,37 +66,13 @@ class CreateOtherSuggestionController extends AbstractCreateController
             ]);
         }
 
-        // Get votes per category limit from settings (default: 1, 0 = unlimited)
-        $votesPerCategory = (int) resolve('flarum.settings')->get('huseyinfiliz-awards.votes_per_category', 1);
-
-        // If unlimited votes, allow unlimited suggestions
-        if ($votesPerCategory === 0) {
-            return OtherSuggestion::create([
-                'category_id' => $categoryId,
-                'user_id' => $actor->id,
-                'name' => $name,
-                'status' => 'pending',
-            ]);
-        }
-
-        // Count user's existing votes in this category
-        $existingVotes = Vote::where('category_id', $categoryId)
-            ->where('user_id', $actor->id)
-            ->count();
-
-        // Count user's pending suggestions in this category
-        $pendingSuggestions = OtherSuggestion::where('category_id', $categoryId)
-            ->where('user_id', $actor->id)
-            ->where('status', 'pending')
-            ->count();
-
-        // Calculate available slots: votes_per_category - existing_votes - pending_suggestions
-        $availableSlots = $votesPerCategory - $existingVotes - $pendingSuggestions;
-
-        if ($availableSlots <= 0) {
-            throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_quota_exhausted')
-            ]);
+        // Check vote limit (unless unlimited)
+        if (!$this->voteLimitService->isUnlimited()) {
+            if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
+                throw new ValidationException([
+                    'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_quota_exhausted')
+                ]);
+            }
         }
 
         return OtherSuggestion::create([
