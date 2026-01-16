@@ -75,13 +75,13 @@
       "@test:unit",
       "@test:integration"
     ],
-    "test:unit": "phpunit -c tests/phpunit.unit.xml",
-    "test:integration": "phpunit -c tests/phpunit.integration.xml",
+    "test:unit": "vendor/bin/phpunit -c tests/phpunit.unit.xml",
+    "test:integration": "vendor/bin/phpunit -c tests/phpunit.integration.xml",
     "test:setup": "@php tests/integration/setup.php",
-    "analyse:phpstan": "phpstan analyse",
-    "analyse:phpstan:baseline": "phpstan analyse --generate-baseline",
-    "cs": "php-cs-fixer fix --dry-run --diff",
-    "cs:fix": "php-cs-fixer fix"
+    "analyse:phpstan": "vendor/bin/phpstan analyse",
+    "analyse:phpstan:baseline": "vendor/bin/phpstan analyse --generate-baseline",
+    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "vendor/bin/php-cs-fixer fix"
   },
   "scripts-descriptions": {
     "test": "Runs all tests.",
