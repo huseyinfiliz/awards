@@ -247,15 +247,14 @@ export default class AwardsPage extends Page {
     const showResultsTab = this.selectedAward?.isPublished();
     const showMyVotesTab = app.session.user;
 
-    // Build category filter options - build categories first, then prepend 'all' to ensure order
-    const categoryOnlyOptions: Record<string, string> = {};
-    categories.forEach((cat) => {
-      categoryOnlyOptions[String(cat.id())] = cat.name() as string;
-    });
+    // Build category filter options with 'cat_' prefix to prevent numeric key sorting
+    // (JS objects sort integer-index keys first, so "1", "2" would come before "all")
     const categoryOptions: Record<string, string> = {
       'all': app.translator.trans('huseyinfiliz-awards.forum.nav.all_categories') as string,
-      ...categoryOnlyOptions,
     };
+    categories.forEach((cat) => {
+      categoryOptions[`cat_${cat.id()}`] = cat.name() as string;
+    });
 
     return (
       <div className="AwardsPage-filterBar">
@@ -267,10 +266,10 @@ export default class AwardsPage extends Page {
           {categories.length > 0 && this.currentView !== 'my_votes' ? (
             <div className="AwardsPage-categoryFilter">
               <Select
-                value={this.selectedCategoryId || 'all'}
+                value={this.selectedCategoryId ? `cat_${this.selectedCategoryId}` : 'all'}
                 options={categoryOptions}
                 onchange={(value: string) => {
-                  this.selectedCategoryId = value === 'all' ? null : value;
+                  this.selectedCategoryId = value === 'all' ? null : value.replace('cat_', '');
                   m.redraw();
                 }}
               />
