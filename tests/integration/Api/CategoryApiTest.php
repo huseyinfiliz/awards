@@ -88,10 +88,14 @@ class CategoryApiTest extends TestCase
                     'data' => [
                         'type' => 'award-categories',
                         'attributes' => [
-                            'awardId' => 1,
                             'name' => 'New Category',
                             'slug' => 'new-category',
                             'sortOrder' => 3,
+                        ],
+                        'relationships' => [
+                            'award' => [
+                                'data' => ['type' => 'awards', 'id' => '1'],
+                            ],
                         ],
                     ],
                 ],

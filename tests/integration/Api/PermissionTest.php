@@ -59,7 +59,8 @@ class PermissionTest extends TestCase
             ])
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        // Flarum returns 403 for permission denied
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -199,7 +200,8 @@ class PermissionTest extends TestCase
             $this->request('GET', '/api/awards')
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        // Flarum returns 403 for guests without permission
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -221,6 +223,7 @@ class PermissionTest extends TestCase
             ])
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        // Guest POST requests return 403 (permission denied)
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }

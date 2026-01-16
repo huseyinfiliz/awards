@@ -67,9 +67,13 @@ class NomineeApiTest extends TestCase
                     'data' => [
                         'type' => 'award-nominees',
                         'attributes' => [
-                            'categoryId' => 1,
                             'name' => 'New Nominee',
                             'slug' => 'new-nominee',
+                        ],
+                        'relationships' => [
+                            'category' => [
+                                'data' => ['type' => 'award-categories', 'id' => '1'],
+                            ],
                         ],
                     ],
                 ],
@@ -91,10 +95,14 @@ class NomineeApiTest extends TestCase
                     'data' => [
                         'type' => 'award-nominees',
                         'attributes' => [
-                            'categoryId' => 1,
                             'name' => 'New Nominee',
                             'slug' => 'new-nominee',
                             'sortOrder' => 3,
+                        ],
+                        'relationships' => [
+                            'category' => [
+                                'data' => ['type' => 'award-categories', 'id' => '1'],
+                            ],
                         ],
                     ],
                 ],
@@ -154,12 +162,12 @@ class NomineeApiTest extends TestCase
     public function admin_can_adjust_nominee_votes(): void
     {
         $response = $this->send(
-            $this->request('POST', '/api/award-nominees/1/adjust-votes', [
+            $this->request('PATCH', '/api/award-nominees/1/votes', [
                 'authenticatedAs' => 1,
                 'json' => [
                     'data' => [
                         'attributes' => [
-                            'adjustment' => 10,
+                            'voteAdjustment' => 10,
                         ],
                     ],
                 ],
@@ -178,12 +186,12 @@ class NomineeApiTest extends TestCase
     public function user_cannot_adjust_nominee_votes(): void
     {
         $response = $this->send(
-            $this->request('POST', '/api/award-nominees/1/adjust-votes', [
+            $this->request('PATCH', '/api/award-nominees/1/votes', [
                 'authenticatedAs' => 2,
                 'json' => [
                     'data' => [
                         'attributes' => [
-                            'adjustment' => 10,
+                            'voteAdjustment' => 10,
                         ],
                     ],
                 ],

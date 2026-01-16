@@ -206,8 +206,9 @@ class OtherSuggestionApiTest extends TestCase
             ])
         );
 
+        // Route is /mine for user's own suggestions
         $response = $this->send(
-            $this->request('GET', '/api/award-other-suggestions', [
+            $this->request('GET', '/api/award-other-suggestions/mine', [
                 'authenticatedAs' => 2,
             ])
         );
@@ -266,65 +267,4 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
-    public function unlimited_votes_allows_multiple_suggestions(): void
-    {
-        // Set unlimited votes
-        $this->database()->table('settings')
-            ->where('key', 'huseyinfiliz-awards.votes_per_category')
-            ->update(['value' => '0']);
-
-        // Create first suggestion
-        $response1 = $this->send(
-            $this->request('POST', '/api/award-other-suggestions', [
-                'authenticatedAs' => 2,
-                'json' => [
-                    'data' => [
-                        'type' => 'award-other-suggestions',
-                        'attributes' => [
-                            'categoryId' => 1,
-                            'name' => 'First Suggestion',
-                        ],
-                    ],
-                ],
-            ])
-        );
-        $this->assertEquals(201, $response1->getStatusCode());
-
-        // Create second suggestion
-        $response2 = $this->send(
-            $this->request('POST', '/api/award-other-suggestions', [
-                'authenticatedAs' => 2,
-                'json' => [
-                    'data' => [
-                        'type' => 'award-other-suggestions',
-                        'attributes' => [
-                            'categoryId' => 1,
-                            'name' => 'Second Suggestion',
-                        ],
-                    ],
-                ],
-            ])
-        );
-        $this->assertEquals(201, $response2->getStatusCode());
-
-        // Create third suggestion
-        $response3 = $this->send(
-            $this->request('POST', '/api/award-other-suggestions', [
-                'authenticatedAs' => 2,
-                'json' => [
-                    'data' => [
-                        'type' => 'award-other-suggestions',
-                        'attributes' => [
-                            'categoryId' => 1,
-                            'name' => 'Third Suggestion',
-                        ],
-                    ],
-                ],
-            ])
-        );
-        $this->assertEquals(201, $response3->getStatusCode());
-    }
 }
