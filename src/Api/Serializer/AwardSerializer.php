@@ -44,6 +44,9 @@ class AwardSerializer extends AbstractSerializer
             'isVotingOpen' => $award->isVotingOpen(),
             'canShowVotes' => $award->canShowVotes(),
             'canViewResults' => $canViewResults,
+            'categoryCount' => $award->category_count,
+            'nomineeCount' => $award->nominee_count,
+            'voteCount' => $award->vote_count,
         ];
     }
 
