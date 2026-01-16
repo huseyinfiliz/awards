@@ -71,31 +71,27 @@
     }
   },
   "scripts": {
-    "test": "phpunit -c phpunit.xml",
-    "test:coverage": "phpunit -c phpunit.xml --coverage-html coverage",
-    "analyse": "vendor/bin/phpstan analyse",
-    "analyse:clear": "vendor/bin/phpstan clear-result-cache",
-    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
-    "cs:fix": "vendor/bin/php-cs-fixer fix",
-    "qa": [
-      "@cs",
-      "@test"
+    "analyse:phpstan": "phpstan analyse",
+    "analyse:phpstan:clear": "phpstan clear-result-cache",
+    "test": [
+      "@test:unit",
+      "@test:integration"
     ],
-    "qa:full": [
-      "@cs",
-      "@analyse",
-      "@test"
-    ]
+    "test:unit": "phpunit -c phpunit.xml --testsuite Unit",
+    "test:integration": "phpunit -c phpunit.xml --testsuite Integration",
+    "test:coverage": "phpunit -c phpunit.xml --coverage-html coverage",
+    "test:setup": "@php tests/integration/setup.php",
+    "cs": "php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "php-cs-fixer fix"
   },
   "scripts-descriptions": {
-    "test": "Run unit tests",
-    "test:coverage": "Run tests with code coverage",
-    "analyse": "Run static analysis with PHPStan",
-    "analyse:clear": "Clear PHPStan cache",
-    "cs": "Check code style (dry run)",
-    "cs:fix": "Fix code style issues",
-    "qa": "Run essential quality checks (Code Style + Tests)",
-    "qa:full": "Run all quality checks (Code Style + PHPStan + Tests)"
+    "analyse:phpstan": "Run static analysis with PHPStan",
+    "test": "Run all tests",
+    "test:unit": "Run unit tests only",
+    "test:integration": "Run integration tests only",
+    "test:setup": "Set up integration test environment",
+    "cs": "Check code style",
+    "cs:fix": "Fix code style issues"
   },
   "config": {
     "sort-packages": true,
