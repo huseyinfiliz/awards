@@ -154,17 +154,17 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.categories.slug')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.categories.description')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea className="FormControl" bidi={this.description} rows={3} />
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.categories.sort_order')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</label>
             <input className="FormControl" type="number" bidi={this.sortOrder} />
           </div>
 
@@ -178,7 +178,7 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
 
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
-              {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
+              {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
         </div>

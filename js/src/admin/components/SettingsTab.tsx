@@ -50,7 +50,7 @@ export default class SettingsTab extends Component {
 
           <div className="Form-group">
             <Button className="Button Button--primary" loading={this.loading} onclick={this.saveSettings.bind(this)}>
-              {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
+              {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default class SettingsTab extends Component {
       .then(() => {
         this.loading = false;
         m.redraw();
-        app.alerts.show({ type: 'success' }, app.translator.trans('core.lib.success_message'));
+        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.lib.success_message'));
       });
   }
 }

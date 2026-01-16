@@ -48,9 +48,9 @@ export default class AwardsTab extends Component {
             <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.name')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.status')}</div>
             <div>
-              {app.translator.trans('huseyinfiliz-awards.admin.awards.categories')} / {app.translator.trans('huseyinfiliz-awards.admin.awards.votes')}
+              {app.translator.trans('huseyinfiliz-awards.admin.awards.categories')} / {app.translator.trans('huseyinfiliz-awards.lib.votes')}
             </div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.awards.actions')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.lib.actions')}</div>
           </div>
 
           {this.awards.length === 0 ? (
@@ -77,7 +77,7 @@ export default class AwardsTab extends Component {
                   <span title={app.translator.trans('huseyinfiliz-awards.admin.awards.categories') as string}>
                     <i className="fas fa-folder" /> {award.categoryCount?.() || 0}
                   </span>
-                  <span title={app.translator.trans('huseyinfiliz-awards.admin.awards.votes') as string}>
+                  <span title={app.translator.trans('huseyinfiliz-awards.lib.votes') as string}>
                     <i className="fas fa-vote-yea" /> {award.voteCount?.() || 0}
                   </span>
                 </div>

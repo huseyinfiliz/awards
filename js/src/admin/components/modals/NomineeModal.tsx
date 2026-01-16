@@ -120,11 +120,11 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
 
       if (response && response.data && response.data[0] && response.data[0].attributes) {
         this.imageUrl(response.data[0].attributes.url);
-        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.admin.nominees.upload_success'));
+        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.lib.upload_success'));
       }
     } catch (error: any) {
       console.error('Image upload failed:', error);
-      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.admin.nominees.upload_error'));
+      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.lib.upload_error'));
     } finally {
       this.uploadLoading = false;
       target.value = '';
@@ -194,7 +194,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.description')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea
               className="FormControl"
               rows={2}
@@ -207,7 +207,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.slug')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
 
@@ -234,7 +234,7 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                       const fileInput = document.getElementById('nominee-image-upload');
                       if (fileInput) fileInput.click();
                     }}
-                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.upload_image')}
+                    title={app.translator.trans('huseyinfiliz-awards.lib.upload_image')}
                     type="button"
                   />
                 </span>
@@ -262,13 +262,13 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.sort_order')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</label>
             <input className="FormControl" type="number" bidi={this.sortOrder} />
           </div>
 
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
-              {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
+              {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
         </div>

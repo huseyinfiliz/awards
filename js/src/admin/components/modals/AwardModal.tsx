@@ -58,11 +58,11 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
 
       if (response && response.data && response.data[0] && response.data[0].attributes) {
         this.imageUrl(response.data[0].attributes.url);
-        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.admin.awards.upload_success'));
+        app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-awards.lib.upload_success'));
       }
     } catch (error: any) {
       console.error('Image upload failed:', error);
-      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.admin.awards.upload_error'));
+      app.alerts.show({ type: 'error' }, app.translator.trans('huseyinfiliz-awards.lib.upload_error'));
     } finally {
       this.uploadLoading = false;
       target.value = '';
@@ -90,7 +90,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.slug')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
 
@@ -100,7 +100,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.description')}</label>
+            <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea className="FormControl" bidi={this.description} rows={3} />
           </div>
 
@@ -143,7 +143,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
 
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
-              {app.translator.trans('huseyinfiliz-awards.lib.buttons.save')}
+              {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
                   const fileInput = document.getElementById('award-image-upload');
                   if (fileInput) fileInput.click();
                 }}
-                title={app.translator.trans('huseyinfiliz-awards.admin.awards.upload_image')}
+                title={app.translator.trans('huseyinfiliz-awards.lib.upload_image')}
                 type="button"
               />
             </span>

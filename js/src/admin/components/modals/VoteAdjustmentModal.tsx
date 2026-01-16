@@ -77,7 +77,7 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
 
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={this.loading}>
-              {app.translator.trans('huseyinfiliz-awards.admin.nominees.save')}
+              {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
         </div>

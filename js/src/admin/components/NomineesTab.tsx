@@ -153,8 +153,8 @@ export default class NomineesTab extends Component {
           <div className="CardList-header">
             <div style={{ width: '60px' }}></div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.votes')}</div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.nominees.actions')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.lib.votes')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.lib.actions')}</div>
           </div>
 
           {this.nominees.length === 0 ? (
@@ -183,14 +183,14 @@ export default class NomineesTab extends Component {
             icon="fas fa-chevron-up"
             onclick={() => this.moveNominee(nominee, 'up')}
             disabled={index === 0}
-            title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_up') as string}
+            title={app.translator.trans('huseyinfiliz-awards.lib.move_up') as string}
           />
           <Button
             className="Button Button--icon"
             icon="fas fa-chevron-down"
             onclick={() => this.moveNominee(nominee, 'down')}
             disabled={index === this.nominees.length - 1}
-            title={app.translator.trans('huseyinfiliz-awards.admin.nominees.move_down') as string}
+            title={app.translator.trans('huseyinfiliz-awards.lib.move_down') as string}
           />
         </div>
         <div className="CardList-item-cell CardList-item-cell--primary">

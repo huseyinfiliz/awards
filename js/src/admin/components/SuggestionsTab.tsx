@@ -123,7 +123,7 @@ export default class SuggestionsTab extends Component {
             <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.name')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.category')}</div>
             <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.user')}</div>
-            <div>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.actions')}</div>
+            <div>{app.translator.trans('huseyinfiliz-awards.lib.actions')}</div>
           </div>
 
           {this.suggestions.length === 0 ? (
