@@ -71,25 +71,25 @@
     }
   },
   "scripts": {
-    "analyse:phpstan": "phpstan analyse",
-    "analyse:phpstan:clear": "phpstan clear-result-cache",
     "test": [
       "@test:unit",
       "@test:integration"
     ],
-    "test:unit": "phpunit -c phpunit.xml --testsuite Unit",
-    "test:integration": "phpunit -c phpunit.xml --testsuite Integration",
-    "test:coverage": "phpunit -c phpunit.xml --coverage-html coverage",
+    "test:unit": "phpunit -c tests/phpunit.unit.xml",
+    "test:integration": "phpunit -c tests/phpunit.integration.xml",
     "test:setup": "@php tests/integration/setup.php",
+    "analyse:phpstan": "phpstan analyse",
+    "analyse:phpstan:baseline": "phpstan analyse --generate-baseline",
     "cs": "php-cs-fixer fix --dry-run --diff",
     "cs:fix": "php-cs-fixer fix"
   },
   "scripts-descriptions": {
-    "analyse:phpstan": "Run static analysis with PHPStan",
-    "test": "Run all tests",
-    "test:unit": "Run unit tests only",
-    "test:integration": "Run integration tests only",
-    "test:setup": "Set up integration test environment",
+    "test": "Runs all tests.",
+    "test:unit": "Runs all unit tests.",
+    "test:integration": "Runs all integration tests.",
+    "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+    "analyse:phpstan": "Run static analysis with PHPStan.",
+    "analyse:phpstan:baseline": "Generate PHPStan baseline for existing errors.",
     "cs": "Check code style",
     "cs:fix": "Fix code style issues"
   },
