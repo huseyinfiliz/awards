@@ -55,14 +55,38 @@ export default class SuggestionModal extends Modal {
 
   getRemainingSlots(): number {
     const userVoteCount = (this.category.userVoteIds() || []).length;
-    const pendingCount = this.suggestions.filter((s) => s.isPending()).length;
     const votesPerCategory = parseInt(app.forum.attribute('awardsVotesPerCategory') || '1', 10);
 
     if (votesPerCategory === 0) return Infinity;
+
+    // Use the locally loaded suggestions list for accurate pending count
+    const pendingCount = this.suggestions.filter((s) => s.isPending()).length;
+
     return Math.max(0, votesPerCategory - userVoteCount - pendingCount);
   }
 
+  updateCategoryPendingCount() {
+    // Update the category model in the store with the new pending count
+    const pendingCount = this.suggestions.filter((s) => s.isPending()).length;
+
+    // Update the category's data in the store
+    this.category.pushData({
+      attributes: {
+        userPendingSuggestionsCount: pendingCount,
+      },
+    });
+  }
+
   content() {
+    // Show loading state while suggestions are being fetched
+    if (this.loadingSuggestions) {
+      return (
+        <div className="Modal-body">
+          <LoadingIndicator />
+        </div>
+      );
+    }
+
     const remainingSlots = this.getRemainingSlots();
     const isUnlimited = parseInt(app.forum.attribute('awardsVotesPerCategory') || '1', 10) === 0;
     const canSubmit = isUnlimited || remainingSlots > 0;
@@ -106,9 +130,7 @@ export default class SuggestionModal extends Modal {
             {app.translator.trans('huseyinfiliz-awards.forum.other.my_suggestions')}
           </h4>
 
-          {this.loadingSuggestions ? (
-            <LoadingIndicator />
-          ) : this.suggestions.length === 0 ? (
+          {this.suggestions.length === 0 ? (
             <p className="SuggestionModal-empty">
               {app.translator.trans('huseyinfiliz-awards.forum.other.no_suggestions')}
             </p>
@@ -166,6 +188,9 @@ export default class SuggestionModal extends Modal {
 
       // Remove from local list
       this.suggestions = this.suggestions.filter((s) => s.id() !== suggestion.id());
+
+      // Update the category model in the store so OtherCard reflects the change
+      this.updateCategoryPendingCount();
     } catch (error) {
       console.error('Failed to cancel suggestion:', error);
     }
@@ -197,6 +222,10 @@ export default class SuggestionModal extends Modal {
         this.suggestions.unshift(newSuggestion);
         this.name('');
         this.loading = false;
+
+        // Update the category model in the store
+        this.updateCategoryPendingCount();
+
         m.redraw();
       })
       .catch(() => {
