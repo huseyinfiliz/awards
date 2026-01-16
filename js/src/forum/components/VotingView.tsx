@@ -55,11 +55,12 @@ export default class VotingView extends Component {
           )}
         </div>
 
-        {award.isVotingOpen() && app.session.user && !selectedCategoryId ? (
+        {award.isVotingOpen() && app.session.user ? (
           <VotingProgressBar
             votedCount={votedCount}
             totalCount={totalCategories}
             categoryIds={categoryIds}
+            disableNavigation={!!selectedCategoryId}
             onNavigate={(categoryId: string) => {
               const element = document.getElementById(`category-${categoryId}`);
               if (element) {

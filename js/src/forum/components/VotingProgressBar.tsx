@@ -38,6 +38,7 @@ export default class VotingProgressBar extends Component {
     const totalCount = this.attrs.totalCount as number;
     const categoryIds = this.attrs.categoryIds as string[];
     const onNavigate = this.attrs.onNavigate as (categoryId: string) => void;
+    const disableNavigation = this.attrs.disableNavigation as boolean;
 
     const isComplete = votedCount === totalCount && totalCount > 0;
     const progressPercent = totalCount > 0 ? (votedCount / totalCount) * 100 : 0;
@@ -70,7 +71,7 @@ export default class VotingProgressBar extends Component {
               className="Button Button--icon"
               icon="fas fa-chevron-left"
               onclick={() => this.navigate(-1, categoryIds, onNavigate)}
-              disabled={categoryIds.length === 0}
+              disabled={disableNavigation || categoryIds.length === 0}
               title={app.translator.trans('huseyinfiliz-awards.forum.progress.prev') as string}
             >
               {app.translator.trans('huseyinfiliz-awards.forum.progress.prev')}
@@ -79,7 +80,7 @@ export default class VotingProgressBar extends Component {
               className="Button Button--icon"
               icon="fas fa-chevron-right"
               onclick={() => this.navigate(1, categoryIds, onNavigate)}
-              disabled={categoryIds.length === 0}
+              disabled={disableNavigation || categoryIds.length === 0}
               title={app.translator.trans('huseyinfiliz-awards.forum.progress.next') as string}
             >
               {app.translator.trans('huseyinfiliz-awards.forum.progress.next')}
