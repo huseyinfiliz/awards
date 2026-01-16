@@ -1,5 +1,5 @@
 {
-  "name": "@huseyinfiliz/pickem",
+  "name": "@huseyinfiliz/awards",
   "private": true,
   "prettier": "@flarum/prettier-config",
   "dependencies": {

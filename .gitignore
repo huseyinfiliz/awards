@@ -19,5 +19,13 @@ tests/.phpunit.result.cache
 /tests/integration/tmp
 js/coverage-ts
 
+# Coverage
+coverage/
+coverage.xml
+
+# Cache
+.php-cs-fixer.cache
+.phpunit.result.cache
+
 # Other
 .vagrant

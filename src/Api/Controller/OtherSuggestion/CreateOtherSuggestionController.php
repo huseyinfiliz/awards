@@ -34,6 +34,20 @@ class CreateOtherSuggestionController extends AbstractCreateController
         $categoryId = Arr::get($data, 'categoryId');
         $name = trim(Arr::get($data, 'name'));
 
+        // Empty check
+        if (empty($name)) {
+            throw new ValidationException([
+                'name' => $this->translator->trans('validation.required', ['attribute' => 'name'])
+            ]);
+        }
+
+        // Length check
+        if (mb_strlen($name) > 255) {
+            throw new ValidationException([
+                'name' => $this->translator->trans('validation.max.string', ['attribute' => 'name', 'max' => 255])
+            ]);
+        }
+
         $category = Category::with('award')->findOrFail($categoryId);
 
         // Check if category allows other suggestions
