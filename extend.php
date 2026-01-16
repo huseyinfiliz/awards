@@ -70,10 +70,12 @@ return [
         ->post('/award-votes', 'award-votes.create', Controller\Vote\CreateVoteController::class)
         ->delete('/award-votes/{id}', 'award-votes.delete', Controller\Vote\DeleteVoteController::class)
 
-        // Other Suggestions
+        // Other Suggestions - /mine MUST come before /{id}
+        ->get('/award-other-suggestions/mine', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class)
         ->get('/award-other-suggestions', 'award-other-suggestions.index', Controller\OtherSuggestion\ListPendingSuggestionsController::class)
         ->post('/award-other-suggestions', 'award-other-suggestions.create', Controller\OtherSuggestion\CreateOtherSuggestionController::class)
-        ->patch('/award-other-suggestions/{id}', 'award-other-suggestions.update', Controller\OtherSuggestion\UpdateOtherSuggestionController::class),
+        ->patch('/award-other-suggestions/{id}', 'award-other-suggestions.update', Controller\OtherSuggestion\UpdateOtherSuggestionController::class)
+        ->delete('/award-other-suggestions/{id}', 'award-other-suggestions.delete', Controller\OtherSuggestion\DeleteOtherSuggestionController::class),
 
     (new Extend\Policy())
         ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class),
