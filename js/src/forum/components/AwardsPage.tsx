@@ -150,6 +150,10 @@ export default class AwardsPage extends Page {
 
     this.loading = false;
     this.startAutoRefresh();
+
+    // Update URL to reflect current selection (normalizes URL format)
+    this.updateUrl();
+
     m.redraw();
 
     // Scroll to category after DOM updates if category was specified in route
@@ -309,6 +313,7 @@ export default class AwardsPage extends Page {
                 options={categoryOptions}
                 onchange={(value: string) => {
                   this.selectedCategoryId = value === 'all' ? null : value.replace('cat_', '');
+                  this.updateUrl();
                   m.redraw();
                 }}
               />
@@ -370,6 +375,7 @@ export default class AwardsPage extends Page {
             } else {
               this.currentView = 'categories';
             }
+            this.updateUrl();
             m.redraw();
           }}
         />
@@ -385,6 +391,23 @@ export default class AwardsPage extends Page {
     }
   }
 
+  updateUrl() {
+    if (!this.selectedAward) return;
+
+    const awardId = this.selectedAward.id();
+    const awardSlug = this.selectedAward.slug() || 'award';
+
+    let path: string;
+    if (this.selectedCategoryId) {
+      path = app.route('awards.category', { id: `${awardId}-${awardSlug}`, category: this.selectedCategoryId });
+    } else {
+      path = app.route('awards.show', { id: `${awardId}-${awardSlug}` });
+    }
+
+    // Use history.replaceState to update URL without navigation
+    history.replaceState(null, '', path);
+  }
+
   renderAwardView() {
     const award = this.selectedAward!;
 
@@ -396,6 +419,7 @@ export default class AwardsPage extends Page {
           onNavigateToCategory={(categoryId: string) => {
             this.currentView = 'categories';
             this.selectedCategoryId = categoryId;
+            this.updateUrl();
             m.redraw();
             // Delay scroll to allow DOM update
             setTimeout(() => this.scrollToCategory(categoryId), 100);
@@ -417,6 +441,7 @@ export default class AwardsPage extends Page {
           selectedCategoryId={this.selectedCategoryId}
           onCategoryChange={(categoryId: string | null) => {
             this.selectedCategoryId = categoryId;
+            this.updateUrl();
             m.redraw();
           }}
         />
