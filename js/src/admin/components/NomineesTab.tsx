@@ -210,6 +210,12 @@ export default class NomineesTab extends Component {
                     onclick={() => this.editVotes(nominee)}
                     title={app.translator.trans('huseyinfiliz-awards.admin.nominees.edit_votes') as string}
                   />
+                  <Button
+                    className="Button Button--icon Button--link"
+                    icon="fas fa-undo"
+                    onclick={() => this.resetVotes(nominee)}
+                    title={app.translator.trans('huseyinfiliz-awards.admin.nominees.reset_votes') as string}
+                  />
                 </div>
                 <div className="CardList-item-actions">
                   <Button className="Button Button--icon" icon="fas fa-edit" onclick={() => this.openModal(nominee)} />
@@ -259,6 +265,22 @@ export default class NomineesTab extends Component {
       this.loadNominees();
     } catch (error) {
       console.error('Failed to update votes:', error);
+    }
+  }
+
+  async resetVotes(nominee: Nominee) {
+    if (!confirm(app.translator.trans('huseyinfiliz-awards.admin.nominees.reset_votes_confirm') as string)) {
+      return;
+    }
+
+    try {
+      await app.request({
+        method: 'DELETE',
+        url: app.forum.attribute('apiUrl') + '/award-nominees/' + nominee.id() + '/votes',
+      });
+      this.loadNominees();
+    } catch (error) {
+      console.error('Failed to reset votes:', error);
     }
   }
 

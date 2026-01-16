@@ -66,6 +66,7 @@ return [
         ->patch('/award-nominees/{id}', 'award-nominees.update', Controller\Nominee\UpdateNomineeController::class)
         ->delete('/award-nominees/{id}', 'award-nominees.delete', Controller\Nominee\DeleteNomineeController::class)
         ->patch('/award-nominees/{id}/votes', 'award-nominees.updateVotes', Controller\Admin\UpdateNomineeVotesController::class)
+        ->delete('/award-nominees/{id}/votes', 'award-nominees.resetVotes', Controller\Admin\ResetNomineeVotesController::class)
 
         // Votes
         ->get('/award-votes', 'award-votes.index', Controller\Vote\ListVotesController::class)
