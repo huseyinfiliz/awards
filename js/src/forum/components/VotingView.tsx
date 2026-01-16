@@ -28,6 +28,7 @@ export default class VotingView extends Component {
   view() {
     const award = this.attrs.award as Award;
     const selectedCategoryId = this.attrs.selectedCategoryId as string | null;
+    const onCategoryChange = this.attrs.onCategoryChange as ((categoryId: string | null) => void) | undefined;
     const allCategories = (award.categories() || []) as Category[];
 
     // Filter categories if a specific category is selected
@@ -60,7 +61,8 @@ export default class VotingView extends Component {
             votedCount={votedCount}
             totalCount={totalCategories}
             categoryIds={categoryIds}
-            disableNavigation={!!selectedCategoryId}
+            selectedCategoryId={selectedCategoryId}
+            onCategoryChange={onCategoryChange}
             onNavigate={(categoryId: string) => {
               const element = document.getElementById(`category-${categoryId}`);
               if (element) {
