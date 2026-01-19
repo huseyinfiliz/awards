@@ -177,7 +177,7 @@ This extension comes with English translations. Community translations are welco
 If you find this extension useful, consider:
 
 - ⭐ Starring the repository on GitHub
-- 💬 Leaving feedback on the [Flarum discussion](https://discuss.flarum.org/d/your-discussion-id)
+- 💬 Leaving feedback on the [Flarum discussion](https://discuss.flarum.org/d/38654-awards-community-voting-extension)
 - 🐛 Reporting issues on [GitHub](https://github.com/huseyinfiliz/awards/issues)
 - 🌐 Contributing translations
 
