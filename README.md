@@ -1,4 +1,4 @@
-![](https://i.ibb.co/PLACEHOLDER/awards-demo.gif)
+![](https://i.ibb.co/93nmVqsD/awards.jpg)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards) [![Total Downloads](https://img.shields.io/packagist/dt/huseyinfiliz/awards.svg)](https://packagist.org/packages/huseyinfiliz/awards)
 
@@ -8,20 +8,17 @@ A comprehensive community awards and voting extension for [Flarum](https://flaru
 
 **Credits:** This extension sponsored by [@StryGuardian](https://discuss.flarum.org/u/stryguardian) ✨
 
-### 🏆 Awards & Categories
-![Awards Demo](https://i.ibb.co/PLACEHOLDER/awards-categories.png)
-
 ### 🗳️ Voting Interface
-![Voting Demo](https://i.ibb.co/PLACEHOLDER/voting.png)
+![Voting Demo](https://i.ibb.co/1f6Nhpzm/image.png)
 
 ### 📊 Results & Winners
-![Results Demo](https://i.ibb.co/PLACEHOLDER/results.png)
+![Results Demo](https://i.ibb.co/S4z8JmLQ/image.png)
 
 ### ✅ My Votes Dashboard
-![My Votes Demo](https://i.ibb.co/PLACEHOLDER/my-votes.png)
+![My Votes Demo](https://i.ibb.co/rGrLHJJg/image.png)
 
 ### ⚙️ Admin Management
-![Admin Demo](https://i.ibb.co/PLACEHOLDER/admin.png)
+![Admin Demo](https://i.ibb.co/Hpt4113G/image.png)
 
 ## Features
 
