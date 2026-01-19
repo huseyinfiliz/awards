@@ -112,7 +112,13 @@ export default class AwardsPage extends Page {
       const awards = await app.store.find<Award[]>('awards', {
         include: 'categories,categories.nominees',
       });
-      this.awards = (awards || []).filter((a) => a.isActive() || a.isPublished() || a.hasEnded());
+
+      // Admins can see drafts (for preview), others only see active/ended/published
+      const canManage = app.forum.attribute('canManageAwards');
+      this.awards = (awards || []).filter((a) => {
+        if (canManage) return true; // Admins see all
+        return a.isActive() || a.isPublished() || a.hasEnded();
+      });
 
       // If route has award ID, select that award; otherwise use default selection
       if (this.routeAwardId) {
@@ -251,6 +257,11 @@ export default class AwardsPage extends Page {
             {this.selectedAward && this.selectedAward.isPublished() ? (
               <div className="AwardsHero-countdown AwardsHero-countdown--published">
                 {app.translator.trans('huseyinfiliz-awards.forum.hero.results_published')}
+              </div>
+            ) : null}
+            {this.selectedAward && this.selectedAward.isDraft() ? (
+              <div className="AwardsHero-countdown AwardsHero-countdown--draft">
+                <i className="fas fa-eye" /> Draft Preview
               </div>
             ) : null}
           </div>
@@ -427,18 +438,25 @@ export default class AwardsPage extends Page {
       return <ResultsView award={award} selectedCategoryId={this.selectedCategoryId} />;
     }
 
-    // Voting view
-    if (award.isActive() || award.hasEnded()) {
+    // Voting view (including draft preview for admins)
+    if (award.isActive() || award.hasEnded() || award.isDraft()) {
       return (
-        <VotingView
-          award={award}
-          selectedCategoryId={this.selectedCategoryId}
-          onCategoryChange={(categoryId: string | null) => {
-            this.selectedCategoryId = categoryId;
-            this.updateUrl();
-            m.redraw();
-          }}
-        />
+        <div>
+          {award.isDraft() ? (
+            <div className="Alert Alert--warning AwardsPage-draftAlert">
+              <i className="fas fa-eye" /> Draft Preview - Only visible to admins
+            </div>
+          ) : null}
+          <VotingView
+            award={award}
+            selectedCategoryId={this.selectedCategoryId}
+            onCategoryChange={(categoryId: string | null) => {
+              this.selectedCategoryId = categoryId;
+              this.updateUrl();
+              m.redraw();
+            }}
+          />
+        </div>
       );
     }
 

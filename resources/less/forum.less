@@ -90,6 +90,31 @@
       &--published {
         color: @hf-awards-success-color;
       }
+
+      &--draft {
+        color: @hf-awards-warning-color;
+        background: fade(@hf-awards-warning-color, 15%);
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+    }
+  }
+
+  // Draft Preview Alert
+  .AwardsPage-draftAlert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background: fade(@hf-awards-warning-color, 15%);
+    border: 1px solid fade(@hf-awards-warning-color, 30%);
+    border-radius: var(--border-radius);
+    color: darken(@hf-awards-warning-color, 10%);
+    font-weight: 500;
+
+    i {
+      font-size: 16px;
     }
   }
 
