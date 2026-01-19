@@ -26,6 +26,14 @@ class Nominee extends AbstractModel
         'vote_adjustment' => 'integer',
     ];
 
+    /**
+     * Hide sensitive fields from array/JSON serialization
+     * These are only exposed through the serializer with proper permission checks
+     */
+    protected $hidden = [
+        'vote_adjustment',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
