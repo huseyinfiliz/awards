@@ -23,8 +23,7 @@ class ListAwardsController extends AbstractListController
         $actor->assertCan('awards.view');
 
         $query = Award::withCount('categories')
-            ->orderBy('year', 'desc')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('starts_at', 'desc');
 
         // Non-admins only see active or published
         if (!$actor->can('awards.manage')) {
