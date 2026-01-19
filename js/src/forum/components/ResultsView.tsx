@@ -14,8 +14,18 @@ export default class ResultsView extends Component {
     // Filter categories if a specific category is selected
     const categories = selectedCategoryId ? allCategories.filter((cat) => String(cat.id()) === selectedCategoryId) : allCategories;
 
+    // Check if this is an early preview (ended but not published)
+    const isEarlyPreview = award.hasEnded() && !award.isPublished();
+
     return (
       <div className="ResultsView">
+        {/* Early preview alert */}
+        {isEarlyPreview ? (
+          <div className="Alert Alert--info AwardsPage-previewAlert">
+            <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.preview.results_not_published')}
+          </div>
+        ) : null}
+
         {/* Prediction Summary - only shown when viewing all categories */}
         {app.session.user && !selectedCategoryId ? <PredictionSummary award={award} categories={allCategories} /> : null}
 

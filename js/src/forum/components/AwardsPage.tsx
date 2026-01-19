@@ -261,7 +261,12 @@ export default class AwardsPage extends Page {
             ) : null}
             {this.selectedAward && this.selectedAward.isDraft() ? (
               <div className="AwardsHero-countdown AwardsHero-countdown--draft">
-                <i className="fas fa-eye" /> Draft Preview
+                <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.hero.draft_preview')}
+              </div>
+            ) : null}
+            {this.selectedAward && this.selectedAward.hasEnded() && !this.selectedAward.isPublished() && this.selectedAward.canViewResults() ? (
+              <div className="AwardsHero-countdown AwardsHero-countdown--preview">
+                <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.hero.results_preview')}
               </div>
             ) : null}
           </div>

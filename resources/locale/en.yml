@@ -146,6 +146,10 @@ huseyinfiliz-awards:
       countdown: "Voting ends in: {time}"
       voting_ended: Voting has ended
       results_published: Results Published
+      draft_preview: Draft Preview
+      results_preview: Results Preview
+    preview:
+      results_not_published: "Results preview - This award has not been published yet. Only users with 'View Results Early' permission can see this."
     results:
       winner: Winner
       runner_up: Runner Up
