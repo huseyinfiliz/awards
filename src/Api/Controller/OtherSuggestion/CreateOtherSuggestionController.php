@@ -12,6 +12,7 @@ use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use HuseyinFiliz\Awards\Models\Category;
 use Flarum\Foundation\ValidationException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Illuminate\Cache\RateLimiter;
 use HuseyinFiliz\Awards\Service\VoteLimitService;
 
 class CreateOtherSuggestionController extends AbstractCreateController
@@ -19,11 +20,16 @@ class CreateOtherSuggestionController extends AbstractCreateController
     public $serializer = OtherSuggestionSerializer::class;
 
     protected $translator;
+    protected $limiter;
     protected $voteLimitService;
 
-    public function __construct(TranslatorInterface $translator, VoteLimitService $voteLimitService)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        RateLimiter $limiter,
+        VoteLimitService $voteLimitService
+    ) {
         $this->translator = $translator;
+        $this->limiter = $limiter;
         $this->voteLimitService = $voteLimitService;
     }
 
@@ -31,6 +37,15 @@ class CreateOtherSuggestionController extends AbstractCreateController
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('awards.vote');
+
+        // Rate limit: shares limit with votes (10 actions per minute)
+        $key = 'awards_vote_' . $actor->id;
+        if ($this->limiter->tooManyAttempts($key, 10)) {
+            throw new ValidationException([
+                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit')
+            ]);
+        }
+        $this->limiter->hit($key, 60);
 
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
         $categoryId = Arr::get($data, 'categoryId');
