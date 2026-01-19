@@ -22,7 +22,7 @@ export default class ResultsView extends Component {
         {/* Early preview alert */}
         {isEarlyPreview ? (
           <div className="Alert Alert--info AwardsPage-previewAlert">
-            <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.preview.results_not_published')}
+            <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.preview.admin_only')}
           </div>
         ) : null}
 

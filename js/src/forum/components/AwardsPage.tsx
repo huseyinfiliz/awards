@@ -449,7 +449,7 @@ export default class AwardsPage extends Page {
         <div>
           {award.isDraft() ? (
             <div className="Alert Alert--warning AwardsPage-draftAlert">
-              <i className="fas fa-eye" /> Draft Preview - Only visible to admins
+              <i className="fas fa-eye" /> {app.translator.trans('huseyinfiliz-awards.forum.preview.admin_only')}
             </div>
           ) : null}
           <VotingView

@@ -149,7 +149,7 @@ huseyinfiliz-awards:
       draft_preview: Draft Preview
       results_preview: Results Preview
     preview:
-      results_not_published: "Results preview - This award has not been published yet. Only users with 'View Results Early' permission can see this."
+      admin_only: "Preview mode - Only visible to authorized users"
     results:
       winner: Winner
       runner_up: Runner Up
