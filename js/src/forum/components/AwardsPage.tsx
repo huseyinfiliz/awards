@@ -366,18 +366,20 @@ export default class AwardsPage extends Page {
   }
 
   renderAwardSelector() {
+    // Use 'award_' prefix to prevent numeric key sorting in JS objects
     const awardOptions: Record<string, string> = {};
     this.awards.forEach((award) => {
-      awardOptions[String(award.id())] = `${award.name()} (${award.year()})`;
+      awardOptions[`award_${award.id()}`] = `${award.name()} (${award.year()})`;
     });
 
     return (
       <div className="AwardsPage-selector">
         <Select
-          value={String(this.selectedAward?.id())}
+          value={`award_${this.selectedAward?.id()}`}
           options={awardOptions}
           onchange={(value: string) => {
-            this.selectedAward = this.awards.find((a) => String(a.id()) === value) || null;
+            const awardId = value.replace('award_', '');
+            this.selectedAward = this.awards.find((a) => String(a.id()) === awardId) || null;
             this.selectedCategoryId = null;
             // Update view based on new award status
             if (this.selectedAward?.canViewResults()) {
