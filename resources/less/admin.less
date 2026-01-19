@@ -1,0 +1,611 @@
+// ============================================
+// Awards Admin Panel - Flarum 1.8.x Compatible
+// All classes prefixed with HFAwards to avoid conflicts
+// ============================================
+
+// Variables with HFAwards prefix
+@hf-awards-card-radius: 8px;
+@hf-awards-transition-speed: 180ms;
+@hf-awards-status-active: #27ae60;
+@hf-awards-status-draft: #999;
+@hf-awards-status-published: #3498db;
+@hf-awards-status-ended: #e74c3c;
+
+// ============================================
+// MAIN SCOPE - All styles inside this block
+// ============================================
+
+.huseyinfiliz-awards {
+  // ============================================
+  // MAIN CONTAINER & TABS
+  // ============================================
+
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px 12px;
+  }
+
+  .AwardsPage-header {
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--heading-color);
+    }
+  }
+
+  .AwardsPage-nav {
+    margin-bottom: 24px;
+  }
+
+  .AwardsPage-tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--control-bg);
+    padding: 4px;
+    border-radius: 8px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    .Button {
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted-color);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all @hf-awards-transition-speed;
+      flex: 1;
+      white-space: nowrap;
+      min-width: fit-content;
+
+      i { font-size: 14px; }
+
+      &:hover {
+        color: var(--link-color);
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      &.Button--primary {
+        color: var(--primary-color);
+        background: var(--body-bg);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        font-weight: 700;
+      }
+
+      @media (max-width: 768px) {
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .AwardsPage-content {
+    background: var(--body-bg);
+    border: 1px solid var(--control-bg);
+    border-radius: @hf-awards-card-radius;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    min-height: 400px;
+
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+  }
+
+  // ============================================
+  // TAB SECTIONS HEADER
+  // ============================================
+
+  .AwardsTab-header,
+  .CategoriesTab-header,
+  .NomineesTab-header,
+  .SuggestionsTab-header,
+  .SettingsTab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--control-bg);
+    gap: 12px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--heading-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: fade(@hf-awards-status-active, 10%);
+        border-radius: 6px;
+        color: var(--primary-color);
+        font-size: 14px;
+      }
+    }
+
+    .Button--primary {
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: 6px;
+      transition: all @hf-awards-transition-speed;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  // ============================================
+  // CARD LIST (Tables)
+  // ============================================
+
+  .CardList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &-header {
+      display: grid;
+      grid-template-columns: var(--grid-cols);
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted-color);
+      align-items: center;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    &-item {
+      background: var(--body-bg);
+      border: 1px solid var(--control-bg);
+      border-radius: @hf-awards-card-radius;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: var(--grid-cols);
+      gap: 8px;
+      align-items: center;
+      transition: all @hf-awards-transition-speed;
+
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transform: translateY(-1px);
+        border-color: var(--primary-color);
+      }
+
+      @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        gap: 12px;
+      }
+    }
+
+    &-item-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--body-color);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &--primary {
+        font-weight: 600;
+        color: var(--heading-color);
+      }
+
+      &--muted {
+        color: var(--muted-color);
+        font-size: 13px;
+      }
+    }
+
+    &-item-name {
+      font-weight: 600;
+      color: var(--heading-color);
+      font-size: 14px;
+    }
+
+    &-item-meta {
+      font-size: 12px;
+      color: var(--muted-color);
+      margin-top: 2px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    &-item-slug,
+    &-item-year {
+      font-size: 12px;
+      color: var(--muted-color);
+    }
+
+    &-item-nominee {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &-item-sort {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 60px;
+
+      .Button {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-width: auto;
+
+        &:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    &-item-actions {
+      display: flex;
+      gap: 4px;
+      justify-content: flex-end;
+
+      .Button {
+        font-size: 12px;
+        padding: 6px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        white-space: nowrap;
+
+        i { font-size: 12px; margin-right: 4px; }
+
+        &--danger {
+          background: fade(@hf-awards-status-ended, 10%);
+          color: @hf-awards-status-ended;
+          &:hover { background: @hf-awards-status-ended; color: white; }
+        }
+
+        &--success {
+          background: fade(@hf-awards-status-active, 10%);
+          color: @hf-awards-status-active;
+          &:hover { background: @hf-awards-status-active; color: white; }
+        }
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        .Button { flex: 1; justify-content: center; }
+      }
+    }
+  }
+
+  // ============================================
+  // GRID CONFIGURATIONS
+  // ============================================
+
+  .AwardsTab .CardList {
+    --grid-cols: 2fr 1fr 1fr 160px;
+    @media (max-width: 1024px) { --grid-cols: 1.5fr 1fr 1fr 140px; }
+  }
+
+  .CategoriesTab .CardList {
+    --grid-cols: 2fr 1.5fr 1fr 160px;
+    @media (max-width: 1024px) { --grid-cols: 1.5fr 1fr 1fr 140px; }
+  }
+
+  .NomineesTab .CardList {
+    --grid-cols: 50px 2fr 1.5fr 1fr 160px;
+    @media (max-width: 1024px) { --grid-cols: 50px 1.5fr 1fr 1fr 140px; }
+  }
+
+  .SuggestionsTab .CardList {
+    --grid-cols: 2fr 1.5fr 1fr 200px;
+    @media (max-width: 1024px) { --grid-cols: 1.5fr 1fr 1fr 180px; }
+  }
+
+  // ============================================
+  // COMPONENT STYLES
+  // ============================================
+
+  .NomineeImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--control-bg);
+
+    &--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-color);
+      font-size: 16px;
+    }
+  }
+
+  .HFAwardsStatusBadge,
+  .StatusBadge {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+
+    &--active { background: fade(@hf-awards-status-active, 15%); color: @hf-awards-status-active; }
+    &--draft { background: rgba(0,0,0,0.05); color: var(--text-color); border: 1px solid rgba(0,0,0,0.1); }
+    &--published { background: fade(@hf-awards-status-published, 15%); color: @hf-awards-status-published; }
+    &--ended { background: fade(@hf-awards-status-ended, 15%); color: @hf-awards-status-ended; }
+  }
+
+  .LoadMore {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--control-bg);
+    .Button { padding: 8px 24px; }
+  }
+
+  .SettingsTab .Form-group {
+    background: var(--body-bg);
+    border: 1px solid var(--control-bg);
+    border-radius: @hf-awards-card-radius;
+    padding: 20px;
+    margin-bottom: 20px;
+    h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
+    p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+  }
+
+  .HFAwardsEmptyState,
+  .EmptyState {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted-color);
+    i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; display: block; }
+    p { margin: 0; }
+  }
+
+  // ============================================
+  // TABLE STYLES
+  // ============================================
+
+  .Table,
+  .CategoriesTab-table,
+  .NomineesTab-table,
+  .SuggestionsTab-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted-color);
+      background: rgba(0, 0, 0, 0.02);
+      border-bottom: 2px solid var(--control-bg);
+    }
+
+    tbody tr {
+      transition: background @hf-awards-transition-speed;
+      &:hover { background: var(--control-bg); }
+    }
+
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--control-bg);
+      vertical-align: middle;
+    }
+
+    .helpText {
+      font-size: 12px;
+      color: var(--muted-color);
+      margin-top: 4px;
+    }
+  }
+
+  .CategoriesTab-empty,
+  .NomineesTab-empty,
+  .SuggestionsTab-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted-color);
+  }
+
+  .CategoriesTab-actions,
+  .NomineesTab-actions,
+  .SuggestionsTab-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+
+    .Button {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+  }
+
+  // Sort buttons
+  .CategoriesTab-sort,
+  .NomineesTab-sort {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .Button {
+      padding: 4px 8px;
+      font-size: 10px;
+      min-width: auto;
+      
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// ============================================
+// MODAL STYLES (Global - with HFAwards prefix)
+// ============================================
+
+.HFAwardsModal {
+  .Modal-body {
+    .Form-group {
+      margin-bottom: 16px;
+
+      label {
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 6px;
+        display: block;
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--control-bg);
+        border-radius: 6px;
+        background: var(--body-bg);
+        color: var(--body-color);
+      }
+
+      .helpText {
+        font-size: 12px;
+        color: var(--muted-color);
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .Modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+// Specific modal styles (if needed)
+.HFAwardsNomineeModal {
+  // Additional styles
+}
+
+.HFAwardsCategoryModal {
+  // Additional styles
+}
+
+.HFAwardsAwardModal {
+  // Additional styles
+}
+
+.HFAwardsMergeModal {
+  // Additional styles
+}
+
+// ============================================
+// VOTE ADJUSTMENT STYLES
+// ============================================
+
+.VoteAdjustment-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+
+  &.positive {
+    background: fade(@hf-awards-status-active, 15%);
+    color: @hf-awards-status-active;
+  }
+
+  &.negative {
+    background: fade(@hf-awards-status-ended, 15%);
+    color: @hf-awards-status-ended;
+  }
+}
+
+.VoteAdjustmentModal {
+  .FormControl-static {
+    padding: 8px 12px;
+    background: var(--control-bg);
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .VoteAdjustment-input {
+    display: flex;
+    gap: 8px;
+
+    input {
+      flex: 1;
+    }
+
+    .Button {
+      white-space: nowrap;
+    }
+  }
+
+  .VoteAdjustment-preview {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .helpText {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-top: 6px;
+  }
+}

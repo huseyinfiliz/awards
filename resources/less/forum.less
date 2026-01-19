@@ -1,0 +1,1528 @@
+// Awards Forum Styles - Flarum 1.8.x Compatible
+// All classes prefixed with HFAwards to avoid conflicts
+// ============================================
+
+// Variables with HFAwards prefix
+@hf-awards-success-color: #27ae60;
+@hf-awards-warning-color: #f39c12;
+@hf-awards-info-color: #3498db;
+@hf-awards-gold-color: #ffd700;
+@hf-awards-silver-color: #c0c0c0;
+@hf-awards-bronze-color: #cd7f32;
+
+// ============================================
+// MAIN SCOPE - All styles inside this block
+// ============================================
+
+.huseyinfiliz-awards {
+  // ============================================
+  // AWARDS PAGE - Flarum IndexPage Style
+  // ============================================
+
+  // Hero Header (Mobile)
+  @media (min-width: 768px) {
+    .Hero.AwardsHero .container {
+      padding-bottom: 40px;
+    }
+  }
+
+  .AwardsHero {
+    position: relative;
+
+    .Hero-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .Hero-subtitle {
+      margin-top: 10px;
+      font-size: 16px;
+      color: var(--muted-color);
+      position: relative;
+      z-index: 1;
+    }
+
+    // Hero with background image
+    &--withImage {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      .Hero-title,
+      .Hero-subtitle,
+      .AwardsHero-countdown {
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    &-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+      z-index: 0;
+    }
+
+    &-countdown {
+      margin-top: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--heading-color);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+
+      i {
+        margin-right: 8px;
+      }
+
+      &--ended {
+        color: @hf-awards-warning-color;
+      }
+
+      &--published {
+        color: @hf-awards-success-color;
+      }
+
+      &--draft {
+        color: @hf-awards-warning-color;
+        background: fade(@hf-awards-warning-color, 15%);
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+
+      &--preview {
+        color: @hf-awards-info-color;
+        background: fade(@hf-awards-info-color, 15%);
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+    }
+  }
+
+  // Preview Alerts (Draft & Results)
+  .AwardsPage-draftAlert,
+  .AwardsPage-previewAlert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  .AwardsPage-draftAlert {
+    background: fade(@hf-awards-warning-color, 15%);
+    border: 1px solid fade(@hf-awards-warning-color, 30%);
+    color: darken(@hf-awards-warning-color, 10%);
+  }
+
+  .AwardsPage-previewAlert {
+    background: fade(@hf-awards-info-color, 15%);
+    border: 1px solid fade(@hf-awards-info-color, 30%);
+    color: darken(@hf-awards-info-color, 10%);
+  }
+
+  // ============================================
+  // FILTER BAR
+  // ============================================
+
+  .AwardsPage-filterBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--control-bg-shaded);
+    flex-wrap: wrap;
+
+    &-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    &-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      &-left,
+      &-right {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Award Selector
+  .AwardsPage-selector {
+    .Select {
+      max-width: 300px;
+      min-width: 180px;
+    }
+  }
+
+  // Category Filter
+  .AwardsPage-categoryFilter {
+    .Select {
+      max-width: 250px;
+      min-width: 160px;
+    }
+  }
+
+  // Tab buttons
+  .AwardsPage-tabs {
+    display: flex;
+    gap: 8px;
+
+    .Button {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+
+      &--primary {
+        background: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+
+  // Content area
+  .AwardsPage-content {
+    scroll-behavior: smooth;
+  }
+
+  // ============================================
+  // VOTING VIEW
+  // ============================================
+
+  .VotingView {
+    &-status {
+      margin-bottom: 20px;
+    }
+  }
+
+  // ============================================
+  // RESULTS VIEW
+  // ============================================
+
+  .ResultsView {
+    &-status {
+      margin-bottom: 20px;
+    }
+  }
+
+  // ============================================
+  // CATEGORY CARD
+  // ============================================
+
+  .CategoryCard {
+    margin-bottom: 30px;
+    background: var(--control-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    scroll-margin-top: 20px;
+
+    &-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--body-bg);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+
+      h2 {
+        margin: 0 0 5px;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--heading-color);
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--muted-color);
+      }
+    }
+
+    &-headerMain {
+      flex: 1;
+    }
+
+    &-badges {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    &-badge {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-color);
+      background: var(--body-bg);
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    &-voteBadge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: @hf-awards-success-color;
+      background: fade(@hf-awards-success-color, 10%);
+      border-radius: 12px;
+      white-space: nowrap;
+
+      i {
+        font-size: 10px;
+      }
+    }
+
+    &-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 20px;
+
+      @media (max-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 500px) {
+        gap: 12px;
+        padding: 15px;
+      }
+    }
+  }
+
+  // Category Result Card - View All button
+  .CategoryResultCard-viewAll {
+    color: var(--primary-color);
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // ============================================
+  // NOMINEE CARD - Clickable Full Card
+  // ============================================
+
+  .NomineeCard {
+    display: flex;
+    flex-direction: column;
+    background: var(--body-bg);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+
+    // Clickable state
+    &--clickable {
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+    }
+
+    // Not clickable (guest or voting closed)
+    &:not(.NomineeCard--clickable) {
+      cursor: default;
+    }
+
+    // Voted/Selected state
+    &--voted {
+      border-color: var(--primary-color);
+      background: rgba(66, 133, 244, 0.08); // Fallback primary color tint
+
+      .NomineeCard-check {
+        display: flex;
+      }
+    }
+
+    // Loading state
+    &--loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    // Winner state (results)
+    &--winner {
+      border-color: @hf-awards-gold-color;
+      background: fade(@hf-awards-gold-color, 8%);
+    }
+
+    // Image container
+    &-image {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: var(--control-bg);
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    // Check icon overlay (voted)
+    &-check {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    // Placeholder when no image
+    &-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--control-bg);
+      color: var(--muted-color);
+      font-size: 48px;
+    }
+
+    // Content area
+    &-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 4px;
+    }
+
+    // Title
+    &-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+      line-height: 1.3;
+    }
+
+    // Description
+    &-description {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted-color);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    // Badge for winners (gold, silver, bronze)
+    &-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      z-index: 1;
+
+      &--gold {
+        background: linear-gradient(135deg, #ffd700, #ffb800);
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+      }
+
+      &--silver {
+        background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+        box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+      }
+
+      &--bronze {
+        background: linear-gradient(135deg, #cd7f32, #b87333);
+        box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+      }
+    }
+
+    // Stats (votes, percentage)
+    &-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    &-votes {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-color);
+    }
+
+    &-percentage {
+      font-size: 11px;
+      color: var(--muted-color);
+    }
+
+    // Loading indicator
+    &-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+  }
+
+  // ============================================
+  // OTHER CARD (Suggestion)
+  // ============================================
+
+  .OtherCard {
+    background: var(--body-bg);
+    border: 2px dashed var(--control-bg-shaded);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+
+    &:hover {
+      border-color: var(--primary-color);
+    }
+
+    &-icon {
+      font-size: 32px;
+      color: var(--muted-color);
+      margin-bottom: 10px;
+    }
+
+    &-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+      margin-bottom: 10px;
+    }
+  }
+
+  // ============================================
+  // TAG LABELS
+  // ============================================
+
+  .HFAwardsTagLabel {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
+    &--success {
+      background: fade(@hf-awards-success-color, 15%);
+      color: @hf-awards-success-color;
+    }
+
+    &--warning {
+      background: fade(@hf-awards-warning-color, 15%);
+      color: @hf-awards-warning-color;
+    }
+
+    &--info {
+      background: fade(@hf-awards-info-color, 15%);
+      color: @hf-awards-info-color;
+    }
+
+    &--danger {
+      background: fade(#e74c3c, 15%);
+      color: #e74c3c;
+    }
+  }
+
+  // Legacy support for TagLabel
+  .TagLabel {
+    &.Label--success {
+      background: fade(@hf-awards-success-color, 15%);
+      color: @hf-awards-success-color;
+    }
+
+    &.Label--warning {
+      background: fade(@hf-awards-warning-color, 15%);
+      color: @hf-awards-warning-color;
+    }
+
+    &.Label--info {
+      background: fade(@hf-awards-info-color, 15%);
+      color: @hf-awards-info-color;
+    }
+
+    &.Label--danger {
+      background: fade(#e74c3c, 15%);
+      color: #e74c3c;
+    }
+  }
+
+  // ============================================
+  // MY VOTES VIEW
+  // ============================================
+
+  .MyVotesView {
+    &-summary {
+      background: var(--control-bg);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 24px;
+
+      &-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      &-stats {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      &-count {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--heading-color);
+      }
+
+      &-time {
+        font-size: 13px;
+        color: var(--muted-color);
+      }
+
+      &-progress {
+        height: 8px;
+        background: var(--body-bg);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      &-progressBar {
+        height: 100%;
+        background: var(--primary-color);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+    }
+
+    &-section {
+      margin-bottom: 24px;
+
+      &-title {
+        margin: 0 0 16px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--heading-color);
+      }
+
+      &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--control-bg);
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: var(--control-bg-shaded);
+        }
+
+        i {
+          color: var(--muted-color);
+        }
+      }
+
+      &-count {
+        margin-left: 8px;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--muted-color);
+      }
+
+      &--unvoted {
+        .MyVotesView-section-title {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    // Multi-vote category grouping
+    &-categoryGroup {
+      background: var(--control-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    &-categoryHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.03);
+      border-bottom: 1px solid var(--body-bg);
+    }
+
+    &-categoryName {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+
+    &-categoryVoteCount {
+      font-size: 12px;
+      color: var(--muted-color);
+    }
+
+    &-addMore {
+      padding: 10px 16px;
+      border-top: 1px solid var(--body-bg);
+
+      .Button {
+        font-size: 13px;
+        color: var(--primary-color);
+      }
+    }
+
+    &-summary-totalVotes {
+      font-size: 13px;
+      color: var(--muted-color);
+    }
+
+    &-item {
+      display: grid;
+      grid-template-columns: 50px 1fr auto auto;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--body-bg);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      @media (max-width: 600px) {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+
+        &-meta,
+        &-actions {
+          grid-column: 2;
+        }
+      }
+
+      &-nominee {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 6px;
+        object-fit: cover;
+
+        @media (max-width: 600px) {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      &-placeholder {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--body-bg);
+        border-radius: 6px;
+        color: var(--muted-color);
+        font-size: 20px;
+
+        @media (max-width: 600px) {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+
+      &-info {
+        min-width: 0;
+      }
+
+      &-category {
+        font-size: 12px;
+        color: var(--muted-color);
+        margin-bottom: 2px;
+      }
+
+      &-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--heading-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &-date {
+        font-size: 12px;
+        color: var(--muted-color);
+      }
+    }
+
+    &-unvotedList {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    &-unvotedItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--body-bg);
+      border-radius: var(--border-radius);
+
+      &-name {
+        font-size: 14px;
+        color: var(--heading-color);
+      }
+    }
+
+    &-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted-color);
+
+      i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        display: block;
+        opacity: 0.5;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // ============================================
+  // VOTING PROGRESS BAR
+  // ============================================
+
+  .VotingProgressBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--body-bg);
+    border-top: 1px solid var(--control-bg-shaded);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 20px;
+
+    @media (max-width: 767px) {
+      bottom: ~"calc(var(--mobile-tab-height, 0px) + env(safe-area-inset-bottom, 0px))";
+    }
+
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    &-progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    &-progressTrack {
+      flex: 1;
+      max-width: 300px;
+      height: 8px;
+      background: var(--control-bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    &-progressFill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    &-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--heading-color);
+      white-space: nowrap;
+    }
+
+    &-nav {
+      display: flex;
+      gap: 8px;
+
+      .Button {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+    }
+
+    // Complete state
+    &--complete {
+      .VotingProgressBar-progressFill {
+        background: @hf-awards-success-color;
+      }
+
+      .VotingProgressBar-text {
+        color: @hf-awards-success-color;
+      }
+    }
+
+    // Confetti animation
+    &--confetti {
+      overflow: hidden;
+    }
+
+    &-confettiContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    &-confettiPiece {
+      position: absolute;
+      top: -10px;
+      border-radius: 2px;
+      animation: confetti-fall 3s ease-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100px) rotate(720deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      padding: 10px 15px;
+
+      &-progressTrack {
+        max-width: 150px;
+      }
+
+      &-text {
+        font-size: 12px;
+      }
+
+      &-nav .Button {
+        padding: 6px 10px;
+        font-size: 12px;
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // PREDICTION SUMMARY
+  // ============================================
+
+  .PredictionSummary {
+    background: var(--control-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 24px;
+
+    &-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      i {
+        font-size: 24px;
+        color: var(--primary-color);
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--heading-color);
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    &-progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    &-progressTrack {
+      flex: 1;
+      height: 10px;
+      background: var(--body-bg);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    &-progressFill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+
+    &-score {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--heading-color);
+      white-space: nowrap;
+    }
+
+    &-toggle {
+      background: none;
+      border: none;
+      padding: 8px 0;
+      color: var(--primary-color);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &-details {
+      margin-top: 8px;
+    }
+
+    &-section {
+      margin-bottom: 12px;
+
+      &-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      &--correct &-label {
+        color: @hf-awards-success-color;
+      }
+
+      &--wrong &-label {
+        color: #e74c3c;
+      }
+    }
+
+    &-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    &-category {
+      padding: 4px 10px;
+      font-size: 12px;
+      background: var(--body-bg);
+      border-radius: 12px;
+      color: var(--muted-color);
+    }
+  }
+
+  // ============================================
+  // EMPTY STATE
+  // ============================================
+
+  .HFAwardsEmptyState,
+  .EmptyState {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--muted-color);
+
+    i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+      display: block;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  // ============================================
+  // MOBILE RESPONSIVE
+  // ============================================
+
+  @media (max-width: 767px) {
+    .AwardsPage-categoryNav {
+      margin: 0 -15px 20px;
+      padding: 12px 15px;
+      border-radius: 0;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        background: linear-gradient(to right, transparent, var(--body-bg) 90%);
+        pointer-events: none;
+      }
+    }
+
+    .CategoryCard {
+      margin-bottom: 20px;
+      border-radius: 0;
+      margin-left: -15px;
+      margin-right: -15px;
+
+      &-header {
+        padding: 15px;
+
+        h2 {
+          font-size: 18px;
+        }
+      }
+
+      &-grid {
+        padding: 15px;
+      }
+    }
+
+    .NomineeCard {
+      padding: 12px;
+
+      &-image {
+        margin-bottom: 10px;
+      }
+
+      &-title {
+        font-size: 13px;
+      }
+
+      &-description {
+        font-size: 11px;
+      }
+
+      &-placeholder {
+        font-size: 36px;
+      }
+    }
+  }
+}
+
+// ============================================
+// MODAL STYLES (Global - with HFAwards prefix)
+// ============================================
+
+.HFAwardsModal {
+  .Modal-body {
+    .Form-group {
+      margin-bottom: 16px;
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .FormControl {
+        width: 100%;
+      }
+
+      .helpText {
+        font-size: 12px;
+        color: var(--muted-color);
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+.HFAwardsSuggestionModal {
+  .SuggestionModal-form {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--control-bg);
+  }
+
+  .SuggestionModal-remaining {
+    margin-left: 12px;
+    color: var(--muted-color);
+    font-size: 13px;
+  }
+
+  .SuggestionModal-list {
+    margin-top: 16px;
+  }
+
+  .SuggestionModal-listTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin: 0 0 12px;
+  }
+
+  .SuggestionModal-empty {
+    color: var(--muted-color);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .SuggestionModal-suggestions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .SuggestionModal-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--control-bg);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .SuggestionModal-itemName {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-color);
+  }
+
+  .SuggestionModal-itemStatus {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+
+    &--pending {
+      background: fade(#f39c12, 20%);
+      color: #f39c12;
+    }
+
+    &--approved {
+      background: fade(#27ae60, 20%);
+      color: #27ae60;
+    }
+
+    &--rejected {
+      background: fade(#e74c3c, 20%);
+      color: #e74c3c;
+    }
+
+    &--merged {
+      background: fade(#3498db, 20%);
+      color: #3498db;
+    }
+  }
+
+  .SuggestionModal-itemCancel {
+    padding: 4px 8px;
+    color: var(--muted-color);
+
+    &:hover {
+      color: #e74c3c;
+    }
+  }
+}
+
+// Exhausted state for OtherCard
+.NomineeCard--exhausted {
+  opacity: 0.7;
+
+  .NomineeCard-placeholder {
+    background: var(--control-bg);
+  }
+}
+
+// ============================================
+// CATEGORY RESULTS MODAL
+// ============================================
+
+.CategoryResultsModal {
+  .Modal-body {
+    padding: 0;
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-item {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--control-bg);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--winner {
+      background: fade(@hf-awards-gold-color, 8%);
+    }
+
+    &-rank {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-nominee {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    &-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    &-placeholder {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--control-bg);
+      border-radius: 6px;
+      color: var(--muted-color);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    &-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 200px;
+
+      @media (max-width: 600px) {
+        min-width: 0;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+      }
+    }
+
+    &-votes {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--heading-color);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    &-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--control-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 100px;
+
+      @media (max-width: 600px) {
+        min-width: 60px;
+      }
+    }
+
+    &-barFill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    &-percentage {
+      font-size: 12px;
+      color: var(--muted-color);
+      min-width: 35px;
+      text-align: right;
+    }
+  }
+
+  &-medal {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+
+    &--gold {
+      background: linear-gradient(135deg, #ffd700, #ffb800);
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    }
+
+    &--silver {
+      background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+      box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+    }
+
+    &--bronze {
+      background: linear-gradient(135deg, #cd7f32, #b87333);
+      box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+    }
+  }
+
+  &-rankNumber {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted-color);
+  }
+}

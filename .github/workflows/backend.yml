@@ -1,0 +1,16 @@
+name: Backend
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  run:
+    uses: flarum/framework/.github/workflows/REUSABLE_backend.yml@main
+    with:
+      enable_backend_testing: true
+      enable_phpstan: false
+
+      backend_directory: .
+
+      # Flarum 1.8 requires PHP 8.1+
+      php_versions: '["8.1", "8.2", "8.3"]'
+      db_versions: '["mysql:5.7", "mariadb"]'

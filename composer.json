@@ -1,0 +1,110 @@
+{
+  "name": "huseyinfiliz/awards",
+  "description": "Community awards and voting extension for Flarum",
+  "keywords": [
+    "flarum",
+    "awards",
+    "voting",
+    "polls",
+    "community"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/huseyinfiliz/awards/issues",
+    "source": "https://github.com/huseyinfiliz/awards",
+    "forum": "https://discuss.flarum.org/d/your-discussion-id"
+  },
+  "homepage": "https://github.com/huseyinfiliz/awards",
+  "funding": [
+    {
+      "type": "website",
+      "url": "https://github.com/huseyinfiliz"
+    }
+  ],
+  "require": {
+    "flarum/core": "^1.8.0"
+  },
+  "authors": [
+    {
+      "name": "Hüseyin Filiz",
+      "email": "mysuperuser01@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "HuseyinFiliz\\Awards\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HuseyinFiliz\\Awards\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Awards",
+      "category": "feature",
+      "icon": {
+        "name": "fas fa-trophy",
+        "backgroundColor": "#3498db",
+        "color": "#fff"
+      }
+    },
+    "flarum-cli": {
+      "modules": {
+        "admin": true,
+        "forum": true,
+        "js": true,
+        "jsCommon": true,
+        "css": true,
+        "gitConf": true,
+        "githubActions": true,
+        "prettier": true,
+        "typescript": true, 
+        "bundlewatch": false,
+        "backendTesting": true,
+        "editorConfig": true,
+        "styleci": true
+      }
+    }
+  },
+  "scripts": {
+    "test": [
+      "@test:unit",
+      "@test:integration"
+    ],
+    "test:unit": "vendor/bin/phpunit -c tests/phpunit.unit.xml",
+    "test:integration": "vendor/bin/phpunit -c tests/phpunit.integration.xml",
+    "test:setup": "@php tests/integration/setup.php",
+    "analyse:phpstan": "vendor/bin/phpstan analyse",
+    "analyse:phpstan:baseline": "vendor/bin/phpstan analyse --generate-baseline",
+    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "vendor/bin/php-cs-fixer fix"
+  },
+  "scripts-descriptions": {
+    "test": "Runs all tests.",
+    "test:unit": "Runs all unit tests.",
+    "test:integration": "Runs all integration tests.",
+    "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+    "analyse:phpstan": "Run static analysis with PHPStan.",
+    "analyse:phpstan:baseline": "Generate PHPStan baseline for existing errors.",
+    "cs": "Check code style",
+    "cs:fix": "Fix code style issues"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "flarum/phpstan": "^1.0",
+    "flarum/testing": "^1.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "mockery/mockery": "^1.0"
+  }
+}

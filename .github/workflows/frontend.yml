@@ -1,0 +1,17 @@
+name: Frontend
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  run:
+    uses: flarum/framework/.github/workflows/REUSABLE_frontend.yml@main
+    with:
+      enable_bundlewatch: false
+      enable_prettier: true
+      enable_typescript: true
+
+      frontend_directory: ./js
+      backend_directory: .
+      js_package_manager: npm
+      # Set to non-existent branch to disable auto-commit behavior
+      main_git_branch: __never_auto_commit__
