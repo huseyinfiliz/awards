@@ -30,11 +30,27 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
     this.slug = Stream(award?.slug() || '');
     this.year = Stream(award?.year() || new Date().getFullYear());
     this.description = Stream(award?.description() || '');
-    this.startsAt = Stream(award?.startsAt()?.toISOString().slice(0, 16) || '');
-    this.endsAt = Stream(award?.endsAt()?.toISOString().slice(0, 16) || '');
+    this.startsAt = Stream(this.formatDateForInput(award?.startsAt()));
+    this.endsAt = Stream(this.formatDateForInput(award?.endsAt()));
     this.status = Stream(award?.status() || 'draft');
     this.showLiveVotes = Stream(award?.showLiveVotes() || false);
     this.imageUrl = Stream(award?.imageUrl() || '');
+  }
+
+  /**
+   * Format a Date object to datetime-local input format using LOCAL timezone
+   * This ensures the user sees and edits times in their local timezone
+   */
+  formatDateForInput(date: Date | undefined): string {
+    if (!date) return '';
+
+    const YYYY = date.getFullYear();
+    const MM = (date.getMonth() + 1).toString().padStart(2, '0');
+    const DD = date.getDate().toString().padStart(2, '0');
+    const HH = date.getHours().toString().padStart(2, '0');
+    const mm = date.getMinutes().toString().padStart(2, '0');
+
+    return `${YYYY}-${MM}-${DD}T${HH}:${mm}`;
   }
 
   async handleUpload(e: Event) {

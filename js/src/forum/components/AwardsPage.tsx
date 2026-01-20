@@ -95,13 +95,13 @@ export default class AwardsPage extends Page {
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    let timeStr = '';
-    if (days > 0) timeStr += `${days}d `;
-    if (hours > 0 || days > 0) timeStr += `${hours}h `;
-    if (minutes > 0 || hours > 0 || days > 0) timeStr += `${minutes}m `;
-    timeStr += `${seconds}s`;
-
-    this.countdownText = app.translator.trans('huseyinfiliz-awards.forum.hero.countdown', { time: timeStr }) as string;
+    // Use single translation string with all placeholders
+    this.countdownText = app.translator.trans('huseyinfiliz-awards.forum.hero.countdown', {
+      days,
+      hours,
+      minutes,
+      seconds,
+    }) as string;
   }
 
   async loadAwards() {
