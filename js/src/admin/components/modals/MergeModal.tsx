@@ -1,5 +1,6 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
@@ -11,7 +12,7 @@ interface MergeModalAttrs {
   onmerge?: () => void;
 }
 
-export default class MergeModal extends Modal<MergeModalAttrs> {
+export default class MergeModal extends FormModal<MergeModalAttrs> {
   loading: boolean = true;
   nominees: Nominee[] = [];
   selectedNomineeId: Stream<string>;
@@ -73,7 +74,7 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
 
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <p className="MergeModal-info">
               {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge_info', {
@@ -81,7 +82,6 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
               })}
             </p>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.select_nominee_label')}</label>
             <select
@@ -99,13 +99,12 @@ export default class MergeModal extends Modal<MergeModalAttrs> {
               ))}
             </select>
           </div>
-
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={!this.selectedNomineeId()}>
               {app.translator.trans('huseyinfiliz-awards.admin.suggestions.merge')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import app from 'flarum/forum/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Alert from 'flarum/common/components/Alert';
@@ -7,7 +7,7 @@ import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Category from '../../common/models/Category';
 import OtherSuggestion from '../../common/models/OtherSuggestion';
 
-export default class SuggestionModal extends Modal {
+export default class SuggestionModal extends FormModal {
   category!: Category;
   name!: Stream<string>;
   suggestions: OtherSuggestion[] = [];

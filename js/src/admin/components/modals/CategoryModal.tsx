@@ -1,5 +1,6 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Category from '../../../common/models/Category';
@@ -15,7 +16,7 @@ interface CategoryModalAttrs {
   onsubmit?: () => void;
 }
 
-export default class CategoryModal extends Modal<CategoryModalAttrs> {
+export default class CategoryModal extends FormModal<CategoryModalAttrs> {
   name: Stream<string>;
   slug: Stream<string>;
   description: Stream<string>;
@@ -97,8 +98,13 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
   content() {
     return (
       <div className="Modal-body">
-        <div className="Form">
-          <div className="Form-group" style={{ position: 'relative' }}>
+        <Form>
+          <div
+            className="Form-group"
+            style={{
+              position: 'relative',
+            }}
+          >
             <label>{app.translator.trans('huseyinfiliz-awards.admin.categories.name')}</label>
             <input
               className="FormControl"
@@ -142,7 +148,11 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
                         type="button"
                         className="Button Button--link"
                         onclick={() => this.selectSuggestion(suggestion)}
-                        style={{ width: '100%', textAlign: 'left', padding: '8px 12px' }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 12px',
+                        }}
                       >
                         {String(suggestion.name)}
                       </button>
@@ -152,22 +162,18 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
               </ul>
             ) : null}
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea className="FormControl" bidi={this.description} rows={3} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</label>
             <input className="FormControl" type="number" bidi={this.sortOrder} />
           </div>
-
           <div className="Form-group">
             <label className="checkbox">
               <input type="checkbox" checked={this.allowOther()} onchange={(e: Event) => this.allowOther((e.target as HTMLInputElement).checked)} />
@@ -175,13 +181,12 @@ export default class CategoryModal extends Modal<CategoryModalAttrs> {
             </label>
             <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.categories.allow_other_help')}</div>
           </div>
-
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }

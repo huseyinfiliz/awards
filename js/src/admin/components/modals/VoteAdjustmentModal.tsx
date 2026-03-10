@@ -1,5 +1,6 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Nominee from '../../../common/models/Nominee';
 
@@ -8,7 +9,7 @@ interface VoteAdjustmentModalAttrs {
   onsubmit: () => void;
 }
 
-export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs> {
+export default class VoteAdjustmentModal extends FormModal<VoteAdjustmentModalAttrs> {
   adjustment: number = 0;
   loading: boolean = false;
 
@@ -32,12 +33,11 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
 
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.real_votes')}</label>
             <div className="FormControl-static">{realVotes}</div>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.adjustment')}</label>
             <div className="VoteAdjustment-input">
@@ -61,7 +61,6 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
             </div>
             <p className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.adjustment_help')}</p>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.displayed_votes')}</label>
             <div className="FormControl-static VoteAdjustment-preview">
@@ -74,13 +73,12 @@ export default class VoteAdjustmentModal extends Modal<VoteAdjustmentModalAttrs>
               )}
             </div>
           </div>
-
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading} disabled={this.loading}>
               {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }

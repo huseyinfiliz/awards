@@ -1,3 +1,4 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
@@ -218,7 +219,7 @@ export default class AwardsPage extends Page {
         <div className="container">
           <div className="sideNavContainer">
             <nav className="IndexPage-nav sideNav">
-              <ul>{listItems(IndexPage.prototype.sidebarItems().toArray())}</ul>
+              <ul>{listItems(IndexSidebar.prototype.items().toArray())}</ul>
             </nav>
 
             <div className="IndexPage-results sideNavOffset">{this.loading ? <LoadingIndicator /> : this.content()}</div>

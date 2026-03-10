@@ -5,7 +5,7 @@ import AwardsPage from './components/AwardsPage';
 app.initializers.add('huseyinfiliz/awards', () => {
   extenders.forEach((extender) => extender.extend(app));
 
-  app.extensionData
+  app.registry
     .for('huseyinfiliz-awards')
     .registerPage(AwardsPage)
     .registerPermission(

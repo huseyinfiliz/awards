@@ -1,5 +1,6 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Nominee from '../../../common/models/Nominee';
@@ -16,7 +17,7 @@ interface NomineeModalAttrs {
   onsubmit?: () => void;
 }
 
-export default class NomineeModal extends Modal<NomineeModalAttrs> {
+export default class NomineeModal extends FormModal<NomineeModalAttrs> {
   name: Stream<string>;
   description: Stream<string>;
   slug: Stream<string>;
@@ -137,8 +138,13 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
 
     return (
       <div className="Modal-body">
-        <div className="Form">
-          <div className="Form-group" style={{ position: 'relative' }}>
+        <Form>
+          <div
+            className="Form-group"
+            style={{
+              position: 'relative',
+            }}
+          >
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.name')}</label>
             <input
               className="FormControl"
@@ -182,7 +188,11 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                         type="button"
                         className="Button Button--link"
                         onclick={() => this.selectSuggestion(suggestion)}
-                        style={{ width: '100%', textAlign: 'left', padding: '8px 12px' }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 12px',
+                        }}
                       >
                         {String(suggestion.name)}
                       </button>
@@ -192,7 +202,6 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
               </ul>
             ) : null}
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea
@@ -205,15 +214,18 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
             />
             <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.description_help')}</div>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.image_url')}</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
               <input
                 className="FormControl"
                 value={this.imageUrl()}
@@ -221,11 +233,21 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
                   this.imageUrl((e.target as HTMLInputElement).value);
                 }}
                 placeholder="https://example.com/image.png"
-                style={{ flex: 1 }}
+                style={{
+                  flex: 1,
+                }}
               />
               {hasFofUpload ? (
                 <span>
-                  <input id="nominee-image-upload" type="file" accept="image/*" style={{ display: 'none' }} onchange={this.handleUpload.bind(this)} />
+                  <input
+                    id="nominee-image-upload"
+                    type="file"
+                    accept="image/*"
+                    style={{
+                      display: 'none',
+                    }}
+                    onchange={this.handleUpload.bind(this)}
+                  />
                   <Button
                     className="Button Button--icon"
                     icon="fas fa-cloud-upload-alt"
@@ -241,7 +263,11 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
               ) : null}
             </div>
             {this.imageUrl() ? (
-              <div style={{ marginTop: '10px' }}>
+              <div
+                style={{
+                  marginTop: '10px',
+                }}
+              >
                 <img
                   src={this.imageUrl()}
                   alt="Preview"
@@ -260,18 +286,16 @@ export default class NomineeModal extends Modal<NomineeModalAttrs> {
             ) : null}
             <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.image_url_help')}</div>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</label>
             <input className="FormControl" type="number" bidi={this.sortOrder} />
           </div>
-
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }

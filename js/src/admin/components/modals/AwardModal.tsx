@@ -1,5 +1,6 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Award from '../../../common/models/Award';
@@ -9,7 +10,7 @@ interface AwardModalAttrs {
   onsubmit?: () => void;
 }
 
-export default class AwardModal extends Modal<AwardModalAttrs> {
+export default class AwardModal extends FormModal<AwardModalAttrs> {
   name: Stream<string>;
   slug: Stream<string>;
   year: Stream<number>;
@@ -99,37 +100,31 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
   content() {
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.name')}</label>
             <input className="FormControl" bidi={this.name} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.slug')}</label>
             <input className="FormControl" bidi={this.slug} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.year')}</label>
             <input className="FormControl" type="number" bidi={this.year} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.description')}</label>
             <textarea className="FormControl" bidi={this.description} rows={3} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.starts_at')}</label>
             <input className="FormControl" type="datetime-local" bidi={this.startsAt} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.ends_at')}</label>
             <input className="FormControl" type="datetime-local" bidi={this.endsAt} />
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.status')}</label>
             <select className="FormControl" value={this.status()} onchange={(e: Event) => this.status((e.target as HTMLSelectElement).value)}>
@@ -139,7 +134,6 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
               <option value="published">{app.translator.trans('huseyinfiliz-awards.admin.awards.status_published')}</option>
             </select>
           </div>
-
           <div className="Form-group">
             <label className="checkbox">
               <input
@@ -150,19 +144,17 @@ export default class AwardModal extends Modal<AwardModalAttrs> {
               {app.translator.trans('huseyinfiliz-awards.admin.awards.show_live_votes')}
             </label>
           </div>
-
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.admin.awards.image_url')}</label>
             {this.renderImageUpload()}
             <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.awards.image_url_help')}</div>
           </div>
-
           <div className="Form-group">
             <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-awards.lib.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }
