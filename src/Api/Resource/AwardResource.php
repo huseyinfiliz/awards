@@ -38,7 +38,7 @@ class AwardResource extends Resource\AbstractDatabaseResource
             Endpoint\Create::make()
                 ->can('createAward')
                 ->defaultInclude(['categories'])
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) $context->body()['data']['attributes'] ?? [];
 
@@ -62,7 +62,7 @@ class AwardResource extends Resource\AbstractDatabaseResource
                 }),
             Endpoint\Update::make()
                 ->can('update')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
 

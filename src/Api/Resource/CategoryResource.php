@@ -43,7 +43,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
         return [
             Endpoint\Create::make()
                 ->can('createCategory')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
 
@@ -59,7 +59,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                 }),
             Endpoint\Update::make()
                 ->can('update')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
 
@@ -76,7 +76,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                 }),
             Endpoint\Delete::make()
                 ->can('delete')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                 }),
             Endpoint\Show::make()

@@ -2,7 +2,6 @@
 
 namespace HuseyinFiliz\Awards\Api\Resource;
 
-use Flarum\Api\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
@@ -50,7 +49,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
         return [
             Endpoint\Create::make()
                 ->can('createOtherSuggestion')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');
 
@@ -111,7 +110,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                 }),
             Endpoint\Update::make()
                 ->can('update')
-                ->before(function (Context $context) {
+                ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
                     $action = $attrs['action'] ?? null;
