@@ -1,7 +1,8 @@
 <?php
 
 use Flarum\Extend;
-use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Api\Resource\ForumResource;
+use Flarum\Api\Schema;
 use HuseyinFiliz\Awards\Api\Controller;
 use HuseyinFiliz\Awards\Notification;
 
@@ -27,66 +28,38 @@ return [
         ->serializeToForum('awardsNavTitle', 'huseyinfiliz-awards.nav_title')
         ->serializeToForum('awardsNavIcon', 'huseyinfiliz-awards.nav_icon'),
 
-    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
-    (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attributes(function (ForumSerializer $serializer): array {
-            $actor = $serializer->getActor();
-            return [
-                'canViewAwards' => $actor->hasPermission('awards.view'),
-                'canVoteAwards' => $actor->hasPermission('awards.vote'),
-                'canViewAwardsResults' => $actor->hasPermission('awards.viewResults'),
-                'canManageAwards' => $actor->hasPermission('awards.manage'),
-                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\AwardResource::class),
-                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\CategoryResource::class),
-                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\NomineeResource::class),
-                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\OtherSuggestionResource::class),
-                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\VoteResource::class),
-            ];
-        }),
+    (new Extend\ApiResource(ForumResource::class))
+        ->fields(fn () => [
+            Schema\Boolean::make('canViewAwards')
+                ->get(fn ($model, $context) => $context->getActor()->hasPermission('awards.view')),
+            Schema\Boolean::make('canVoteAwards')
+                ->get(fn ($model, $context) => $context->getActor()->hasPermission('awards.vote')),
+            Schema\Boolean::make('canViewAwardsResults')
+                ->get(fn ($model, $context) => $context->getActor()->hasPermission('awards.viewResults')),
+            Schema\Boolean::make('canManageAwards')
+                ->get(fn ($model, $context) => $context->getActor()->hasPermission('awards.manage')),
+        ]),
 
     (new Extend\Notification())
         ->type(Notification\ResultsPublishedBlueprint::class, ['alert']),
 
     (new Extend\Routes('api'))
-        // Awards
-        ->get('/awards', 'awards.index', Controller\Award\ListAwardsController::class)
-        ->post('/awards', 'awards.create', Controller\Award\CreateAwardController::class)
-        ->get('/awards/{id}', 'awards.show', Controller\Award\ShowAwardController::class)
-        ->patch('/awards/{id}', 'awards.update', Controller\Award\UpdateAwardController::class)
-        ->delete('/awards/{id}', 'awards.delete', Controller\Award\DeleteAwardController::class)
         ->post('/awards/{id}/publish', 'awards.publish', Controller\Admin\PublishResultsController::class)
-
-        // Categories - autocomplete ÖNCE gelmeli
         ->get('/award-categories/autocomplete', 'award-categories.autocomplete', Controller\Category\AutocompleteCategoriesController::class)
-        ->get('/award-categories', 'award-categories.index', Controller\Category\ListCategoriesController::class)
-        ->post('/award-categories', 'award-categories.create', Controller\Category\CreateCategoryController::class)
-        ->get('/award-categories/{id}', 'award-categories.show', Controller\Category\ShowCategoryController::class)
-        ->patch('/award-categories/{id}', 'award-categories.update', Controller\Category\UpdateCategoryController::class)
-        ->delete('/award-categories/{id}', 'award-categories.delete', Controller\Category\DeleteCategoryController::class)
-
-        // Nominees - autocomplete ÖNCE gelmeli
         ->get('/award-nominees/autocomplete', 'award-nominees.autocomplete', Controller\Nominee\AutocompleteNomineesController::class)
-        ->get('/award-nominees', 'award-nominees.index', Controller\Nominee\ListNomineesController::class)
-        ->post('/award-nominees', 'award-nominees.create', Controller\Nominee\CreateNomineeController::class)
-        ->get('/award-nominees/{id}', 'award-nominees.show', Controller\Nominee\ShowNomineeController::class)
-        ->patch('/award-nominees/{id}', 'award-nominees.update', Controller\Nominee\UpdateNomineeController::class)
-        ->delete('/award-nominees/{id}', 'award-nominees.delete', Controller\Nominee\DeleteNomineeController::class)
         ->patch('/award-nominees/{id}/votes', 'award-nominees.updateVotes', Controller\Admin\UpdateNomineeVotesController::class)
-
-        // Votes
-        ->get('/award-votes', 'award-votes.index', Controller\Vote\ListVotesController::class)
-        ->post('/award-votes', 'award-votes.create', Controller\Vote\CreateVoteController::class)
-        ->delete('/award-votes/{id}', 'award-votes.delete', Controller\Vote\DeleteVoteController::class)
-
-        // Other Suggestions - /mine MUST come before /{id}
-        ->get('/award-other-suggestions/mine', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class)
-        ->get('/award-other-suggestions', 'award-other-suggestions.index', Controller\OtherSuggestion\ListPendingSuggestionsController::class)
-        ->post('/award-other-suggestions', 'award-other-suggestions.create', Controller\OtherSuggestion\CreateOtherSuggestionController::class)
-        ->patch('/award-other-suggestions/{id}', 'award-other-suggestions.update', Controller\OtherSuggestion\UpdateOtherSuggestionController::class)
-        ->delete('/award-other-suggestions/{id}', 'award-other-suggestions.delete', Controller\OtherSuggestion\DeleteOtherSuggestionController::class),
+        ->get('/award-other-suggestions/mine', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class),
 
     (new Extend\Policy())
         ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class),
+
+    (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Award::class))
+        ->scope(function ($actor, $query) {
+            if (!$actor->hasPermission('awards.manage')) {
+                $query->whereIn('status', ['active', 'published', 'ended']);
+            }
+        }),
+
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\AwardResource::class),
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\CategoryResource::class),
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\NomineeResource::class),

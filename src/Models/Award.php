@@ -3,11 +3,13 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 
 class Award extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'awards';
 
     protected $casts = ['starts_at' => 'datetime', 'ends_at' => 'datetime', 'created_at' => 'datetime', 'updated_at' => 'datetime'];

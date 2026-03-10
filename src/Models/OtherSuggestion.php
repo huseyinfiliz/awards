@@ -3,11 +3,13 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OtherSuggestion extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'award_other_suggestions';
 
     protected $fillable = [

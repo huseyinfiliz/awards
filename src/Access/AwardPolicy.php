@@ -8,15 +8,31 @@ use HuseyinFiliz\Awards\Models\Award;
 
 class AwardPolicy extends AbstractPolicy
 {
-    public function can(User $actor, string $ability)
+    public function createAward(User $actor)
     {
         if ($actor->hasPermission('awards.manage')) {
-            return true;
+            return $this->allow();
+        }
+    }
+
+    public function update(User $actor, Award $award)
+    {
+        if ($actor->hasPermission('awards.manage')) {
+            return $this->allow();
+        }
+    }
+
+    public function delete(User $actor, Award $award)
+    {
+        if ($actor->hasPermission('awards.manage')) {
+            return $this->allow();
         }
     }
 
     public function view(User $actor, Award $award)
     {
-        return $actor->hasPermission('awards.view');
+        if ($actor->hasPermission('awards.view')) {
+            return $this->allow();
+        }
     }
 }

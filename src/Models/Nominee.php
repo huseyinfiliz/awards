@@ -3,11 +3,13 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Nominee extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'award_nominees';
 
     protected $fillable = [

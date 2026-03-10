@@ -6,9 +6,13 @@ use Flarum\Api\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
-use Flarum\Api\Sort\SortColumn;
+use Flarum\Foundation\ValidationException;
+use HuseyinFiliz\Awards\Models\Nominee;
 use HuseyinFiliz\Awards\Models\Vote;
+use HuseyinFiliz\Awards\Service\VoteLimitService;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Database\Eloquent\Builder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tobyz\JsonApiServer\Context as OriginalContext;
 
 /**
@@ -16,6 +20,13 @@ use Tobyz\JsonApiServer\Context as OriginalContext;
  */
 class VoteResource extends Resource\AbstractDatabaseResource
 {
+    public function __construct(
+        protected TranslatorInterface $translator,
+        protected RateLimiter $limiter,
+        protected VoteLimitService $voteLimitService,
+    ) {
+    }
+
     public function type(): string
     {
         return 'award-votes';
@@ -35,7 +46,53 @@ class VoteResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createVote'),
+                ->can('createVote')
+                ->before(function (Context $context) {
+                    $actor = $context->getActor();
+                    $actor->assertCan('awards.vote');
+
+                    $key = 'awards_vote_' . $actor->id;
+                    if ($this->limiter->tooManyAttempts($key, 10)) {
+                        throw new ValidationException([
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit')
+                        ]);
+                    }
+                    $this->limiter->hit($key, 60);
+
+                    $attrs = (array) ($context->body()['data']['attributes'] ?? []);
+                    $nomineeId = $attrs['nomineeId'] ?? null;
+
+                    $nominee = Nominee::with('category.award')->findOrFail($nomineeId);
+                    $award = $nominee->category->award;
+                    $categoryId = $nominee->category_id;
+
+                    if (!$award->isVotingOpen()) {
+                        throw new ValidationException([
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.voting.voting_closed')
+                        ]);
+                    }
+
+                    if ($this->voteLimitService->isSingleVoteMode()) {
+                        Vote::where('category_id', $categoryId)
+                            ->where('user_id', $actor->id)
+                            ->delete();
+                    } elseif (!$this->voteLimitService->isUnlimited()) {
+                        if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
+                            $limit = $this->voteLimitService->getVotesPerCategory();
+                            throw new ValidationException([
+                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_limit_reached', ['limit' => $limit])
+                            ]);
+                        }
+                    }
+
+                    $context->body = array_merge($context->body(), [
+                        'data' => array_merge($context->body()['data'] ?? [], [
+                            'attributes' => array_merge($attrs, [
+                                'categoryId' => $categoryId,
+                            ]),
+                        ]),
+                    ]);
+                }),
             Endpoint\Delete::make()
                 ->can('delete'),
             Endpoint\Index::make()
@@ -46,39 +103,37 @@ class VoteResource extends Resource\AbstractDatabaseResource
     public function fields(): array
     {
         return [
-
-            /**
-             * @todo migrate logic from old serializer and controllers to this API Resource.
-             * @see https://docs.flarum.org/2.x/extend/api#api-resources
-             */
-
-            // Example:
-            Schema\Str::make('name')
+            Schema\DateTime::make('createdAt')
+                ->property('created_at'),
+            Schema\Integer::make('nomineeId')
+                ->writable()
                 ->requiredOnCreate()
-                ->minLength(3)
-                ->maxLength(255)
-                ->writable(),
-
+                ->property('nominee_id'),
+            Schema\Integer::make('categoryId')
+                ->writable()
+                ->property('category_id'),
 
             Schema\Relationship\ToOne::make('nominee')
                 ->includable()
-                // ->inverse('?') // the inverse relationship name if any.
-                ->type('nominees'), // the serialized type of this relation (type of the relation model's API resource).
+                ->type('award-nominees'),
             Schema\Relationship\ToOne::make('category')
                 ->includable()
-                // ->inverse('?') // the inverse relationship name if any.
-                ->type('categorys'), // the serialized type of this relation (type of the relation model's API resource).
+                ->type('award-categories'),
             Schema\Relationship\ToOne::make('user')
                 ->includable()
-                // ->inverse('?') // the inverse relationship name if any.
-                ->type('users'), // the serialized type of this relation (type of the relation model's API resource).
+                ->type('users'),
         ];
     }
 
     public function sorts(): array
     {
-        return [
-            // SortColumn::make('createdAt'),
-        ];
+        return [];
+    }
+
+    protected function newModel(Context $context): object
+    {
+        $model = parent::newModel($context);
+        $model->user_id = $context->getActor()->id;
+        return $model;
     }
 }
