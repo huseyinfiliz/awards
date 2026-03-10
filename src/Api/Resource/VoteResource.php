@@ -132,6 +132,17 @@ class VoteResource extends Resource\AbstractDatabaseResource
     {
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
+
+        $attrs = (array) ($context->body()['data']['attributes'] ?? []);
+        $nomineeId = $attrs['nomineeId'] ?? null;
+
+        if ($nomineeId) {
+            $nominee = Nominee::find($nomineeId);
+            if ($nominee) {
+                $model->category_id = $nominee->category_id;
+            }
+        }
+
         return $model;
     }
 }
