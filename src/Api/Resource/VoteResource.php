@@ -130,7 +130,7 @@ class VoteResource extends Resource\AbstractDatabaseResource
         return [];
     }
 
-    public function newModel(Context $context): object
+    public function newModel(OriginalContext $context): object
     {
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
