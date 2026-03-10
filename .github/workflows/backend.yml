@@ -12,4 +12,4 @@ jobs:
       backend_directory: .
 
       php_versions: '["8.2", "8.3", "8.4"]'
-      db_versions: '["mysql:5.7", "mariadb"]'
+      db_versions: '["mysql:8.0.36", "mariadb"]'
