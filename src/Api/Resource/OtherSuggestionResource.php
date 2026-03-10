@@ -217,6 +217,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
     {
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
+        $model->status = 'pending';
         return $model;
     }
 }

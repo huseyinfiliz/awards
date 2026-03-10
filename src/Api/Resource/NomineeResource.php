@@ -130,6 +130,7 @@ class NomineeResource extends Resource\AbstractDatabaseResource
 
             Schema\Relationship\ToOne::make('category')
                 ->includable()
+                ->writable()
                 ->type('award-categories'),
         ];
     }

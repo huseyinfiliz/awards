@@ -164,6 +164,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
 
             Schema\Relationship\ToOne::make('award')
                 ->includable()
+                ->writable()
                 ->type('awards'),
             Schema\Relationship\ToMany::make('nominees')
                 ->includable()
