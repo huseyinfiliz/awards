@@ -99,7 +99,7 @@
             "composer/installers": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require-dev": {
         "flarum/phpstan": "^2.0",
