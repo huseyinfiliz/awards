@@ -405,10 +405,14 @@
 
   .HFAwardsEmptyState,
   .EmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 40px;
     color: var(--muted-color);
-    i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; display: block; }
+    i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
     p { margin: 0; }
   }
 
