@@ -8,5 +8,3 @@ parameters:
         - extend.php
     excludePaths:
         - tests
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
