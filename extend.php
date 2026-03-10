@@ -27,6 +27,7 @@ return [
         ->serializeToForum('awardsNavTitle', 'huseyinfiliz-awards.nav_title')
         ->serializeToForum('awardsNavIcon', 'huseyinfiliz-awards.nav_icon'),
 
+    // @TODO: Replace with the new implementation https://docs.flarum.org/2.x/extend/api#extending-api-resources
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attributes(function (ForumSerializer $serializer): array {
             $actor = $serializer->getActor();
@@ -35,6 +36,11 @@ return [
                 'canVoteAwards' => $actor->hasPermission('awards.vote'),
                 'canViewAwardsResults' => $actor->hasPermission('awards.viewResults'),
                 'canManageAwards' => $actor->hasPermission('awards.manage'),
+                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\AwardResource::class),
+                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\CategoryResource::class),
+                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\NomineeResource::class),
+                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\OtherSuggestionResource::class),
+                new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\VoteResource::class),
             ];
         }),
 
@@ -81,4 +87,9 @@ return [
 
     (new Extend\Policy())
         ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class),
+    new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\AwardResource::class),
+    new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\CategoryResource::class),
+    new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\NomineeResource::class),
+    new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\OtherSuggestionResource::class),
+    new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\VoteResource::class),
 ];

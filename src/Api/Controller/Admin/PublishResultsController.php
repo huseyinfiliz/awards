@@ -13,6 +13,12 @@ use HuseyinFiliz\Awards\Models\Award;
 use HuseyinFiliz\Awards\Models\Vote;
 use HuseyinFiliz\Awards\Notification\ResultsPublishedBlueprint;
 
+/**
+ * @TODO: Remove this in favor of one of the API resource classes that were added.
+ *      Or extend an existing API Resource to add this to.
+ *      Or use a vanilla RequestHandlerInterface controller.
+ *      @link https://docs.flarum.org/2.x/extend/api#endpoints
+ */
 class PublishResultsController extends AbstractShowController
 {
     public $serializer = AwardSerializer::class;
