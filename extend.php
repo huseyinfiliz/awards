@@ -83,4 +83,11 @@ return [
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\NomineeResource::class),
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\OtherSuggestionResource::class),
     new Extend\ApiResource(HuseyinFiliz\Awards\Api\Resource\VoteResource::class),
+
+    (new Extend\SearchDriver(Flarum\Search\Database\DatabaseSearchDriver::class))
+        ->addSearcher(HuseyinFiliz\Awards\Models\Award::class, HuseyinFiliz\Awards\Search\AwardSearcher::class)
+        ->addSearcher(HuseyinFiliz\Awards\Models\Category::class, HuseyinFiliz\Awards\Search\CategorySearcher::class)
+        ->addSearcher(HuseyinFiliz\Awards\Models\Nominee::class, HuseyinFiliz\Awards\Search\NomineeSearcher::class)
+        ->addSearcher(HuseyinFiliz\Awards\Models\Vote::class, HuseyinFiliz\Awards\Search\VoteSearcher::class)
+        ->addSearcher(HuseyinFiliz\Awards\Models\OtherSuggestion::class, HuseyinFiliz\Awards\Search\OtherSuggestionSearcher::class),
 ];
