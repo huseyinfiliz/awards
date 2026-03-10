@@ -8,24 +8,30 @@ use HuseyinFiliz\Awards\Models\Nominee;
 
 class NomineePolicy extends AbstractPolicy
 {
-    public function createNominee(User $actor)
+    public function createNominee(User $actor): ?string
     {
         if ($actor->hasPermission('awards.manage')) {
             return $this->allow();
         }
+
+        return null;
     }
 
-    public function update(User $actor, Nominee $nominee)
+    public function update(User $actor, Nominee $nominee): ?string
     {
         if ($actor->hasPermission('awards.manage')) {
             return $this->allow();
         }
+
+        return null;
     }
 
-    public function delete(User $actor, Nominee $nominee)
+    public function delete(User $actor, Nominee $nominee): ?string
     {
         if ($actor->hasPermission('awards.manage')) {
             return $this->allow();
         }
+
+        return null;
     }
 }

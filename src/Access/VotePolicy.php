@@ -8,14 +8,16 @@ use HuseyinFiliz\Awards\Models\Vote;
 
 class VotePolicy extends AbstractPolicy
 {
-    public function createVote(User $actor)
+    public function createVote(User $actor): ?string
     {
         if ($actor->hasPermission('awards.vote')) {
             return $this->allow();
         }
+
+        return null;
     }
 
-    public function delete(User $actor, Vote $vote)
+    public function delete(User $actor, Vote $vote): ?string
     {
         if ($actor->id === $vote->user_id) {
             return $this->allow();
@@ -24,5 +26,7 @@ class VotePolicy extends AbstractPolicy
         if ($actor->hasPermission('awards.manage')) {
             return $this->allow();
         }
+
+        return null;
     }
 }

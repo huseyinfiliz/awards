@@ -1,0 +1,11 @@
+php:
+  preset: recommended
+  disabled:
+    - unused_imports
+  finder:
+    not-name:
+      - "*.blade.php"
+
+js: true
+
+css: false
