@@ -40,8 +40,14 @@ class AwardApiTest extends TestCase
             $this->request('GET', '/api/awards')
         );
 
+        $statusCode = $response->getStatusCode();
+        if ($statusCode === 500) {
+            $body = $response->getBody()->getContents();
+            $this->fail("Got 500 error. Response body: " . $body);
+        }
+
         // Flarum returns 403 for permission denied, not 401
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(403, $statusCode);
     }
 
     #[Test]
