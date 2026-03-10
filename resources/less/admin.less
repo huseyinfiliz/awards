@@ -399,14 +399,26 @@
     .Button { padding: 8px 24px; }
   }
 
-  .SettingsTab .Form-group {
-    background: var(--body-bg);
-    border: 1px solid var(--control-bg);
-    border-radius: @hf-awards-card-radius;
-    padding: 20px;
-    margin-bottom: 20px;
-    h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
-    p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+  .SettingsTab {
+    > .Form-group {
+      background: var(--body-bg);
+      border: 1px solid var(--control-bg);
+      border-radius: @hf-awards-card-radius;
+      padding: 20px;
+      margin-bottom: 20px;
+      h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
+      p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+    }
+
+    .Form-group {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .FormControl {
+      max-width: 100%;
+      width: 100%;
+    }
   }
 
   .HFAwardsEmptyState,
