@@ -5,6 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
+use Flarum\Group\Group;
 
 class PermissionTest extends TestCase
 {
@@ -17,7 +20,7 @@ class PermissionTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'viewer', 'email' => 'viewer@machine.local', 'is_email_confirmed' => 1],
                 ['id' => 4, 'username' => 'voter', 'email' => 'voter@machine.local', 'is_email_confirmed' => 1],
@@ -32,7 +35,7 @@ class PermissionTest extends TestCase
             'award_nominees' => [
                 ['id' => 1, 'category_id' => 1, 'name' => 'Nominee 1', 'slug' => 'nominee-1', 'sort_order' => 1],
             ],
-            'groups' => [
+            Group::class => [
                 ['id' => 10, 'name_singular' => 'Viewer', 'name_plural' => 'Viewers'],
                 ['id' => 11, 'name_singular' => 'Voter', 'name_plural' => 'Voters'],
             ],
@@ -48,9 +51,7 @@ class PermissionTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_without_view_permission_cannot_list_awards(): void
     {
         $response = $this->send(
@@ -63,9 +64,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_with_view_permission_can_list_awards(): void
     {
         $response = $this->send(
@@ -77,9 +76,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_without_vote_permission_cannot_vote(): void
     {
         $response = $this->send(
@@ -100,9 +97,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_with_vote_permission_can_vote(): void
     {
         $response = $this->send(
@@ -123,9 +118,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_without_manage_permission_cannot_create_award(): void
     {
         $response = $this->send(
@@ -147,9 +140,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_has_manage_permission(): void
     {
         $response = $this->send(
@@ -174,9 +165,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_with_view_permission_can_view_published_results(): void
     {
         $response = $this->send(
@@ -191,9 +180,7 @@ class PermissionTest extends TestCase
         $this->assertEquals('published', $body['data']['attributes']['status']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function guest_cannot_access_any_awards(): void
     {
         $response = $this->send(
@@ -204,9 +191,7 @@ class PermissionTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function guest_cannot_vote(): void
     {
         $response = $this->send(

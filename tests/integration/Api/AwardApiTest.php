@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use HuseyinFiliz\Awards\Models\Award;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
 
 class AwardApiTest extends TestCase
 {
@@ -18,7 +20,7 @@ class AwardApiTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
             ],
             'awards' => [
@@ -31,9 +33,7 @@ class AwardApiTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function guest_cannot_list_awards(): void
     {
         $response = $this->send(
@@ -44,9 +44,7 @@ class AwardApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_list_awards(): void
     {
         $response = $this->send(
@@ -61,9 +59,7 @@ class AwardApiTest extends TestCase
         $this->assertArrayHasKey('data', $body);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_award(): void
     {
         $response = $this->send(
@@ -86,9 +82,7 @@ class AwardApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_create_award(): void
     {
         $response = $this->send(
@@ -116,9 +110,7 @@ class AwardApiTest extends TestCase
         $this->assertEquals('New Award', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_update_award(): void
     {
         $response = $this->send(
@@ -141,9 +133,7 @@ class AwardApiTest extends TestCase
         $this->assertEquals('Updated Award Name', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_delete_award(): void
     {
         $response = $this->send(
@@ -157,9 +147,7 @@ class AwardApiTest extends TestCase
         $this->assertNull(Award::find(2));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_view_single_award(): void
     {
         $response = $this->send(

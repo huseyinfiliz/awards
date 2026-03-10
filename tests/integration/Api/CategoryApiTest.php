@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use HuseyinFiliz\Awards\Models\Category;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
 
 class CategoryApiTest extends TestCase
 {
@@ -18,7 +20,7 @@ class CategoryApiTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
             ],
             'awards' => [
@@ -34,9 +36,7 @@ class CategoryApiTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_list_categories(): void
     {
         $response = $this->send(
@@ -52,9 +52,7 @@ class CategoryApiTest extends TestCase
         $this->assertCount(2, $body['data']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_category(): void
     {
         $response = $this->send(
@@ -76,9 +74,7 @@ class CategoryApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_create_category(): void
     {
         $response = $this->send(
@@ -108,9 +104,7 @@ class CategoryApiTest extends TestCase
         $this->assertEquals('New Category', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_update_category(): void
     {
         $response = $this->send(
@@ -133,9 +127,7 @@ class CategoryApiTest extends TestCase
         $this->assertEquals('Updated Category Name', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_delete_category(): void
     {
         $response = $this->send(
@@ -149,9 +141,7 @@ class CategoryApiTest extends TestCase
         $this->assertNull(Category::find(2));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_view_single_category(): void
     {
         $response = $this->send(

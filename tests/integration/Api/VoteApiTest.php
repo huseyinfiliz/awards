@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use HuseyinFiliz\Awards\Models\Vote;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
 
 class VoteApiTest extends TestCase
 {
@@ -18,7 +20,7 @@ class VoteApiTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
                 ['id' => 3, 'username' => 'otheruser', 'email' => 'other@machine.local', 'is_email_confirmed' => 1],
             ],
@@ -45,9 +47,7 @@ class VoteApiTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_vote_for_nominee(): void
     {
         $response = $this->send(
@@ -71,9 +71,7 @@ class VoteApiTest extends TestCase
         $this->assertArrayHasKey('data', $body);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function vote_replaces_previous_vote_in_single_vote_mode(): void
     {
         // First vote
@@ -116,9 +114,7 @@ class VoteApiTest extends TestCase
         $this->assertEquals(2, $votes->first()->nominee_id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_vote_when_voting_closed(): void
     {
         $response = $this->send(
@@ -139,9 +135,7 @@ class VoteApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_delete_own_vote(): void
     {
         // First create a vote
@@ -172,9 +166,7 @@ class VoteApiTest extends TestCase
         $this->assertNull(Vote::find($vote->id));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_delete_others_vote(): void
     {
         // Vote ID 1 belongs to user 3
@@ -187,9 +179,7 @@ class VoteApiTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_list_own_votes(): void
     {
         // Create a vote first

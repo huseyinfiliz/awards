@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use HuseyinFiliz\Awards\Models\Nominee;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
 
 class NomineeApiTest extends TestCase
 {
@@ -18,7 +20,7 @@ class NomineeApiTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
             ],
             'awards' => [
@@ -37,9 +39,7 @@ class NomineeApiTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_list_nominees(): void
     {
         $response = $this->send(
@@ -55,9 +55,7 @@ class NomineeApiTest extends TestCase
         $this->assertCount(2, $body['data']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_nominee(): void
     {
         $response = $this->send(
@@ -83,9 +81,7 @@ class NomineeApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_create_nominee(): void
     {
         $response = $this->send(
@@ -115,9 +111,7 @@ class NomineeApiTest extends TestCase
         $this->assertEquals('New Nominee', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_update_nominee(): void
     {
         $response = $this->send(
@@ -140,9 +134,7 @@ class NomineeApiTest extends TestCase
         $this->assertEquals('Updated Nominee Name', $body['data']['attributes']['name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_delete_nominee(): void
     {
         $response = $this->send(
@@ -156,9 +148,7 @@ class NomineeApiTest extends TestCase
         $this->assertNull(Nominee::find(2));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function admin_can_adjust_nominee_votes(): void
     {
         $response = $this->send(
@@ -180,9 +170,7 @@ class NomineeApiTest extends TestCase
         $this->assertEquals(10, $nominee->vote_adjustment);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_adjust_nominee_votes(): void
     {
         $response = $this->send(
@@ -201,9 +189,7 @@ class NomineeApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_view_single_nominee(): void
     {
         $response = $this->send(

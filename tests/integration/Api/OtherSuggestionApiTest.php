@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
 
 class OtherSuggestionApiTest extends TestCase
 {
@@ -18,7 +20,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->extension('huseyinfiliz-awards');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 $this->normalUser(),
             ],
             'awards' => [
@@ -43,9 +45,7 @@ class OtherSuggestionApiTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_with_vote_permission_can_create_suggestion(): void
     {
         $response = $this->send(
@@ -70,9 +70,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals('pending', $body['data']['attributes']['status']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_suggestion_if_category_does_not_allow(): void
     {
         $response = $this->send(
@@ -93,9 +91,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_suggestion_if_voting_closed(): void
     {
         $response = $this->send(
@@ -116,9 +112,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function quota_enforcement_prevents_excess_suggestions(): void
     {
         // Create first suggestion (quota is 1)
@@ -156,9 +150,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_without_vote_permission_cannot_create_suggestion(): void
     {
         // Remove vote permission for normal user
@@ -185,9 +177,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_can_list_own_suggestions(): void
     {
         // Create a suggestion first
@@ -219,9 +209,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertArrayHasKey('data', $body);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_suggestion_with_empty_name(): void
     {
         $response = $this->send(
@@ -242,9 +230,7 @@ class OtherSuggestionApiTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function user_cannot_create_suggestion_with_name_exceeding_max_length(): void
     {
         $longName = str_repeat('a', 300); // 300 characters, exceeds 255 limit
