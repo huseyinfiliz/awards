@@ -215,7 +215,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
         return [];
     }
 
-    protected function newModel(Context $context): object
+    public function newModel(Context $context): object
     {
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
