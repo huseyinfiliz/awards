@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "flarum/core": "^2.0.0-beta"
+        "flarum/core": "^2.0"
     },
     "authors": [
         {
@@ -102,8 +102,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "flarum/phpstan": "^2.0.0-beta",
-        "flarum/testing": "^2.0.0-beta",
+        "flarum/phpstan": "^2.0",
+        "flarum/testing": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.0",
         "mockery/mockery": "^1.0"
     }
