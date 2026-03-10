@@ -51,12 +51,30 @@ return [
         ->get('/award-user-suggestions', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class),
 
     (new Extend\Policy())
-        ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class),
+        ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class)
+        ->modelPolicy(\HuseyinFiliz\Awards\Models\Category::class, \HuseyinFiliz\Awards\Access\CategoryPolicy::class)
+        ->modelPolicy(\HuseyinFiliz\Awards\Models\Nominee::class, \HuseyinFiliz\Awards\Access\NomineePolicy::class)
+        ->modelPolicy(\HuseyinFiliz\Awards\Models\Vote::class, \HuseyinFiliz\Awards\Access\VotePolicy::class)
+        ->modelPolicy(\HuseyinFiliz\Awards\Models\OtherSuggestion::class, \HuseyinFiliz\Awards\Access\OtherSuggestionPolicy::class),
 
     (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Award::class))
         ->scope(function ($actor, $query) {
             if (!$actor->hasPermission('awards.manage')) {
                 $query->whereIn('status', ['active', 'published', 'ended']);
+            }
+        }),
+
+    (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Vote::class))
+        ->scope(function ($actor, $query) {
+            if (!$actor->hasPermission('awards.manage')) {
+                $query->where('user_id', $actor->id);
+            }
+        }),
+
+    (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\OtherSuggestion::class))
+        ->scope(function ($actor, $query) {
+            if (!$actor->hasPermission('awards.manage')) {
+                $query->where('user_id', $actor->id);
             }
         }),
 

@@ -88,11 +88,17 @@ class AwardResource extends Resource\AbstractDatabaseResource
             Endpoint\Delete::make()
                 ->can('delete'),
             Endpoint\Show::make()
-                ->defaultInclude(['categories', 'categories.nominees']),
+                ->defaultInclude(['categories', 'categories.nominees'])
+                ->before(function (OriginalContext $context) {
+                    $context->getActor()->assertCan('awards.view');
+                }),
             Endpoint\Index::make()
                 ->paginate()
                 ->defaultInclude(['categories'])
-                ->defaultSort('-startsAt'),
+                ->defaultSort('-startsAt')
+                ->before(function (OriginalContext $context) {
+                    $context->getActor()->assertCan('awards.view');
+                }),
         ];
     }
 
