@@ -45,10 +45,10 @@ return [
 
     (new Extend\Routes('api'))
         ->post('/awards/{id}/publish', 'awards.publish', Controller\Admin\PublishResultsController::class)
-        ->get('/award-categories/autocomplete', 'award-categories.autocomplete', Controller\Category\AutocompleteCategoriesController::class)
-        ->get('/award-nominees/autocomplete', 'award-nominees.autocomplete', Controller\Nominee\AutocompleteNomineesController::class)
+        ->get('/award-category-autocomplete', 'award-categories.autocomplete', Controller\Category\AutocompleteCategoriesController::class)
+        ->get('/award-nominee-autocomplete', 'award-nominees.autocomplete', Controller\Nominee\AutocompleteNomineesController::class)
         ->patch('/award-nominees/{id}/votes', 'award-nominees.updateVotes', Controller\Admin\UpdateNomineeVotesController::class)
-        ->get('/award-other-suggestions/mine', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class),
+        ->get('/award-user-suggestions', 'award-other-suggestions.mine', Controller\OtherSuggestion\ListUserSuggestionsController::class),
 
     (new Extend\Policy())
         ->modelPolicy(\HuseyinFiliz\Awards\Models\Award::class, \HuseyinFiliz\Awards\Access\AwardPolicy::class),

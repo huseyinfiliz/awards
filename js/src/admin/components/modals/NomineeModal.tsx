@@ -62,7 +62,7 @@ export default class NomineeModal extends FormModal<NomineeModalAttrs> {
     try {
       const response = await app.request<any>({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/award-nominees/autocomplete',
+        url: app.forum.attribute('apiUrl') + '/award-nominee-autocomplete',
         params: { 'filter[q]': query },
       });
 

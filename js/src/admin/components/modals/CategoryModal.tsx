@@ -60,7 +60,7 @@ export default class CategoryModal extends FormModal<CategoryModalAttrs> {
     try {
       const response = await app.request<any>({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/award-categories/autocomplete',
+        url: app.forum.attribute('apiUrl') + '/award-category-autocomplete',
         params: { 'filter[q]': query },
       });
 

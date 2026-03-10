@@ -196,9 +196,9 @@ class OtherSuggestionApiTest extends TestCase
             ])
         );
 
-        // Route is /mine for user's own suggestions
+        // Route is /award-user-suggestions for user's own suggestions
         $response = $this->send(
-            $this->request('GET', '/api/award-other-suggestions/mine', [
+            $this->request('GET', '/api/award-user-suggestions', [
                 'authenticatedAs' => 2,
             ])
         );

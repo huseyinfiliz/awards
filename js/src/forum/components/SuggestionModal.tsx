@@ -37,7 +37,7 @@ export default class SuggestionModal extends FormModal {
     try {
       const response = await app.request<any>({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/award-other-suggestions/mine',
+        url: app.forum.attribute('apiUrl') + '/award-user-suggestions',
         params: { 'filter[category]': this.category.id() },
       });
 
