@@ -89,5 +89,9 @@ return [
         ->addSearcher(HuseyinFiliz\Awards\Models\Category::class, HuseyinFiliz\Awards\Search\CategorySearcher::class)
         ->addSearcher(HuseyinFiliz\Awards\Models\Nominee::class, HuseyinFiliz\Awards\Search\NomineeSearcher::class)
         ->addSearcher(HuseyinFiliz\Awards\Models\Vote::class, HuseyinFiliz\Awards\Search\VoteSearcher::class)
-        ->addSearcher(HuseyinFiliz\Awards\Models\OtherSuggestion::class, HuseyinFiliz\Awards\Search\OtherSuggestionSearcher::class),
+        ->addSearcher(HuseyinFiliz\Awards\Models\OtherSuggestion::class, HuseyinFiliz\Awards\Search\OtherSuggestionSearcher::class)
+        ->addFilter(HuseyinFiliz\Awards\Search\CategorySearcher::class, HuseyinFiliz\Awards\Search\Filter\AwardFilter::class)
+        ->addFilter(HuseyinFiliz\Awards\Search\NomineeSearcher::class, HuseyinFiliz\Awards\Search\Filter\CategoryFilter::class)
+        ->addFilter(HuseyinFiliz\Awards\Search\OtherSuggestionSearcher::class, HuseyinFiliz\Awards\Search\Filter\CategoryFilter::class)
+        ->addFilter(HuseyinFiliz\Awards\Search\OtherSuggestionSearcher::class, HuseyinFiliz\Awards\Search\Filter\SuggestionAwardFilter::class),
 ];
