@@ -10,7 +10,7 @@ class Award extends AbstractModel
 {
     protected $table = 'awards';
 
-    protected $dates = ['starts_at', 'ends_at', 'created_at', 'updated_at'];
+    protected $casts = ['starts_at' => 'datetime', 'ends_at' => 'datetime', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
     protected $fillable = [
         'name',

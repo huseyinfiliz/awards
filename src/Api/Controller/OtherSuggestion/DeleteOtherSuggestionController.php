@@ -12,14 +12,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DeleteOtherSuggestionController extends AbstractDeleteController
 {
-    protected $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(protected TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $id = Arr::get($request->getQueryParams(), 'id');

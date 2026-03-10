@@ -12,14 +12,11 @@ use Flarum\Foundation\ValidationException;
 
 class DeleteVoteController extends AbstractDeleteController
 {
-    protected $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(protected TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('awards.vote');

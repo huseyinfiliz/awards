@@ -2,23 +2,21 @@
 
 namespace HuseyinFiliz\Awards\Notification;
 
+use Flarum\Notification\AlertableInterface;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Award;
 
-class ResultsPublishedBlueprint implements BlueprintInterface
+class ResultsPublishedBlueprint implements BlueprintInterface, AlertableInterface
 {
-    public Award $award;
-
-    public function __construct(Award $award)
+    public function __construct(public Award $award)
     {
-        $this->award = $award;
     }
 
     /**
      * Get the user that sent the notification.
      */
-    public function getFromUser(): ?User
+    public function getFromUser(): ?\Flarum\User\User
     {
         return null;
     }
@@ -26,7 +24,7 @@ class ResultsPublishedBlueprint implements BlueprintInterface
     /**
      * Get the model that is the subject of this activity.
      */
-    public function getSubject(): Award
+    public function getSubject(): ?\Flarum\Database\AbstractModel
     {
         return $this->award;
     }
@@ -34,7 +32,7 @@ class ResultsPublishedBlueprint implements BlueprintInterface
     /**
      * Get the data to be stored in the notification.
      */
-    public function getData(): array
+    public function getData(): mixed
     {
         return [
             'awardId' => $this->award->id,

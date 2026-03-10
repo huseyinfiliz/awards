@@ -17,11 +17,8 @@ class PublishResultsController extends AbstractShowController
 {
     public $serializer = AwardSerializer::class;
 
-    protected $notifications;
-
-    public function __construct(NotificationSyncer $notifications)
+    public function __construct(protected NotificationSyncer $notifications)
     {
-        $this->notifications = $notifications;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

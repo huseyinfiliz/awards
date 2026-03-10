@@ -9,11 +9,8 @@ use HuseyinFiliz\Awards\Models\OtherSuggestion;
 
 class VoteLimitService
 {
-    protected $settings;
-
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(protected SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
     }
 
     /**

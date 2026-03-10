@@ -19,18 +19,8 @@ class CreateVoteController extends AbstractCreateController
 {
     public $serializer = VoteSerializer::class;
 
-    protected $translator;
-    protected $limiter;
-    protected $voteLimitService;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        RateLimiter $limiter,
-        VoteLimitService $voteLimitService
-    ) {
-        $this->translator = $translator;
-        $this->limiter = $limiter;
-        $this->voteLimitService = $voteLimitService;
+    public function __construct(protected TranslatorInterface $translator, protected RateLimiter $limiter, protected VoteLimitService $voteLimitService)
+    {
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

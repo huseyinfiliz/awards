@@ -10,7 +10,7 @@ use HuseyinFiliz\Awards\Models\Nominee;
 
 class DeleteNomineeController extends AbstractDeleteController
 {
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('awards.manage');

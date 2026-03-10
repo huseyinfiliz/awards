@@ -39,7 +39,7 @@ return [
         }),
 
     (new Extend\Notification())
-        ->type(Notification\ResultsPublishedBlueprint::class, \HuseyinFiliz\Awards\Api\Serializer\AwardSerializer::class, ['alert']),
+        ->type(Notification\ResultsPublishedBlueprint::class, ['alert']),
 
     (new Extend\Routes('api'))
         // Awards
