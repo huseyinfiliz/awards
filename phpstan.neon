@@ -1,10 +1,13 @@
 includes:
     - vendor/flarum/phpstan/extension.neon
+    - phpstan-baseline.neon
 
 parameters:
-    level: 5
+    level: 6
     paths:
         - src
         - extend.php
     excludePaths:
-        - tests
+        - *.blade.php
+    databaseMigrationsPath:
+        - migrations

@@ -3,11 +3,24 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $award_id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property int $sort_order
+ * @property bool $allow_other
+ * @property int $total_votes
+ * @property int $nominee_count
+ */
 class Category extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'award_categories';
 
     protected $fillable = [

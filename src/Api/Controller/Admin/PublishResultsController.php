@@ -2,32 +2,24 @@
 
 namespace HuseyinFiliz\Awards\Api\Controller\Admin;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Flarum\Notification\NotificationSyncer;
 use Illuminate\Support\Arr;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
-use HuseyinFiliz\Awards\Api\Serializer\AwardSerializer;
+use Psr\Http\Server\RequestHandlerInterface;
 use HuseyinFiliz\Awards\Models\Award;
 use HuseyinFiliz\Awards\Models\Vote;
 use HuseyinFiliz\Awards\Notification\ResultsPublishedBlueprint;
 
-/**
- * @TODO: Remove this in favor of one of the API resource classes that were added.
- *      Or extend an existing API Resource to add this to.
- *      Or use a vanilla RequestHandlerInterface controller.
- *      @link https://docs.flarum.org/2.x/extend/api#endpoints
- */
-class PublishResultsController extends AbstractShowController
+class PublishResultsController implements RequestHandlerInterface
 {
-    public $serializer = AwardSerializer::class;
-
     public function __construct(protected NotificationSyncer $notifications)
     {
     }
 
-    protected function data(ServerRequestInterface $request, Document $document)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('awards.manage');
@@ -35,11 +27,9 @@ class PublishResultsController extends AbstractShowController
         $id = Arr::get($request->getQueryParams(), 'id');
         $award = Award::findOrFail($id);
 
-        // Update status to published
         $award->status = 'published';
         $award->save();
 
-        // Notify all users who voted (single batch notification)
         $userIds = Vote::whereHas('category', function ($q) use ($award) {
             $q->where('award_id', $award->id);
         })->distinct('user_id')->pluck('user_id');
@@ -53,6 +43,15 @@ class PublishResultsController extends AbstractShowController
             );
         }
 
-        return $award;
+        return new JsonResponse([
+            'data' => [
+                'type' => 'awards',
+                'id' => (string) $award->id,
+                'attributes' => [
+                    'status' => $award->status,
+                    'isPublished' => true,
+                ],
+            ],
+        ]);
     }
 }

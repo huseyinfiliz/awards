@@ -3,11 +3,22 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $category_id
+ * @property int $user_id
+ * @property string $name
+ * @property string $status
+ * @property int|null $merged_to_nominee_id
+ * @property string $created_at
+ */
 class OtherSuggestion extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'award_other_suggestions';
 
     protected $fillable = [

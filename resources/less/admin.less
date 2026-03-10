@@ -103,6 +103,12 @@
     padding: 24px;
     min-height: 400px;
 
+    .container {
+      max-width: 100%;
+      width: 100%;
+      padding: 0;
+    }
+
     @media (max-width: 768px) {
       padding: 16px;
     }
@@ -393,22 +399,38 @@
     .Button { padding: 8px 24px; }
   }
 
-  .SettingsTab .Form-group {
-    background: var(--body-bg);
-    border: 1px solid var(--control-bg);
-    border-radius: @hf-awards-card-radius;
-    padding: 20px;
-    margin-bottom: 20px;
-    h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
-    p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+  .SettingsTab {
+    > .Form-group {
+      background: var(--body-bg);
+      border: 1px solid var(--control-bg);
+      border-radius: @hf-awards-card-radius;
+      padding: 20px;
+      margin-bottom: 20px;
+      h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
+      p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+    }
+
+    .Form-group {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .FormControl {
+      max-width: 100%;
+      width: 100%;
+    }
   }
 
   .HFAwardsEmptyState,
   .EmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 40px;
     color: var(--muted-color);
-    i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; display: block; }
+    i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
     p { margin: 0; }
   }
 

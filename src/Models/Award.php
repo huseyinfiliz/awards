@@ -3,11 +3,28 @@
 namespace HuseyinFiliz\Awards\Models;
 
 use Flarum\Database\AbstractModel;
+use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property int $year
+ * @property string $status
+ * @property string|null $starts_at
+ * @property string|null $ends_at
+ * @property bool $show_live_votes
+ * @property string|null $image_url
+ * @property int $category_count
+ * @property int $nominee_count
+ * @property int $vote_count
+ */
 class Award extends AbstractModel
 {
+    use ScopeVisibilityTrait;
     protected $table = 'awards';
 
     protected $casts = ['starts_at' => 'datetime', 'ends_at' => 'datetime', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
