@@ -45,7 +45,6 @@ class VoteResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createVote')
                 ->before(function (OriginalContext $context) {
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');

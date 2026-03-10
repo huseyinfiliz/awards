@@ -42,7 +42,6 @@ class CategoryResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createCategory')
                 ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);

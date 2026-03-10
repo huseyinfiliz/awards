@@ -36,7 +36,6 @@ class AwardResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createAward')
                 ->defaultInclude(['categories'])
                 ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');

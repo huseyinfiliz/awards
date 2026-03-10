@@ -36,7 +36,6 @@ class NomineeResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createNominee')
                 ->before(function (OriginalContext $context) {
                     $context->getActor()->assertCan('awards.manage');
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);

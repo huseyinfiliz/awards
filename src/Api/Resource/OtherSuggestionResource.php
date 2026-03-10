@@ -48,7 +48,6 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
     {
         return [
             Endpoint\Create::make()
-                ->can('createOtherSuggestion')
                 ->before(function (OriginalContext $context) {
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');
