@@ -203,11 +203,7 @@ export default class NomineesTab extends Component {
 
         {this.hasMore && (
           <div style={{ textAlign: 'center', padding: '15px' }}>
-            <Button
-              className="Button"
-              loading={this.loadingMore}
-              onclick={() => this.loadMoreNominees()}
-            >
+            <Button className="Button" loading={this.loadingMore} onclick={() => this.loadMoreNominees()}>
               {app.translator.trans('huseyinfiliz-awards.admin.nominees.load_more')}
             </Button>
           </div>
