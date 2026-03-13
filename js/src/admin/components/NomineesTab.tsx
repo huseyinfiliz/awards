@@ -16,6 +16,9 @@ export default class NomineesTab extends Component {
   nominees: Nominee[] = [];
   selectedAwardId: string = '';
   selectedCategoryId: string = '';
+  hasMore: boolean = false;
+  loadingMore: boolean = false;
+  nextOffset: number = 0;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -73,16 +76,47 @@ export default class NomineesTab extends Component {
       return;
     }
 
+    this.hasMore = false;
+    this.nextOffset = 0;
+
     try {
       const nominees = await app.store.find<Nominee[]>('award-nominees', {
         filter: { category: this.selectedCategoryId },
+        page: { offset: 0, limit: 20 },
       });
       this.nominees = (nominees || []).sort((a, b) => (a.sortOrder() || 0) - (b.sortOrder() || 0));
+      this.hasMore = !!(nominees as any)?.payload?.links?.next;
+      if (this.hasMore) {
+        this.nextOffset = 20;
+      }
     } catch (error) {
       console.error('Failed to load nominees:', error);
       this.nominees = [];
     }
 
+    m.redraw();
+  }
+
+  async loadMoreNominees() {
+    this.loadingMore = true;
+    m.redraw();
+
+    try {
+      const nominees = await app.store.find<Nominee[]>('award-nominees', {
+        filter: { category: this.selectedCategoryId },
+        page: { offset: this.nextOffset, limit: 20 },
+      });
+      const newNominees = nominees || [];
+      this.nominees = [...this.nominees, ...newNominees].sort((a, b) => (a.sortOrder() || 0) - (b.sortOrder() || 0));
+      this.hasMore = !!(nominees as any)?.payload?.links?.next;
+      if (this.hasMore) {
+        this.nextOffset += 20;
+      }
+    } catch (error) {
+      console.error('Failed to load more nominees:', error);
+    }
+
+    this.loadingMore = false;
     m.redraw();
   }
 
@@ -166,6 +200,18 @@ export default class NomineesTab extends Component {
             this.nominees.map((nominee, index) => this.renderNomineeRow(nominee, index))
           )}
         </div>
+
+        {this.hasMore && (
+          <div style={{ textAlign: 'center', padding: '15px' }}>
+            <Button
+              className="Button"
+              loading={this.loadingMore}
+              onclick={() => this.loadMoreNominees()}
+            >
+              {app.translator.trans('huseyinfiliz-awards.admin.nominees.load_more')}
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
