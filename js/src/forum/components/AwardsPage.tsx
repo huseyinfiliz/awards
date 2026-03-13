@@ -3,8 +3,8 @@ import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Select from 'flarum/common/components/Select';
 import Button from 'flarum/common/components/Button';
-import IndexPage from 'flarum/forum/components/IndexPage';
-import listItems from 'flarum/common/helpers/listItems';
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
+import PageStructure from 'flarum/forum/components/PageStructure';
 import extractText from 'flarum/common/utils/extractText';
 import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
@@ -208,27 +208,20 @@ export default class AwardsPage extends Page {
   }
 
   view() {
-    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
-    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
-
     return (
-      <div className="IndexPage huseyinfiliz-awards">
-        {this.hero(navTitle, navIcon)}
-
-        <div className="container">
-          <div className="sideNavContainer">
-            <nav className="IndexPage-nav sideNav">
-              <ul>{listItems(IndexPage.prototype.sidebarItems().toArray())}</ul>
-            </nav>
-
-            <div className="IndexPage-results sideNavOffset">{this.loading ? <LoadingIndicator /> : this.content()}</div>
-          </div>
-        </div>
-      </div>
+      <PageStructure className="IndexPage huseyinfiliz-awards" hero={this.hero.bind(this)} sidebar={this.sidebar.bind(this)}>
+        {this.loading ? <LoadingIndicator /> : this.content()}
+      </PageStructure>
     );
   }
 
-  hero(navTitle: string, navIcon: string) {
+  sidebar(): Mithril.Children {
+    return <IndexSidebar />;
+  }
+
+  hero(): Mithril.Children {
+    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
+    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
     const imageUrl = this.selectedAward?.imageUrl?.();
     const hasImage = imageUrl && imageUrl.length > 0;
 
@@ -326,6 +319,9 @@ export default class AwardsPage extends Page {
                   this.selectedCategoryId = value === 'all' ? null : value.replace('cat_', '');
                   this.updateUrl();
                   m.redraw();
+                  if (this.selectedCategoryId) {
+                    setTimeout(() => this.scrollToCategory(this.selectedCategoryId), 100);
+                  }
                 }}
               />
             </div>
@@ -333,10 +329,9 @@ export default class AwardsPage extends Page {
         </div>
 
         <div className="AwardsPage-filterBar-right">
-          {/* Tab buttons */}
           <div className="AwardsPage-tabs">
             <Button
-              className={`Button ${this.currentView === 'categories' || (this.currentView === 'results' && !showResultsTab) ? 'Button--primary' : ''}`}
+              className={`Button ${this.currentView === (showResultsTab ? 'results' : 'categories') ? 'Button--primary' : ''}`}
               onclick={() => {
                 this.currentView = showResultsTab ? 'results' : 'categories';
                 m.redraw();

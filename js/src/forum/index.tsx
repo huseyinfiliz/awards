@@ -1,6 +1,6 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import IndexPage from 'flarum/forum/components/IndexPage';
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import LinkButton from 'flarum/common/components/LinkButton';
 import commonExtenders from '../common/extend';
 import AwardsPage from './components/AwardsPage';
@@ -17,7 +17,7 @@ app.initializers.add('huseyinfiliz/awards', () => {
   // Register notification component
   app.notificationComponents.awardsResultsPublished = ResultsPublishedNotification;
 
-  extend(IndexPage.prototype, 'navItems', function (items) {
+  extend(IndexSidebar.prototype, 'navItems', function (items) {
     if (app.forum.attribute('canViewAwards') !== false) {
       const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
       const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
