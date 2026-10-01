@@ -56,6 +56,8 @@ huseyinfiliz-awards:
       image: Image
       image_url: Image URL
       image_url_help: URL to the nominee's image (e.g., game cover, person photo)
+      website_url: Website / Link URL
+      website_url_help: External URL for this nominee (must start with http:// or https://)
       adjust_votes: Adjust Votes
       vote_adjustment_title: Vote Adjustment
       real_votes: Real Votes
@@ -167,6 +169,8 @@ huseyinfiliz-awards:
       nominees_count: "{count} nominees"
       votes_used: "{used}/{limit} votes"
       votes_unlimited: "{count} votes"
+    nominee:
+      open_link: Open link in new tab
     other:
       suggest: Suggest Other
       click_to_suggest: Click to suggest a nominee

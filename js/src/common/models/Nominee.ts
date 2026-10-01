@@ -6,6 +6,7 @@ export default class Nominee extends Model {
   description = Model.attribute<string>('description');
   slug = Model.attribute<string>('slug');
   imageUrl = Model.attribute<string>('imageUrl');
+  url = Model.attribute<string>('url');
   metadata = Model.attribute<Record<string, any>>('metadata');
   sortOrder = Model.attribute<number>('sortOrder');
   createdAt = Model.attribute('createdAt', Model.transformDate);

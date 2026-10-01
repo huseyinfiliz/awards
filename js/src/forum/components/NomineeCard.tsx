@@ -64,6 +64,20 @@ export default class NomineeCard extends Component {
               <i className="fas fa-check" />
             </div>
           ) : null}
+          {(nominee as any).url?.() ? (
+            <a
+              className="NomineeCard-link"
+              href={(nominee as any).url()}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={app.translator.trans('huseyinfiliz-awards.forum.nominee.open_link') as string}
+              onclick={(e: MouseEvent) => {
+                e.stopPropagation();
+              }}
+            >
+              <i className="fas fa-external-link-alt" />
+            </a>
+          ) : null}
         </div>
 
         <div className="NomineeCard-content">

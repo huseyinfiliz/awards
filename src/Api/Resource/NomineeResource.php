@@ -97,6 +97,11 @@ class NomineeResource extends Resource\AbstractDatabaseResource
                 ->maxLength(500)
                 ->regex('/^https?:\/\/.+/i')
                 ->property('image_url'),
+            Schema\Str::make('url')
+                ->writable()
+                ->nullable()
+                ->maxLength(1000)
+                ->regex('/^https?:\/\/.+/i'),
             Schema\Arr::make('metadata')
                 ->writable(),
             Schema\Integer::make('sortOrder')

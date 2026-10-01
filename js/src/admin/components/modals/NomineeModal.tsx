@@ -22,6 +22,7 @@ export default class NomineeModal extends FormModal<NomineeModalAttrs> {
   description: Stream<string>;
   slug: Stream<string>;
   imageUrl: Stream<string>;
+  url: Stream<string>;
   sortOrder: Stream<number>;
   suggestions: Stream<NomineeSuggestion[]>;
   showSuggestions: Stream<boolean>;
@@ -36,6 +37,7 @@ export default class NomineeModal extends FormModal<NomineeModalAttrs> {
     this.description = Stream(nominee?.description() || '');
     this.slug = Stream(nominee?.slug() || '');
     this.imageUrl = Stream(nominee?.imageUrl() || '');
+    this.url = Stream((nominee as any)?.url?.() || '');
     this.sortOrder = Stream(nominee?.sortOrder() || 0);
     this.suggestions = Stream<NomineeSuggestion[]>([]);
     this.showSuggestions = Stream(false);
@@ -287,6 +289,19 @@ export default class NomineeModal extends FormModal<NomineeModalAttrs> {
             <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.image_url_help')}</div>
           </div>
           <div className="Form-group">
+            <label>{app.translator.trans('huseyinfiliz-awards.admin.nominees.website_url')}</label>
+            <input
+              className="FormControl"
+              type="url"
+              placeholder="https://..."
+              value={this.url()}
+              oninput={(e: InputEvent) => {
+                this.url((e.target as HTMLInputElement).value);
+              }}
+            />
+            <div className="helpText">{app.translator.trans('huseyinfiliz-awards.admin.nominees.website_url_help')}</div>
+          </div>
+          <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-awards.lib.sort_order')}</label>
             <input className="FormControl" type="number" bidi={this.sortOrder} />
           </div>
@@ -309,6 +324,7 @@ export default class NomineeModal extends FormModal<NomineeModalAttrs> {
       description: this.description(),
       slug: this.slug() || this.name().toLowerCase().replace(/\s+/g, '-'),
       imageUrl: this.imageUrl(),
+      url: this.url() || null,
       sortOrder: this.sortOrder(),
     };
 

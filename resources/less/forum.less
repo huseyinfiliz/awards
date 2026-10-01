@@ -419,7 +419,7 @@
       display: none;
       position: absolute;
       top: 8px;
-      right: 8px;
+      left: 8px;
       width: 28px;
       height: 28px;
       background: var(--primary-color);
@@ -429,6 +429,33 @@
       justify-content: center;
       font-size: 14px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    // External link icon
+    &-link {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 5;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover,
+      &:focus-visible {
+        background: var(--primary-color);
+        color: #fff;
+        transform: scale(1.1);
+      }
     }
 
     // Placeholder when no image

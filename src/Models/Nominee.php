@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $slug
  * @property string|null $description
  * @property string|null $image_url
+ * @property string|null $url
  * @property array|null $metadata
  * @property int $sort_order
  * @property int $vote_count
@@ -33,6 +34,7 @@ class Nominee extends AbstractModel
         'description',
         'slug',
         'image_url',
+        'url',
         'metadata',
         'sort_order',
         'vote_adjustment',
