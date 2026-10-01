@@ -25,7 +25,11 @@ export default class MyVotesView extends Component {
 
   getVotesInfo(award: Award): { votedCategories: CategoryVoteInfo[]; unvoted: Category[]; lastVoteTime: Date | null; totalVotes: number } {
     const categories = (award.categories() || []) as Category[];
-    const userVotes = app.store.all<Vote>('award-votes');
+    const currentUserId = app.session.user?.id();
+    const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      return !vUserId || String(vUserId) === String(currentUserId);
+    });
     const votesLimit = parseInt(app.forum.attribute('awardsVotesPerCategory') || '1', 10);
 
     const votedCategories: CategoryVoteInfo[] = [];

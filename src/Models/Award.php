@@ -43,7 +43,7 @@ class Award extends AbstractModel
 
     public function categories(): HasMany
     {
-        return $this->hasMany(Category::class)->orderBy('sort_order');
+        return $this->hasMany(Category::class)->orderBy('sort_order')->withCount(['nominees', 'votes']);
     }
 
     public function getCategoryCountAttribute(): int
@@ -56,7 +56,7 @@ class Award extends AbstractModel
     {
         // If categories are already loaded, calculate from them to avoid N+1
         if ($this->relationLoaded('categories')) {
-            return $this->categories->sum(fn($cat) => $cat->nominees_count ?? $cat->nominees()->count());
+            return $this->categories->sum(fn($cat) => $cat->nominees_count ?? $cat->nominee_count);
         }
         return Nominee::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
@@ -65,7 +65,7 @@ class Award extends AbstractModel
     {
         // If categories are already loaded, calculate from them to avoid N+1
         if ($this->relationLoaded('categories')) {
-            return $this->categories->sum('total_votes');
+            return $this->categories->sum(fn($cat) => $cat->votes_count ?? $cat->total_votes);
         }
         return Vote::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
@@ -94,8 +94,8 @@ class Award extends AbstractModel
     {
         $now = Carbon::now();
         return $this->isActive() &&
-               $now->gte($this->starts_at) &&
-               $now->lte($this->ends_at);
+               (!$this->starts_at || $now->gte($this->starts_at)) &&
+               (!$this->ends_at || $now->lte($this->ends_at));
     }
 
     public function canShowVotes(): bool
@@ -105,7 +105,7 @@ class Award extends AbstractModel
 
     public function hasStarted(): bool
     {
-        return Carbon::now()->gte($this->starts_at);
+        return !$this->starts_at || Carbon::now()->gte($this->starts_at);
     }
 
     /**

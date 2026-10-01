@@ -38,7 +38,13 @@ class VoteResource extends Resource\AbstractDatabaseResource
 
     public function scope(Builder $query, OriginalContext $context): void
     {
-        $query->whereVisibleTo($context->getActor());
+        $actor = $context->getActor();
+        $query->whereVisibleTo($actor);
+
+        // By default on list queries, users only see their own votes
+        if ($context->request->getMethod() === 'GET' && !str_contains($context->path(), '/') && !isset($context->request->getQueryParams()['all'])) {
+            $query->where('user_id', $actor->id);
+        }
     }
 
     public function endpoints(): array
@@ -59,6 +65,12 @@ class VoteResource extends Resource\AbstractDatabaseResource
 
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
                     $nomineeId = $attrs['nomineeId'] ?? null;
+
+                    if (Vote::where('nominee_id', $nomineeId)->where('user_id', $actor->id)->exists()) {
+                        throw new ValidationException([
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.already_voted')
+                        ]);
+                    }
 
                     $nominee = Nominee::with('category.award')->findOrFail($nomineeId);
                     $award = $nominee->category->award;
@@ -94,7 +106,7 @@ class VoteResource extends Resource\AbstractDatabaseResource
             Endpoint\Delete::make()
                 ->can('delete'),
             Endpoint\Index::make()
-                ->paginate(),
+                ->paginate(defaultLimit: 100, maxLimit: 500),
         ];
     }
 
@@ -110,6 +122,8 @@ class VoteResource extends Resource\AbstractDatabaseResource
             Schema\Integer::make('categoryId')
                 ->writable()
                 ->property('category_id'),
+            Schema\Integer::make('userId')
+                ->property('user_id'),
 
             Schema\Relationship\ToOne::make('nominee')
                 ->includable()
@@ -134,10 +148,10 @@ class VoteResource extends Resource\AbstractDatabaseResource
         $model->user_id = $context->getActor()->id;
 
         $attrs = (array) ($context->body()['data']['attributes'] ?? []);
-        $nomineeId = $attrs['nomineeId'] ?? null;
-
-        if ($nomineeId) {
-            $nominee = Nominee::find($nomineeId);
+        if (!empty($attrs['categoryId'])) {
+            $model->category_id = (int) $attrs['categoryId'];
+        } elseif (!empty($attrs['nomineeId'])) {
+            $nominee = Nominee::find($attrs['nomineeId']);
             if ($nominee) {
                 $model->category_id = $nominee->category_id;
             }

@@ -15,7 +15,11 @@ export default class CategoryCard extends Component {
 
     // Calculate user's votes in this category
     const categoryId = category.id();
-    const userVotes = app.store.all<Vote>('award-votes');
+    const currentUserId = app.session.user?.id();
+    const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      return !vUserId || String(vUserId) === String(currentUserId);
+    });
     const votesInCategory = userVotes.filter((v) => {
       const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
       return String(vCategoryId) === String(categoryId);

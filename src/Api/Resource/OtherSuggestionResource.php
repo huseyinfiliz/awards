@@ -125,10 +125,17 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                                 'sort_order' => 999,
                             ]);
 
-                            Vote::updateOrCreate(
-                                ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                ['nominee_id' => $nominee->id]
-                            );
+                            if ($this->voteLimitService->isSingleVoteMode()) {
+                                Vote::updateOrCreate(
+                                    ['category_id' => $model->category_id, 'user_id' => $model->user_id],
+                                    ['nominee_id' => $nominee->id]
+                                );
+                            } else {
+                                Vote::firstOrCreate(
+                                    ['nominee_id' => $nominee->id, 'user_id' => $model->user_id],
+                                    ['category_id' => $model->category_id]
+                                );
+                            }
 
                             $context->body = array_merge($context->body(), [
                                 'data' => array_merge($context->body()['data'] ?? [], [
@@ -155,10 +162,17 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                                 throw new \InvalidArgumentException('mergeToNomineeId is required for merge action');
                             }
 
-                            Vote::updateOrCreate(
-                                ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                ['nominee_id' => $mergeToNomineeId]
-                            );
+                            if ($this->voteLimitService->isSingleVoteMode()) {
+                                Vote::updateOrCreate(
+                                    ['category_id' => $model->category_id, 'user_id' => $model->user_id],
+                                    ['nominee_id' => $mergeToNomineeId]
+                                );
+                            } else {
+                                Vote::firstOrCreate(
+                                    ['nominee_id' => $mergeToNomineeId, 'user_id' => $model->user_id],
+                                    ['category_id' => $model->category_id]
+                                );
+                            }
 
                             $context->body = array_merge($context->body(), [
                                 'data' => array_merge($context->body()['data'] ?? [], [

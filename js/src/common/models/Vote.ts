@@ -8,6 +8,7 @@ export default class Vote extends Model {
   // Direct attribute access for IDs (for when relationships aren't loaded)
   nomineeId = Model.attribute<number>('nomineeId');
   categoryId = Model.attribute<number>('categoryId');
+  userId = Model.attribute<number>('userId');
 
   // Relationship accessors
   nominee = Model.hasOne<Nominee>('nominee');

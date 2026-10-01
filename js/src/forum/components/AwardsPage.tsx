@@ -154,6 +154,7 @@ export default class AwardsPage extends Page {
     }
 
     this.loading = false;
+    this.updateCountdown();
     this.startAutoRefresh();
 
     // Update URL to reflect current selection (normalizes URL format)
@@ -201,7 +202,9 @@ export default class AwardsPage extends Page {
 
   async loadUserVotes() {
     try {
-      await app.store.find<Vote[]>('award-votes');
+      await app.store.find<Vote[]>('award-votes', {
+        page: { limit: 250 },
+      });
     } catch (error) {
       console.error('Failed to load user votes:', error);
     }
@@ -376,6 +379,7 @@ export default class AwardsPage extends Page {
             const awardId = value.replace('award_', '');
             this.selectedAward = this.awards.find((a) => String(a.id()) === awardId) || null;
             this.selectedCategoryId = null;
+            this.updateCountdown();
             // Update view based on new award status
             if (this.selectedAward?.canViewResults()) {
               this.currentView = 'results';

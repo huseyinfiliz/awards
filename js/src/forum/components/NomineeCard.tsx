@@ -13,7 +13,11 @@ export default class NomineeCard extends Component {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
 
-    const userVotes = app.store.all<Vote>('award-votes');
+    const currentUserId = app.session.user?.id();
+    const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      return !vUserId || String(vUserId) === String(currentUserId);
+    });
     const nomineeId = nominee.id();
     const categoryId = category.id();
 
@@ -88,9 +92,12 @@ export default class NomineeCard extends Component {
   updateCategoryUserVoteIds(category: Category) {
     // Update the category's userVoteIds based on current votes in store
     const categoryId = category.id();
+    const currentUserId = app.session.user?.id();
     const userVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const isCurrentUser = !vUserId || String(vUserId) === String(currentUserId);
       const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
-      return String(vCategoryId) === String(categoryId);
+      return isCurrentUser && String(vCategoryId) === String(categoryId);
     });
 
     const userVoteIds = userVotesInCategory
@@ -144,9 +151,12 @@ export default class NomineeCard extends Component {
     }
 
     // Adding a new vote - check limits for multi-vote mode
+    const currentUserId = app.session.user?.id();
     const existingVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const isCurrentUser = !vUserId || String(vUserId) === String(currentUserId);
       const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
-      return String(vCategoryId) === String(categoryId);
+      return isCurrentUser && String(vCategoryId) === String(categoryId);
     });
 
     // Check if at limit (votesLimit > 0 means there's a limit, 0 = unlimited)

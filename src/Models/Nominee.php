@@ -66,6 +66,12 @@ class Nominee extends AbstractModel
      */
     public function getRealVoteCountAttribute(): int
     {
+        if (isset($this->attributes['votes_count'])) {
+            return (int) $this->attributes['votes_count'];
+        }
+        if ($this->relationLoaded('votes')) {
+            return $this->votes->count();
+        }
         return $this->votes()->count();
     }
 

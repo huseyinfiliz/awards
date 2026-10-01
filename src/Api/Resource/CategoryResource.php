@@ -132,8 +132,6 @@ class CategoryResource extends Resource\AbstractDatabaseResource
             Schema\Integer::make('sortOrder')
                 ->writable()
                 ->property('sort_order'),
-            Schema\Integer::make('totalVotes')
-                ->get(fn (Category $model) => $model->total_votes),
             Schema\Integer::make('voteCount')
                 ->get(fn (Category $model) => $model->total_votes),
             Schema\Integer::make('nomineeCount')
@@ -142,7 +140,8 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                 ->writable()
                 ->property('allow_other'),
             Schema\Integer::make('pendingSuggestionsCount')
-                ->get(fn (Category $model) => $model->pendingSuggestions()->count()),
+                ->visible(fn (Category $model, Context $context) => $context->getActor()->hasPermission('awards.manage'))
+                ->get(fn (Category $model) => $model->pending_suggestions_count ?? $model->pendingSuggestions()->count()),
             Schema\Integer::make('userPendingSuggestionsCount')
                 ->get(function (Category $model, Context $context) {
                     $actor = $context->getActor();

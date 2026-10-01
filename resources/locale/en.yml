@@ -199,6 +199,7 @@ huseyinfiliz-awards:
       vote_limit_reached: "You can only vote for {limit} nominees in this category."
       vote_quota_exhausted: You have used all your available votes/suggestions for this category.
       cannot_delete_processed_suggestion: Only pending suggestions can be cancelled.
+      already_voted: You have already voted for this nominee.
       not_available: This award is not available yet.
 
   lib:

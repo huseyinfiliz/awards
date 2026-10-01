@@ -138,4 +138,16 @@ class AwardModelTest extends TestCase
 
         $this->assertEquals('draft', $award->getEffectiveStatus());
     }
+
+    #[Test]
+    public function is_voting_open_and_has_started_handle_null_dates(): void
+    {
+        $award = new Award();
+        $award->status = 'active';
+        $award->starts_at = null;
+        $award->ends_at = null;
+
+        $this->assertTrue($award->isVotingOpen());
+        $this->assertTrue($award->hasStarted());
+    }
 }

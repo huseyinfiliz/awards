@@ -136,6 +136,9 @@ class AwardResource extends Resource\AbstractDatabaseResource
                 ->property('show_live_votes'),
             Schema\Str::make('imageUrl')
                 ->writable()
+                ->nullable()
+                ->maxLength(500)
+                ->regex('/^https?:\/\/.+/i')
                 ->property('image_url'),
             Schema\Boolean::make('isDraft')
                 ->get(fn (Award $model) => $model->isDraft()),

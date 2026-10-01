@@ -19,6 +19,11 @@ class VotePolicy extends AbstractPolicy
 
     public function delete(User $actor, Vote $vote): ?string
     {
+        $award = $vote->category?->award;
+        if ($award && !$award->isVotingOpen()) {
+            return $this->deny();
+        }
+
         if ($actor->id === $vote->user_id) {
             return $this->allow();
         }

@@ -39,7 +39,7 @@ class Category extends AbstractModel
 
     public function nominees(): HasMany
     {
-        return $this->hasMany(Nominee::class)->orderBy('sort_order');
+        return $this->hasMany(Nominee::class)->orderBy('sort_order')->withCount('votes');
     }
 
     public function votes(): HasMany
@@ -59,11 +59,23 @@ class Category extends AbstractModel
 
     public function getTotalVotesAttribute(): int
     {
+        if (isset($this->attributes['votes_count'])) {
+            return (int) $this->attributes['votes_count'];
+        }
+        if ($this->relationLoaded('votes')) {
+            return $this->votes->count();
+        }
         return $this->votes()->count();
     }
 
     public function getNomineeCountAttribute(): int
     {
+        if (isset($this->attributes['nominees_count'])) {
+            return (int) $this->attributes['nominees_count'];
+        }
+        if ($this->relationLoaded('nominees')) {
+            return $this->nominees->count();
+        }
         return $this->nominees()->count();
     }
 }

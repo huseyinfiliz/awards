@@ -16,7 +16,11 @@ export default class PredictionSummary extends Component {
   showDetails: boolean = false;
 
   getPredictionResults(award: Award, categories: Category[]): PredictionResult[] {
-    const userVotes = app.store.all<Vote>('award-votes');
+    const currentUserId = app.session.user?.id();
+    const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
+      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      return !vUserId || String(vUserId) === String(currentUserId);
+    });
     const results: PredictionResult[] = [];
 
     categories.forEach((category) => {

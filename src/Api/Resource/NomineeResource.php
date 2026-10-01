@@ -29,7 +29,7 @@ class NomineeResource extends Resource\AbstractDatabaseResource
 
     public function scope(Builder $query, OriginalContext $context): void
     {
-        $query->whereVisibleTo($context->getActor());
+        $query->whereVisibleTo($context->getActor())->withCount('votes');
     }
 
     public function endpoints(): array
@@ -93,6 +93,9 @@ class NomineeResource extends Resource\AbstractDatabaseResource
                 ->writable(),
             Schema\Str::make('imageUrl')
                 ->writable()
+                ->nullable()
+                ->maxLength(500)
+                ->regex('/^https?:\/\/.+/i')
                 ->property('image_url'),
             Schema\Arr::make('metadata')
                 ->writable(),
