@@ -28,30 +28,34 @@ class ListUserSuggestionsController implements RequestHandlerInterface
 
         $suggestions = $query->orderBy('created_at', 'desc')->get();
 
-        return new JsonResponse([
-            'data' => $suggestions->map(function ($suggestion) {
-                $data = [
-                    'type' => 'award-other-suggestions',
-                    'id' => (string) $suggestion->id,
-                    'attributes' => [
-                        'name' => $suggestion->name,
-                        'status' => $suggestion->status,
-                        'createdAt' => $suggestion->created_at?->toIso8601String(),
+        $data = [];
+        foreach ($suggestions as $suggestion) {
+            /** @var OtherSuggestion $suggestion */
+            $item = [
+                'type' => 'award-other-suggestions',
+                'id' => (string) $suggestion->id,
+                'attributes' => [
+                    'name' => $suggestion->name,
+                    'status' => $suggestion->status,
+                    'createdAt' => $suggestion->created_at?->toIso8601String(),
+                ],
+                'relationships' => [],
+            ];
+
+            if ($suggestion->relationLoaded('category') && $suggestion->category) {
+                $item['relationships']['category'] = [
+                    'data' => [
+                        'type' => 'award-categories',
+                        'id' => (string) $suggestion->category->id,
                     ],
-                    'relationships' => [],
                 ];
+            }
 
-                if ($suggestion->relationLoaded('category') && $suggestion->category) {
-                    $data['relationships']['category'] = [
-                        'data' => [
-                            'type' => 'award-categories',
-                            'id' => (string) $suggestion->category->id,
-                        ],
-                    ];
-                }
+            $data[] = $item;
+        }
 
-                return $data;
-            })->toArray(),
+        return new JsonResponse([
+            'data' => $data,
         ]);
     }
 }

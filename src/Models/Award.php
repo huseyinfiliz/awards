@@ -21,6 +21,7 @@ use Carbon\Carbon;
  * @property int $category_count
  * @property int $nominee_count
  * @property int $vote_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $categories
  */
 class Award extends AbstractModel
 {
@@ -56,7 +57,12 @@ class Award extends AbstractModel
     {
         // If categories are already loaded, calculate from them to avoid N+1
         if ($this->relationLoaded('categories')) {
-            return $this->categories->sum(fn($cat) => $cat->nominees_count ?? $cat->nominee_count);
+            $total = 0;
+            foreach ($this->categories as $category) {
+                /** @var Category $category */
+                $total += (int) ($category->nominees_count ?? $category->nominee_count);
+            }
+            return $total;
         }
         return Nominee::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
@@ -65,7 +71,12 @@ class Award extends AbstractModel
     {
         // If categories are already loaded, calculate from them to avoid N+1
         if ($this->relationLoaded('categories')) {
-            return $this->categories->sum(fn($cat) => $cat->votes_count ?? $cat->total_votes);
+            $total = 0;
+            foreach ($this->categories as $category) {
+                /** @var Category $category */
+                $total += (int) ($category->votes_count ?? $category->total_votes);
+            }
+            return $total;
         }
         return Vote::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }

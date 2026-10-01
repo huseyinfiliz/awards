@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $vote_adjustment
  * @property float $vote_percentage
  * @property int $total_votes
+ * @property-read Category|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Vote> $votes
+ * @property-read int|null $votes_count
  */
 class Nominee extends AbstractModel
 {

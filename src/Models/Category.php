@@ -17,6 +17,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $allow_other
  * @property int $total_votes
  * @property int $nominee_count
+ * @property-read Award|null $award
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Nominee> $nominees
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Vote> $votes
+ * @property-read int|null $nominees_count
+ * @property-read int|null $votes_count
  */
 class Category extends AbstractModel
 {

@@ -4,6 +4,7 @@ namespace HuseyinFiliz\Awards\Access;
 
 use Flarum\User\Access\AbstractPolicy;
 use Flarum\User\User;
+use HuseyinFiliz\Awards\Models\Category;
 use HuseyinFiliz\Awards\Models\Vote;
 
 class VotePolicy extends AbstractPolicy
@@ -19,7 +20,9 @@ class VotePolicy extends AbstractPolicy
 
     public function delete(User $actor, Vote $vote): ?string
     {
-        $award = $vote->category?->award;
+        /** @var Category|null $category */
+        $category = $vote->category;
+        $award = $category?->award;
         if ($award && !$award->isVotingOpen()) {
             return $this->deny();
         }

@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $nominee_id
  * @property int $category_id
  * @property string $created_at
+ * @property-read Category|null $category
+ * @property-read Nominee|null $nominee
+ * @property-read User|null $user
  */
 class Vote extends AbstractModel
 {

@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $status
  * @property int|null $merged_to_nominee_id
  * @property string $created_at
+ * @property-read Category|null $category
+ * @property-read User|null $user
+ * @property-read Nominee|null $mergedToNominee
  */
 class OtherSuggestion extends AbstractModel
 {
