@@ -1,7 +1,7 @@
 preset: recommended
 
 disabled:
-  - unused_imports
+  - no_unused_imports
 
 finder:
   not-name:
