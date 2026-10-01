@@ -3,12 +3,12 @@
 namespace HuseyinFiliz\Awards\Api\Controller\OtherSuggestion;
 
 use Flarum\Http\RequestUtil;
+use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use HuseyinFiliz\Awards\Models\OtherSuggestion;
 
 class ListUserSuggestionsController implements RequestHandlerInterface
 {
@@ -32,11 +32,11 @@ class ListUserSuggestionsController implements RequestHandlerInterface
         foreach ($suggestions as $suggestion) {
             /** @var OtherSuggestion $suggestion */
             $item = [
-                'type' => 'award-other-suggestions',
-                'id' => (string) $suggestion->id,
+                'type'       => 'award-other-suggestions',
+                'id'         => (string) $suggestion->id,
                 'attributes' => [
-                    'name' => $suggestion->name,
-                    'status' => $suggestion->status,
+                    'name'      => $suggestion->name,
+                    'status'    => $suggestion->status,
                     'createdAt' => $suggestion->created_at?->toIso8601String(),
                 ],
                 'relationships' => [],
@@ -46,7 +46,7 @@ class ListUserSuggestionsController implements RequestHandlerInterface
                 $item['relationships']['category'] = [
                     'data' => [
                         'type' => 'award-categories',
-                        'id' => (string) $suggestion->category->id,
+                        'id'   => (string) $suggestion->category->id,
                     ],
                 ];
             }

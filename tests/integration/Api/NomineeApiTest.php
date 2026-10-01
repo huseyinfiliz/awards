@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Nominee;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
 
 class NomineeApiTest extends TestCase
 {
@@ -61,9 +61,9 @@ class NomineeApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-nominees', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-nominees',
+                        'type'       => 'award-nominees',
                         'attributes' => [
                             'name' => 'New Nominee',
                             'slug' => 'new-nominee',
@@ -87,12 +87,12 @@ class NomineeApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-nominees', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-nominees',
+                        'type'       => 'award-nominees',
                         'attributes' => [
-                            'name' => 'New Nominee',
-                            'slug' => 'new-nominee',
+                            'name'      => 'New Nominee',
+                            'slug'      => 'new-nominee',
                             'sortOrder' => 3,
                         ],
                         'relationships' => [
@@ -117,9 +117,9 @@ class NomineeApiTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/award-nominees/1', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-nominees',
+                        'type'       => 'award-nominees',
                         'attributes' => [
                             'name' => 'Updated Nominee Name',
                         ],
@@ -154,7 +154,7 @@ class NomineeApiTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/award-nominees/1/votes', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
                         'attributes' => [
                             'voteAdjustment' => 10,
@@ -176,7 +176,7 @@ class NomineeApiTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/award-nominees/1/votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
                         'attributes' => [
                             'voteAdjustment' => 10,

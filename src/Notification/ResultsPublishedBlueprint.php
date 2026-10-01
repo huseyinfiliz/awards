@@ -35,7 +35,7 @@ class ResultsPublishedBlueprint implements BlueprintInterface, AlertableInterfac
     public function getData(): mixed
     {
         return [
-            'awardId' => $this->award->id,
+            'awardId'   => $this->award->id,
             'awardName' => $this->award->name,
             'awardSlug' => $this->award->slug,
         ];

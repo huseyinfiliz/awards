@@ -3,11 +3,11 @@
 namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 
 use Carbon\Carbon;
+use Flarum\Group\Group;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 use Flarum\User\User;
-use Flarum\Group\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 class PermissionTest extends TestCase
 {
@@ -82,11 +82,11 @@ class PermissionTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 3, // viewer group (no vote permission)
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],
@@ -103,11 +103,11 @@ class PermissionTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 4, // voter group
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],
@@ -124,9 +124,9 @@ class PermissionTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/awards', [
                 'authenticatedAs' => 4, // voter group
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'awards',
+                        'type'       => 'awards',
                         'attributes' => [
                             'name' => 'New Award',
                             'slug' => 'new-award',
@@ -146,16 +146,16 @@ class PermissionTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/awards', [
                 'authenticatedAs' => 1, // admin
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'awards',
+                        'type'       => 'awards',
                         'attributes' => [
-                            'name' => 'Admin Award',
-                            'slug' => 'admin-award',
-                            'year' => 2025,
-                            'status' => 'draft',
+                            'name'     => 'Admin Award',
+                            'slug'     => 'admin-award',
+                            'year'     => 2025,
+                            'status'   => 'draft',
                             'startsAt' => Carbon::now()->toIso8601String(),
-                            'endsAt' => Carbon::now()->addMonth()->toIso8601String(),
+                            'endsAt'   => Carbon::now()->addMonth()->toIso8601String(),
                         ],
                     ],
                 ],
@@ -198,9 +198,9 @@ class PermissionTest extends TestCase
             $this->request('POST', '/api/award-votes', [
                 'json' => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],

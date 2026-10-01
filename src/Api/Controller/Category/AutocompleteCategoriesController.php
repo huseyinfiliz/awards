@@ -3,12 +3,12 @@
 namespace HuseyinFiliz\Awards\Api\Controller\Category;
 
 use Flarum\Http\RequestUtil;
+use HuseyinFiliz\Awards\Models\Category;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use HuseyinFiliz\Awards\Models\Category;
 
 class AutocompleteCategoriesController implements RequestHandlerInterface
 {
@@ -28,13 +28,13 @@ class AutocompleteCategoriesController implements RequestHandlerInterface
         return new JsonResponse([
             'data' => $categories->map(function ($category) {
                 return [
-                    'type' => 'award-category-suggestions',
+                    'type'       => 'award-category-suggestions',
                     'attributes' => [
-                        'name' => $category->name,
+                        'name'        => $category->name,
                         'description' => $category->description,
-                    ]
+                    ],
                 ];
-            })->toArray()
+            })->toArray(),
         ]);
     }
 }

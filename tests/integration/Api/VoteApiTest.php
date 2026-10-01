@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Vote;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
 
 class VoteApiTest extends TestCase
 {
@@ -53,11 +53,11 @@ class VoteApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],
@@ -78,11 +78,11 @@ class VoteApiTest extends TestCase
         $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],
@@ -94,11 +94,11 @@ class VoteApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 2,
+                            'nomineeId'  => 2,
                             'categoryId' => 1,
                         ],
                     ],
@@ -120,11 +120,11 @@ class VoteApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 3,
+                            'nomineeId'  => 3,
                             'categoryId' => 2,
                         ],
                     ],
@@ -142,11 +142,11 @@ class VoteApiTest extends TestCase
         $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],
@@ -157,7 +157,7 @@ class VoteApiTest extends TestCase
         $vote = Vote::where('user_id', 2)->where('category_id', 1)->first();
 
         $response = $this->send(
-            $this->request('DELETE', '/api/award-votes/' . $vote->id, [
+            $this->request('DELETE', '/api/award-votes/'.$vote->id, [
                 'authenticatedAs' => 2,
             ])
         );
@@ -186,11 +186,11 @@ class VoteApiTest extends TestCase
         $this->send(
             $this->request('POST', '/api/award-votes', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-votes',
+                        'type'       => 'award-votes',
                         'attributes' => [
-                            'nomineeId' => 1,
+                            'nomineeId'  => 1,
                             'categoryId' => 1,
                         ],
                     ],

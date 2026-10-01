@@ -8,10 +8,10 @@ use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property int $nominee_id
- * @property int $category_id
+ * @property int    $id
+ * @property int    $user_id
+ * @property int    $nominee_id
+ * @property int    $category_id
  * @property string $created_at
  * @property-read Category|null $category
  * @property-read Nominee|null $nominee

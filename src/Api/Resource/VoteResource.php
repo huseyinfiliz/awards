@@ -55,10 +55,10 @@ class VoteResource extends Resource\AbstractDatabaseResource
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');
 
-                    $key = 'awards_vote_' . $actor->id;
+                    $key = 'awards_vote_'.$actor->id;
                     if ($this->limiter->tooManyAttempts($key, 10)) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit'),
                         ]);
                     }
                     $this->limiter->hit($key, 60);
@@ -68,7 +68,7 @@ class VoteResource extends Resource\AbstractDatabaseResource
 
                     if (Vote::where('nominee_id', $nomineeId)->where('user_id', $actor->id)->exists()) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.already_voted')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.already_voted'),
                         ]);
                     }
 
@@ -78,7 +78,7 @@ class VoteResource extends Resource\AbstractDatabaseResource
 
                     if (!$award->isVotingOpen()) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.voting.voting_closed')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.voting.voting_closed'),
                         ]);
                     }
 
@@ -89,8 +89,9 @@ class VoteResource extends Resource\AbstractDatabaseResource
                     } elseif (!$this->voteLimitService->isUnlimited()) {
                         if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
                             $limit = $this->voteLimitService->getVotesPerCategory();
+
                             throw new ValidationException([
-                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_limit_reached', ['limit' => $limit])
+                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_limit_reached', ['limit' => $limit]),
                             ]);
                         }
                     }

@@ -3,8 +3,8 @@
 namespace HuseyinFiliz\Awards\Tests\Unit;
 
 use HuseyinFiliz\Awards\Models\Award;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for Award model status methods.

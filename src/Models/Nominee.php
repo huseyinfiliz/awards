@@ -8,20 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
- * @property int $category_id
- * @property string $name
+ * @property int         $id
+ * @property int         $category_id
+ * @property string      $name
  * @property string|null $slug
  * @property string|null $description
  * @property string|null $image_url
  * @property string|null $url
- * @property array|null $metadata
- * @property int $sort_order
- * @property int $vote_count
- * @property int $real_vote_count
- * @property int|null $vote_adjustment
- * @property float $vote_percentage
- * @property int $total_votes
+ * @property array|null  $metadata
+ * @property int         $sort_order
+ * @property int         $vote_count
+ * @property int         $real_vote_count
+ * @property int|null    $vote_adjustment
+ * @property float       $vote_percentage
+ * @property int         $total_votes
  * @property-read Category|null $category
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Vote> $votes
  * @property-read int|null $votes_count
@@ -44,13 +44,13 @@ class Nominee extends AbstractModel
     ];
 
     protected $casts = [
-        'metadata' => 'array',
+        'metadata'        => 'array',
         'vote_adjustment' => 'integer',
     ];
 
     /**
      * Hide sensitive fields from array/JSON serialization
-     * These are only exposed through the serializer with proper permission checks
+     * These are only exposed through the serializer with proper permission checks.
      */
     protected $hidden = [
         'vote_adjustment',
@@ -67,7 +67,7 @@ class Nominee extends AbstractModel
     }
 
     /**
-     * Get the real vote count from database (without adjustment)
+     * Get the real vote count from database (without adjustment).
      */
     public function getRealVoteCountAttribute(): int
     {
@@ -77,11 +77,12 @@ class Nominee extends AbstractModel
         if ($this->relationLoaded('votes')) {
             return $this->votes->count();
         }
+
         return $this->votes()->count();
     }
 
     /**
-     * Get the displayed vote count (real votes + adjustment)
+     * Get the displayed vote count (real votes + adjustment).
      */
     public function getVoteCountAttribute(): int
     {
@@ -91,6 +92,7 @@ class Nominee extends AbstractModel
     public function getVotePercentageAttribute(): float
     {
         $total = $this->category->total_votes;
+
         return $total > 0 ? round(($this->vote_count / $total) * 100, 1) : 0;
     }
 }
