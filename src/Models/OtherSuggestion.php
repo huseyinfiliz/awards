@@ -8,13 +8,13 @@ use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
- * @property int $category_id
- * @property int $user_id
- * @property string $name
- * @property string $status
+ * @property int      $id
+ * @property int      $category_id
+ * @property int      $user_id
+ * @property string   $name
+ * @property string   $status
  * @property int|null $merged_to_nominee_id
- * @property string $created_at
+ * @property string   $created_at
  * @property-read Category|null $category
  * @property-read User|null $user
  * @property-read Nominee|null $mergedToNominee

@@ -2,25 +2,25 @@
 
 namespace HuseyinFiliz\Awards\Models;
 
+use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Carbon\Carbon;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
+ * @property int         $id
+ * @property string      $name
+ * @property string      $slug
  * @property string|null $description
- * @property int $year
- * @property string $status
+ * @property int         $year
+ * @property string      $status
  * @property string|null $starts_at
  * @property string|null $ends_at
- * @property bool $show_live_votes
+ * @property bool        $show_live_votes
  * @property string|null $image_url
- * @property int $category_count
- * @property int $nominee_count
- * @property int $vote_count
+ * @property int         $category_count
+ * @property int         $nominee_count
+ * @property int         $vote_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Category> $categories
  */
 class Award extends AbstractModel
@@ -62,8 +62,10 @@ class Award extends AbstractModel
                 /** @var Category $category */
                 $total += (int) ($category->nominees_count ?? $category->nominee_count);
             }
+
             return $total;
         }
+
         return Nominee::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
 
@@ -76,8 +78,10 @@ class Award extends AbstractModel
                 /** @var Category $category */
                 $total += (int) ($category->votes_count ?? $category->total_votes);
             }
+
             return $total;
         }
+
         return Vote::whereIn('category_id', $this->categories()->pluck('id'))->count();
     }
 
@@ -104,6 +108,7 @@ class Award extends AbstractModel
     public function isVotingOpen(): bool
     {
         $now = Carbon::now();
+
         return $this->isActive() &&
                (!$this->starts_at || $now->gte($this->starts_at)) &&
                (!$this->ends_at || $now->lte($this->ends_at));

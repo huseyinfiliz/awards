@@ -52,10 +52,10 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');
 
-                    $key = 'awards_vote_' . $actor->id;
+                    $key = 'awards_vote_'.$actor->id;
                     if ($this->limiter->tooManyAttempts($key, 10)) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.rate_limit'),
                         ]);
                     }
                     $this->limiter->hit($key, 60);
@@ -66,13 +66,13 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
 
                     if (empty($name)) {
                         throw new ValidationException([
-                            'name' => $this->translator->trans('validation.required', ['attribute' => 'name'])
+                            'name' => $this->translator->trans('validation.required', ['attribute' => 'name']),
                         ]);
                     }
 
                     if (mb_strlen($name) > 255) {
                         throw new ValidationException([
-                            'name' => $this->translator->trans('validation.max.string', ['attribute' => 'name', 'max' => 255])
+                            'name' => $this->translator->trans('validation.max.string', ['attribute' => 'name', 'max' => 255]),
                         ]);
                     }
 
@@ -80,20 +80,20 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
 
                     if (!$category->allow_other) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.other_not_allowed')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.other_not_allowed'),
                         ]);
                     }
 
                     if (!$category->award->isVotingOpen()) {
                         throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.voting_closed')
+                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.voting_closed'),
                         ]);
                     }
 
                     if (!$this->voteLimitService->isUnlimited()) {
                         if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
                             throw new ValidationException([
-                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_quota_exhausted')
+                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_quota_exhausted'),
                             ]);
                         }
                     }
@@ -101,7 +101,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                     $context->body = array_merge($context->body(), [
                         'data' => array_merge($context->body()['data'] ?? [], [
                             'attributes' => array_merge($attrs, [
-                                'name' => $name,
+                                'name'   => $name,
                                 'status' => 'pending',
                             ]),
                         ]),
@@ -129,15 +129,15 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                             $slug = $baseSlug;
                             $counter = 2;
                             while (Nominee::where('category_id', $model->category_id)->where('slug', $slug)->exists()) {
-                                $slug = $baseSlug . '-' . $counter;
+                                $slug = $baseSlug.'-'.$counter;
                                 $counter++;
                             }
 
                             $nominee = Nominee::create([
                                 'category_id' => $model->category_id,
-                                'name' => $model->name,
-                                'slug' => $slug,
-                                'sort_order' => 999,
+                                'name'        => $model->name,
+                                'slug'        => $slug,
+                                'sort_order'  => 999,
                             ]);
 
                             if ($model->user_id) {
@@ -248,6 +248,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
         $model->status = 'pending';
+
         return $model;
     }
 }

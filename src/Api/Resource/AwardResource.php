@@ -44,12 +44,12 @@ class AwardResource extends Resource\AbstractDatabaseResource
                     $name = $attrs['name'] ?? '';
                     $year = $attrs['year'] ?? date('Y');
 
-                    $baseSlug = ($attrs['slug'] ?? '') ?: Str::slug($name) . '-' . $year;
+                    $baseSlug = ($attrs['slug'] ?? '') ?: Str::slug($name).'-'.$year;
                     $slug = $baseSlug;
                     $counter = 2;
 
                     while (Award::where('slug', $slug)->exists()) {
-                        $slug = $baseSlug . '-' . $counter;
+                        $slug = $baseSlug.'-'.$counter;
                         $counter++;
                     }
 
@@ -68,12 +68,12 @@ class AwardResource extends Resource\AbstractDatabaseResource
                     if (array_key_exists('slug', $attrs)) {
                         $model = $context->model;
                         $providedSlug = $attrs['slug'];
-                        $baseSlug = $providedSlug ?: Str::slug($model->name) . '-' . $model->year;
+                        $baseSlug = $providedSlug ?: Str::slug($model->name).'-'.$model->year;
                         $slug = $baseSlug;
                         $counter = 2;
 
                         while (Award::where('slug', $slug)->where('id', '!=', $model->id)->exists()) {
-                            $slug = $baseSlug . '-' . $counter;
+                            $slug = $baseSlug.'-'.$counter;
                             $counter++;
                         }
 
@@ -155,6 +155,7 @@ class AwardResource extends Resource\AbstractDatabaseResource
             Schema\Boolean::make('canViewResults')
                 ->get(function (Award $model, Context $context) {
                     $actor = $context->getActor();
+
                     return $model->isPublished()
                         || ($model->hasEnded() && $actor->hasPermission('awards.viewResults'));
                 }),

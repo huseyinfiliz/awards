@@ -1,24 +1,24 @@
 <?php
 
-use Flarum\Extend;
 use Flarum\Api\Resource\ForumResource;
 use Flarum\Api\Schema;
+use Flarum\Extend;
 use HuseyinFiliz\Awards\Api\Controller;
 use HuseyinFiliz\Awards\Notification;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less')
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less')
         ->route('/awards', 'awards', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class)
         ->route('/awards/{id:[0-9]+}-{slug}', 'awards.show', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class)
         ->route('/awards/{id:[0-9]+}-{slug}/{category:[0-9]+}', 'awards.category', \HuseyinFiliz\Awards\Forum\Controller\AwardsController::class),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/resources/less/admin.less'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Settings())
         ->default('huseyinfiliz-awards.votes_per_category', 1)

@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
- * @property int $award_id
- * @property string $name
- * @property string $slug
+ * @property int         $id
+ * @property int         $award_id
+ * @property string      $name
+ * @property string      $slug
  * @property string|null $description
- * @property int $sort_order
- * @property bool $allow_other
- * @property int $total_votes
- * @property int $nominee_count
+ * @property int         $sort_order
+ * @property bool        $allow_other
+ * @property int         $total_votes
+ * @property int         $nominee_count
  * @property-read Award|null $award
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Nominee> $nominees
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Vote> $votes
@@ -70,6 +70,7 @@ class Category extends AbstractModel
         if ($this->relationLoaded('votes')) {
             return $this->votes->count();
         }
+
         return $this->votes()->count();
     }
 
@@ -81,6 +82,7 @@ class Category extends AbstractModel
         if ($this->relationLoaded('nominees')) {
             return $this->nominees->count();
         }
+
         return $this->nominees()->count();
     }
 }

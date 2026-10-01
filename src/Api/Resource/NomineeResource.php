@@ -116,6 +116,7 @@ class NomineeResource extends Resource\AbstractDatabaseResource
                     if ($award && $award->canShowVotes()) {
                         return $model->vote_count;
                     }
+
                     return null;
                 }),
             Schema\Number::make('votePercentage')
@@ -127,6 +128,7 @@ class NomineeResource extends Resource\AbstractDatabaseResource
                     if ($award && $award->canShowVotes()) {
                         return $model->vote_percentage;
                     }
+
                     return null;
                 }),
             Schema\Integer::make('realVoteCount')

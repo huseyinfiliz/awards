@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
 
 class OtherSuggestionApiTest extends TestCase
 {
@@ -51,12 +51,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => 'My Suggestion',
+                            'name'       => 'My Suggestion',
                         ],
                     ],
                 ],
@@ -76,12 +76,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 2, // allow_other = false
-                            'name' => 'My Suggestion',
+                            'name'       => 'My Suggestion',
                         ],
                     ],
                 ],
@@ -97,12 +97,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 3, // Belongs to closed award
-                            'name' => 'My Suggestion',
+                            'name'       => 'My Suggestion',
                         ],
                     ],
                 ],
@@ -119,12 +119,12 @@ class OtherSuggestionApiTest extends TestCase
         $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => 'First Suggestion',
+                            'name'       => 'First Suggestion',
                         ],
                     ],
                 ],
@@ -135,12 +135,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => 'Second Suggestion',
+                            'name'       => 'Second Suggestion',
                         ],
                     ],
                 ],
@@ -162,12 +162,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => 'My Suggestion',
+                            'name'       => 'My Suggestion',
                         ],
                     ],
                 ],
@@ -184,12 +184,12 @@ class OtherSuggestionApiTest extends TestCase
         $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => 'My Suggestion',
+                            'name'       => 'My Suggestion',
                         ],
                     ],
                 ],
@@ -215,12 +215,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => '   ', // Only whitespace
+                            'name'       => '   ', // Only whitespace
                         ],
                     ],
                 ],
@@ -238,12 +238,12 @@ class OtherSuggestionApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-other-suggestions', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-other-suggestions',
+                        'type'       => 'award-other-suggestions',
                         'attributes' => [
                             'categoryId' => 1,
-                            'name' => $longName,
+                            'name'       => $longName,
                         ],
                     ],
                 ],
@@ -252,5 +252,4 @@ class OtherSuggestionApiTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
     }
-
 }

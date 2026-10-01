@@ -149,6 +149,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                         return 0;
                     }
                     static::loadUserCache($actor->id);
+
                     return static::$userSuggestionsCache[$model->id] ?? 0;
                 }),
             Schema\Arr::make('userVoteIds')
@@ -158,6 +159,7 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                         return [];
                     }
                     static::loadUserCache($actor->id);
+
                     return static::$userVotesCache[$model->id] ?? [];
                 }),
 

@@ -4,8 +4,8 @@ namespace HuseyinFiliz\Awards\Service;
 
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
-use HuseyinFiliz\Awards\Models\Vote;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
+use HuseyinFiliz\Awards\Models\Vote;
 
 class VoteLimitService
 {
@@ -15,7 +15,7 @@ class VoteLimitService
 
     /**
      * Get the votes per category limit from settings.
-     * 0 = unlimited, 1+ = limit
+     * 0 = unlimited, 1+ = limit.
      */
     public function getVotesPerCategory(): int
     {

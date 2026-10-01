@@ -4,14 +4,14 @@ namespace HuseyinFiliz\Awards\Api\Controller\Admin;
 
 use Flarum\Http\RequestUtil;
 use Flarum\Notification\NotificationSyncer;
+use HuseyinFiliz\Awards\Models\Award;
+use HuseyinFiliz\Awards\Models\Vote;
+use HuseyinFiliz\Awards\Notification\ResultsPublishedBlueprint;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use HuseyinFiliz\Awards\Models\Award;
-use HuseyinFiliz\Awards\Models\Vote;
-use HuseyinFiliz\Awards\Notification\ResultsPublishedBlueprint;
 
 class PublishResultsController implements RequestHandlerInterface
 {
@@ -45,10 +45,10 @@ class PublishResultsController implements RequestHandlerInterface
 
         return new JsonResponse([
             'data' => [
-                'type' => 'awards',
-                'id' => (string) $award->id,
+                'type'       => 'awards',
+                'id'         => (string) $award->id,
                 'attributes' => [
-                    'status' => $award->status,
+                    'status'      => $award->status,
                     'isPublished' => true,
                 ],
             ],

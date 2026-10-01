@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Award;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
 
 class AwardApiTest extends TestCase
 {
@@ -65,13 +65,13 @@ class AwardApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/awards', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'awards',
+                        'type'       => 'awards',
                         'attributes' => [
-                            'name' => 'New Award',
-                            'slug' => 'new-award',
-                            'year' => 2025,
+                            'name'   => 'New Award',
+                            'slug'   => 'new-award',
+                            'year'   => 2025,
                             'status' => 'draft',
                         ],
                     ],
@@ -88,16 +88,16 @@ class AwardApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/awards', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'awards',
+                        'type'       => 'awards',
                         'attributes' => [
-                            'name' => 'New Award',
-                            'slug' => 'new-award',
-                            'year' => 2025,
-                            'status' => 'draft',
+                            'name'     => 'New Award',
+                            'slug'     => 'new-award',
+                            'year'     => 2025,
+                            'status'   => 'draft',
                             'startsAt' => Carbon::now()->toIso8601String(),
-                            'endsAt' => Carbon::now()->addMonth()->toIso8601String(),
+                            'endsAt'   => Carbon::now()->addMonth()->toIso8601String(),
                         ],
                     ],
                 ],
@@ -116,9 +116,9 @@ class AwardApiTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/awards/1', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'awards',
+                        'type'       => 'awards',
                         'attributes' => [
                             'name' => 'Updated Award Name',
                         ],

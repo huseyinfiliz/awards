@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Category;
 use PHPUnit\Framework\Attributes\Test;
-use Flarum\User\User;
 
 class CategoryApiTest extends TestCase
 {
@@ -58,13 +58,13 @@ class CategoryApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-categories', [
                 'authenticatedAs' => 2,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-categories',
+                        'type'       => 'award-categories',
                         'attributes' => [
                             'awardId' => 1,
-                            'name' => 'New Category',
-                            'slug' => 'new-category',
+                            'name'    => 'New Category',
+                            'slug'    => 'new-category',
                         ],
                     ],
                 ],
@@ -80,12 +80,12 @@ class CategoryApiTest extends TestCase
         $response = $this->send(
             $this->request('POST', '/api/award-categories', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-categories',
+                        'type'       => 'award-categories',
                         'attributes' => [
-                            'name' => 'New Category',
-                            'slug' => 'new-category',
+                            'name'      => 'New Category',
+                            'slug'      => 'new-category',
                             'sortOrder' => 3,
                         ],
                         'relationships' => [
@@ -110,9 +110,9 @@ class CategoryApiTest extends TestCase
         $response = $this->send(
             $this->request('PATCH', '/api/award-categories/1', [
                 'authenticatedAs' => 1,
-                'json' => [
+                'json'            => [
                     'data' => [
-                        'type' => 'award-categories',
+                        'type'       => 'award-categories',
                         'attributes' => [
                             'name' => 'Updated Category Name',
                         ],
