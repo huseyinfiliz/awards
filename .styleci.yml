@@ -1,11 +1,9 @@
-php:
-  preset: recommended
-  disabled:
-    - unused_imports
-  finder:
-    not-name:
-      - "*.blade.php"
+preset: recommended
 
-js: true
+disabled:
+  - unused_imports
 
-css: false
+finder:
+  not-name:
+    - "*.blade.php"
+

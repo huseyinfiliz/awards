@@ -114,74 +114,90 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                     $attrs = (array) ($context->body()['data']['attributes'] ?? []);
                     $action = $attrs['action'] ?? null;
                     $mergeToNomineeId = $attrs['mergeToNomineeId'] ?? null;
+                    /** @var OtherSuggestion $model */
                     $model = $context->model;
 
                     switch ($action) {
                         case 'approve':
+                            if ($model->status !== 'pending') {
+                                throw new ValidationException([
+                                    'message' => 'This suggestion has already been processed.',
+                                ]);
+                            }
+
+                            $baseSlug = Str::slug($model->name) ?: 'nominee';
+                            $slug = $baseSlug;
+                            $counter = 2;
+                            while (Nominee::where('category_id', $model->category_id)->where('slug', $slug)->exists()) {
+                                $slug = $baseSlug . '-' . $counter;
+                                $counter++;
+                            }
+
                             $nominee = Nominee::create([
                                 'category_id' => $model->category_id,
                                 'name' => $model->name,
-                                'slug' => Str::slug($model->name),
+                                'slug' => $slug,
                                 'sort_order' => 999,
                             ]);
 
-                            if ($this->voteLimitService->isSingleVoteMode()) {
-                                Vote::updateOrCreate(
-                                    ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                    ['nominee_id' => $nominee->id]
-                                );
-                            } else {
-                                Vote::firstOrCreate(
-                                    ['nominee_id' => $nominee->id, 'user_id' => $model->user_id],
-                                    ['category_id' => $model->category_id]
-                                );
+                            if ($model->user_id) {
+                                if ($this->voteLimitService->isSingleVoteMode()) {
+                                    Vote::updateOrCreate(
+                                        ['category_id' => $model->category_id, 'user_id' => $model->user_id],
+                                        ['nominee_id' => $nominee->id]
+                                    );
+                                } else {
+                                    Vote::firstOrCreate(
+                                        ['nominee_id' => $nominee->id, 'user_id' => $model->user_id],
+                                        ['category_id' => $model->category_id]
+                                    );
+                                }
                             }
 
-                            $context->body = array_merge($context->body(), [
-                                'data' => array_merge($context->body()['data'] ?? [], [
-                                    'attributes' => array_merge($attrs, [
-                                        'status' => 'approved',
-                                        'mergedToNomineeId' => $nominee->id,
-                                    ]),
-                                ]),
-                            ]);
+                            $model->status = 'approved';
+                            $model->merged_to_nominee_id = $nominee->id;
+                            $model->save();
                             break;
 
                         case 'reject':
-                            $context->body = array_merge($context->body(), [
-                                'data' => array_merge($context->body()['data'] ?? [], [
-                                    'attributes' => array_merge($attrs, [
-                                        'status' => 'rejected',
-                                    ]),
-                                ]),
-                            ]);
+                            if ($model->status !== 'pending') {
+                                throw new ValidationException([
+                                    'message' => 'This suggestion has already been processed.',
+                                ]);
+                            }
+
+                            $model->status = 'rejected';
+                            $model->save();
                             break;
 
                         case 'merge':
+                            if ($model->status !== 'pending') {
+                                throw new ValidationException([
+                                    'message' => 'This suggestion has already been processed.',
+                                ]);
+                            }
+
                             if (!$mergeToNomineeId) {
                                 throw new \InvalidArgumentException('mergeToNomineeId is required for merge action');
                             }
 
-                            if ($this->voteLimitService->isSingleVoteMode()) {
-                                Vote::updateOrCreate(
-                                    ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                    ['nominee_id' => $mergeToNomineeId]
-                                );
-                            } else {
-                                Vote::firstOrCreate(
-                                    ['nominee_id' => $mergeToNomineeId, 'user_id' => $model->user_id],
-                                    ['category_id' => $model->category_id]
-                                );
+                            if ($model->user_id) {
+                                if ($this->voteLimitService->isSingleVoteMode()) {
+                                    Vote::updateOrCreate(
+                                        ['category_id' => $model->category_id, 'user_id' => $model->user_id],
+                                        ['nominee_id' => $mergeToNomineeId]
+                                    );
+                                } else {
+                                    Vote::firstOrCreate(
+                                        ['nominee_id' => $mergeToNomineeId, 'user_id' => $model->user_id],
+                                        ['category_id' => $model->category_id]
+                                    );
+                                }
                             }
 
-                            $context->body = array_merge($context->body(), [
-                                'data' => array_merge($context->body()['data'] ?? [], [
-                                    'attributes' => array_merge($attrs, [
-                                        'status' => 'merged',
-                                        'mergedToNomineeId' => $mergeToNomineeId,
-                                    ]),
-                                ]),
-                            ]);
+                            $model->status = 'merged';
+                            $model->merged_to_nominee_id = $mergeToNomineeId;
+                            $model->save();
                             break;
                     }
                 }),

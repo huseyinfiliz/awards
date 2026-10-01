@@ -96,6 +96,8 @@ export default class SuggestionsTab extends Component {
       categoryOptions[String(category.id())] = category.name() as string;
     });
 
+    const pendingSuggestions = this.suggestions.filter((s) => s.status() === 'pending');
+
     return (
       <div className="SuggestionsTab">
         <div className="SuggestionsTab-header">
@@ -126,13 +128,13 @@ export default class SuggestionsTab extends Component {
             <div>{app.translator.trans('huseyinfiliz-awards.lib.actions')}</div>
           </div>
 
-          {this.suggestions.length === 0 ? (
+          {pendingSuggestions.length === 0 ? (
             <div className="EmptyState">
               <i className="fas fa-lightbulb" />
               <p>{app.translator.trans('huseyinfiliz-awards.admin.suggestions.empty')}</p>
             </div>
           ) : (
-            this.suggestions.map((suggestion) => (
+            pendingSuggestions.map((suggestion) => (
               <div className="CardList-item" key={suggestion.id()}>
                 <div className="CardList-item-cell CardList-item-cell--primary">
                   <div className="CardList-item-name">{suggestion.name()}</div>
