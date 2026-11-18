@@ -34,6 +34,7 @@ A comprehensive community awards and voting extension for [Flarum](https://flaru
 - **Prediction Summary**: Track your prediction accuracy after results are published
 - **Auto-End Voting**: Automatic status updates based on start/end dates
 - **Vote Adjustment**: Admin can adjust displayed vote counts when needed
+- **Audit Logging**: Optional Flarum Audit integration for management actions
 
 ## Compatibility
 
@@ -116,7 +117,7 @@ Draft > Active > Ended > Published
 | Status | Description |
 |--------|-------------|
 | **Draft** | Setting up the award (only visible to admins for preview) |
-| **Active** | Voting is open between start and end dates |
+| **Active** | Voting is open within the optional start and end dates |
 | **Ended** | Voting closed, admin reviews before publishing |
 | **Published** | Results visible to everyone, all voters notified |
 
@@ -138,16 +139,6 @@ Draft > Active > Ended > Published
 | **Vote in Awards** | Cast votes and suggest nominees where allowed |
 | **View Results Early** | See results before publishing (for moderators) |
 | **Manage Awards** | Full admin access to create/edit/delete |
-
-Start and end dates are optional. An active award accepts votes whenever all
-configured date bounds are satisfied.
-
-## Audit logging
-
-When Flarum Audit is installed and enabled, Awards records award, category, and
-nominee management changes, results publication, vote adjustments, and suggestion
-moderation decisions. Audit records identify the acting user and affected resource.
-Individual ballots and suggestion text are not included in the audit payload.
 
 ## Translations
 
