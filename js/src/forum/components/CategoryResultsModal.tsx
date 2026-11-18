@@ -1,8 +1,8 @@
 import app from 'flarum/forum/app';
 import Modal, { IInternalModalAttrs } from 'flarum/common/components/Modal';
 import Category from '../../common/models/Category';
-import Nominee from '../../common/models/Nominee';
 import Award from '../../common/models/Award';
+import rankNominees from '../utils/rankNominees';
 
 interface CategoryResultsModalAttrs extends IInternalModalAttrs {
   category: Category;
@@ -27,25 +27,22 @@ export default class CategoryResultsModal extends Modal {
   content() {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
-    const nominees = (category.nominees() || []) as Nominee[];
-
-    // Sort by vote count descending
-    const sortedNominees = [...nominees].sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0));
-
-    // Calculate total votes for percentages
-    const totalVotes = sortedNominees.reduce((sum, n) => sum + (n.voteCount() || 0), 0);
+    const ranked = rankNominees(category.nominees() || []);
+    const totalVotes = ranked.reduce((sum, entry) => sum + entry.votes, 0);
 
     const canShowVotes = award.canShowVotes();
 
     return (
       <div className="Modal-body">
+        {canShowVotes && totalVotes === 0 ? (
+          <p className="CategoryResultsModal-noVotes helpText">{app.translator.trans('huseyinfiliz-awards.forum.results.no_votes')}</p>
+        ) : null}
         <div className="CategoryResultsModal-list">
-          {sortedNominees.map((nominee, index) => {
-            const voteCount = nominee.voteCount() || 0;
+          {ranked.map(({ nominee, votes: voteCount, rank }) => {
             const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
-            const isWinner = index === 0;
-            const isRunnerUp = index === 1;
-            const isThird = index === 2;
+            const isWinner = rank === 1;
+            const isRunnerUp = rank === 2;
+            const isThird = rank === 3;
 
             return (
               <div className={`CategoryResultsModal-item ${isWinner ? 'CategoryResultsModal-item--winner' : ''}`} key={nominee.id()}>
@@ -63,7 +60,7 @@ export default class CategoryResultsModal extends Modal {
                       <i className="fas fa-medal" />
                     </span>
                   ) : (
-                    <span className="CategoryResultsModal-rankNumber">{index + 1}</span>
+                    <span className="CategoryResultsModal-rankNumber">{rank ?? '—'}</span>
                   )}
                 </div>
 

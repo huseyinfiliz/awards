@@ -3,19 +3,19 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Category from '../../common/models/Category';
 import Award from '../../common/models/Award';
-import Nominee from '../../common/models/Nominee';
 import CategoryResultsModal from './CategoryResultsModal';
+import rankNominees, { previewNominees } from '../utils/rankNominees';
 
 export default class CategoryResultCard extends Component {
   view() {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
-    const allNominees = (category.nominees() || []).filter((nominee): nominee is Nominee => !!nominee);
-    // Sort by vote count and show only top 3
-    const nominees = [...allNominees].sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0)).slice(0, 3);
+    const ranked = rankNominees(category.nominees() || []);
+    const nominees = previewNominees(ranked);
 
     const canShowVotes = award.canShowVotes();
-    const hasMoreNominees = allNominees.length > 3;
+    const hasMoreNominees = ranked.length > nominees.length;
+    const hasVotes = ranked.some((entry) => entry.rank !== null);
 
     return (
       <div className="CategoryCard CategoryResultCard" id={`category-${category.id()}`}>
@@ -36,11 +36,15 @@ export default class CategoryResultCard extends Component {
           ) : null}
         </div>
 
+        {canShowVotes && !hasVotes ? (
+          <p className="CategoryResultCard-noVotes helpText">{app.translator.trans('huseyinfiliz-awards.forum.results.no_votes')}</p>
+        ) : null}
+
         <div className="CategoryCard-grid">
-          {nominees.map((nominee, index) => {
-            const isWinner = index === 0;
-            const isRunnerUp = index === 1;
-            const isThird = index === 2;
+          {nominees.map(({ nominee, rank }) => {
+            const isWinner = rank === 1;
+            const isRunnerUp = rank === 2;
+            const isThird = rank === 3;
 
             return (
               <div className={`NomineeCard ${isWinner ? 'NomineeCard--winner' : ''}`} key={nominee.id()}>

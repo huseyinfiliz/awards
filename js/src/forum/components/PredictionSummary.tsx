@@ -4,11 +4,12 @@ import Award from '../../common/models/Award';
 import Category from '../../common/models/Category';
 import Nominee from '../../common/models/Nominee';
 import Vote from '../../common/models/Vote';
+import rankNominees from '../utils/rankNominees';
 
 interface PredictionResult {
   category: Category;
   userVotedNominee: Nominee | null;
-  winner: Nominee | null;
+  winners: Nominee[];
   isCorrect: boolean;
 }
 
@@ -27,28 +28,22 @@ export default class PredictionSummary extends Component {
       const categoryId = category.id();
       const nominees = (category.nominees() || []) as Nominee[];
 
-      // Find user's vote for this category
-      const userVote = userVotes.find((v) => {
+      const categoryVotes = userVotes.filter((v) => {
         const vCategoryId = v.categoryId() || v.relationshipId('category');
         return String(vCategoryId) === String(categoryId);
       });
 
-      let userVotedNominee: Nominee | null = null;
-      if (userVote) {
-        const vNomineeId = userVote.nomineeId() || userVote.relationshipId('nominee');
-        userVotedNominee = nominees.find((n) => String(n.id()) === String(vNomineeId)) || null;
-      }
-
-      // Find winner (nominee with highest vote count)
-      const winner = nominees.length > 0 ? nominees.reduce((a, b) => ((b.voteCount() || 0) > (a.voteCount() || 0) ? b : a)) : null;
-
-      // Check if user predicted correctly
-      const isCorrect = userVotedNominee && winner && String(userVotedNominee.id()) === String(winner.id());
+      const votedIds = new Set(categoryVotes.map((vote) => String(vote.nomineeId() || vote.relationshipId('nominee'))));
+      const winners = rankNominees(nominees)
+        .filter((entry) => entry.rank === 1)
+        .map((entry) => entry.nominee);
+      const userVotedNominee = nominees.find((nominee) => votedIds.has(String(nominee.id()))) || null;
+      const isCorrect = winners.some((winner) => votedIds.has(String(winner.id())));
 
       results.push({
         category,
         userVotedNominee,
-        winner,
+        winners,
         isCorrect: !!isCorrect,
       });
     });

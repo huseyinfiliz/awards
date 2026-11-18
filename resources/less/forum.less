@@ -325,6 +325,15 @@
     }
   }
 
+  .CategoryResultCard-noVotes {
+    margin: 0;
+    padding: 16px 20px 0;
+
+    @media (max-width: 500px) {
+      padding: 15px 15px 0;
+    }
+  }
+
   // Category Result Card - View All button
   .CategoryResultCard-viewAll {
     color: var(--primary-color);
@@ -1407,6 +1416,11 @@
 .CategoryResultsModal {
   .Modal-body {
     padding: 0;
+  }
+
+  &-noVotes {
+    margin: 0;
+    padding: 16px 20px;
   }
 
   &-list {
