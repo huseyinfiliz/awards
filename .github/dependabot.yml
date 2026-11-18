@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: composer
+    directory: /
+    target-branch: 2.x
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      development-tools:
+        dependency-type: development
+        update-types: [minor, patch]
+  # GitHub uses the npm ecosystem for Yarn manifests and lockfiles.
+  - package-ecosystem: npm
+    directory: /js
+    target-branch: 2.x
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      compatible-updates:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: 2.x
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
