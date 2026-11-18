@@ -89,9 +89,9 @@ class VotingService
                 }
                 $nominee = Nominee::create([
                     'category_id' => $category->id,
-                    'name' => $suggestion->name,
-                    'slug' => $slug,
-                    'sort_order' => 999,
+                    'name'        => $suggestion->name,
+                    'slug'        => $slug,
+                    'sort_order'  => 999,
                 ]);
             }
 
@@ -107,8 +107,8 @@ class VotingService
                     $this->assertAvailableSlot($category->id, $suggestion->user_id);
                     Vote::create([
                         'category_id' => $category->id,
-                        'user_id' => $suggestion->user_id,
-                        'nominee_id' => $nominee->id,
+                        'user_id'     => $suggestion->user_id,
+                        'nominee_id'  => $nominee->id,
                     ]);
                 }
             }

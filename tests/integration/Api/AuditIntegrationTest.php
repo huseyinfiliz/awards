@@ -19,13 +19,13 @@ class AuditIntegrationTest extends TestCase
         AuditLogger::$testMode = true;
         $this->extension('flarum-audit', 'huseyinfiliz-awards');
         $this->prepareDatabase([
-            'audit_log' => [],
-            User::class => [$this->normalUser()],
-            'awards' => [['id' => 1, 'name' => 'Award', 'slug' => 'award', 'status' => 'active']],
-            'award_categories' => [['id' => 1, 'award_id' => 1, 'name' => 'Category', 'slug' => 'category', 'allow_other' => true]],
-            'award_nominees' => [['id' => 1, 'category_id' => 1, 'name' => 'Nominee', 'slug' => 'nominee']],
+            'audit_log'               => [],
+            User::class               => [$this->normalUser()],
+            'awards'                  => [['id' => 1, 'name' => 'Award', 'slug' => 'award', 'status' => 'active']],
+            'award_categories'        => [['id' => 1, 'award_id' => 1, 'name' => 'Category', 'slug' => 'category', 'allow_other' => true]],
+            'award_nominees'          => [['id' => 1, 'category_id' => 1, 'name' => 'Nominee', 'slug' => 'nominee']],
             'award_other_suggestions' => [['id' => 1, 'category_id' => 1, 'user_id' => 2, 'name' => 'Private suggestion text', 'status' => 'pending']],
-            'group_permission' => [
+            'group_permission'        => [
                 ['group_id' => 3, 'permission' => 'awards.view'],
                 ['group_id' => 3, 'permission' => 'awards.vote'],
             ],
@@ -37,7 +37,7 @@ class AuditIntegrationTest extends TestCase
     {
         $response = $this->send($this->request('PATCH', '/api/awards/1', [
             'authenticatedAs' => 1,
-            'json' => ['data' => ['type' => 'awards', 'attributes' => ['name' => 'Renamed award']]],
+            'json'            => ['data' => ['type' => 'awards', 'attributes' => ['name' => 'Renamed award']]],
         ]));
         $this->assertEquals(200, $response->getStatusCode());
         $log = AuditLog::where('action', 'awards.award.updated')->firstOrFail();
@@ -51,7 +51,7 @@ class AuditIntegrationTest extends TestCase
     {
         $response = $this->send($this->request('PATCH', '/api/award-nominees/1/votes', [
             'authenticatedAs' => 1,
-            'json' => ['data' => ['attributes' => ['voteAdjustment' => 5]]],
+            'json'            => ['data' => ['attributes' => ['voteAdjustment' => 5]]],
         ]));
         $this->assertEquals(200, $response->getStatusCode());
         $log = AuditLog::where('action', 'awards.nominee.votes_adjusted')->firstOrFail();
@@ -74,7 +74,7 @@ class AuditIntegrationTest extends TestCase
     {
         $response = $this->send($this->request('PATCH', '/api/award-other-suggestions/1', [
             'authenticatedAs' => 1,
-            'json' => ['data' => ['attributes' => ['action' => 'approve']]],
+            'json'            => ['data' => ['attributes' => ['action' => 'approve']]],
         ]));
         $this->assertEquals(200, $response->getStatusCode(), (string) $response->getBody());
         $log = AuditLog::where('action', 'awards.suggestion.moderated')->firstOrFail();
@@ -91,7 +91,7 @@ class AuditIntegrationTest extends TestCase
         \HuseyinFiliz\Awards\Models\OtherSuggestion::create(['category_id' => 1, 'user_id' => 2, 'name' => 'Reserved', 'status' => 'pending']);
         $response = $this->send($this->request('PATCH', '/api/award-other-suggestions/1', [
             'authenticatedAs' => 1,
-            'json' => ['data' => ['attributes' => ['action' => 'approve']]],
+            'json'            => ['data' => ['attributes' => ['action' => 'approve']]],
         ]));
         $this->assertEquals(422, $response->getStatusCode());
         $this->assertEquals(0, AuditLog::where('action', 'like', 'awards.%')->count());
