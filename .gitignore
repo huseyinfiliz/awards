@@ -18,6 +18,7 @@ tests/.phpunit.result.cache
 /tests/integration/tmp
 js/coverage-ts
 js/dist-typings/
+js/package-lock.json
 
 # Coverage
 coverage/
