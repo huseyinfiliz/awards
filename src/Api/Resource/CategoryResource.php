@@ -79,8 +79,10 @@ class CategoryResource extends Resource\AbstractDatabaseResource
                     $context->getActor()->assertCan('awards.manage');
                 }),
             Endpoint\Show::make()
+                ->before(fn (OriginalContext $context) => $context->getActor()->assertCan('awards.view'))
                 ->defaultInclude(['nominees']),
             Endpoint\Index::make()
+                ->before(fn (OriginalContext $context) => $context->getActor()->assertCan('awards.view'))
                 ->paginate()
                 ->defaultSort('sortOrder'),
         ];

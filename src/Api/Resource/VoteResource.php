@@ -6,9 +6,8 @@ use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
 use Flarum\Foundation\ValidationException;
-use HuseyinFiliz\Awards\Models\Nominee;
 use HuseyinFiliz\Awards\Models\Vote;
-use HuseyinFiliz\Awards\Service\VoteLimitService;
+use HuseyinFiliz\Awards\Service\VotingService;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -22,7 +21,7 @@ class VoteResource extends Resource\AbstractDatabaseResource
     public function __construct(
         protected TranslatorInterface $translator,
         protected RateLimiter $limiter,
-        protected VoteLimitService $voteLimitService,
+        protected VotingService $voting,
     ) {
     }
 
@@ -62,47 +61,6 @@ class VoteResource extends Resource\AbstractDatabaseResource
                         ]);
                     }
                     $this->limiter->hit($key, 60);
-
-                    $attrs = (array) ($context->body()['data']['attributes'] ?? []);
-                    $nomineeId = $attrs['nomineeId'] ?? null;
-
-                    if (Vote::where('nominee_id', $nomineeId)->where('user_id', $actor->id)->exists()) {
-                        throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.already_voted'),
-                        ]);
-                    }
-
-                    $nominee = Nominee::with('category.award')->findOrFail($nomineeId);
-                    $award = $nominee->category->award;
-                    $categoryId = $nominee->category_id;
-
-                    if (!$award->isVotingOpen()) {
-                        throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.voting.voting_closed'),
-                        ]);
-                    }
-
-                    if ($this->voteLimitService->isSingleVoteMode()) {
-                        Vote::where('category_id', $categoryId)
-                            ->where('user_id', $actor->id)
-                            ->delete();
-                    } elseif (!$this->voteLimitService->isUnlimited()) {
-                        if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
-                            $limit = $this->voteLimitService->getVotesPerCategory();
-
-                            throw new ValidationException([
-                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_limit_reached', ['limit' => $limit]),
-                            ]);
-                        }
-                    }
-
-                    $context->body = array_merge($context->body(), [
-                        'data' => array_merge($context->body()['data'] ?? [], [
-                            'attributes' => array_merge($attrs, [
-                                'categoryId' => $categoryId,
-                            ]),
-                        ]),
-                    ]);
                 }),
             Endpoint\Delete::make()
                 ->can('delete'),
@@ -148,16 +106,16 @@ class VoteResource extends Resource\AbstractDatabaseResource
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
 
-        $attrs = (array) ($context->body()['data']['attributes'] ?? []);
-        if (!empty($attrs['categoryId'])) {
-            $model->category_id = (int) $attrs['categoryId'];
-        } elseif (!empty($attrs['nomineeId'])) {
-            $nominee = Nominee::find($attrs['nomineeId']);
-            if ($nominee) {
-                $model->category_id = $nominee->category_id;
-            }
-        }
-
         return $model;
+    }
+
+    public function create(object $model, OriginalContext $context): object
+    {
+        return $this->voting->vote($model);
+    }
+
+    public function delete(object $model, OriginalContext $context): void
+    {
+        $this->voting->delete($model);
     }
 }

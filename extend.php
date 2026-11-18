@@ -59,9 +59,22 @@ return [
 
     (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Award::class))
         ->scope(function ($actor, $query) {
+            if (!$actor->hasPermission('awards.view') && !$actor->hasPermission('awards.manage')) {
+                $query->whereRaw('1 = 0');
+            }
             if (!$actor->hasPermission('awards.manage')) {
                 $query->whereIn('status', ['active', 'published', 'ended']);
             }
+        }),
+
+    (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Category::class))
+        ->scope(function ($actor, $query) {
+            $query->whereHas('award', fn ($award) => $award->whereVisibleTo($actor));
+        }),
+
+    (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Nominee::class))
+        ->scope(function ($actor, $query) {
+            $query->whereHas('category', fn ($category) => $category->whereVisibleTo($actor));
         }),
 
     (new Extend\ModelVisibility(\HuseyinFiliz\Awards\Models\Vote::class))

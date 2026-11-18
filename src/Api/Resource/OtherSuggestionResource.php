@@ -6,14 +6,10 @@ use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
 use Flarum\Foundation\ValidationException;
-use HuseyinFiliz\Awards\Models\Category;
-use HuseyinFiliz\Awards\Models\Nominee;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
-use HuseyinFiliz\Awards\Models\Vote;
-use HuseyinFiliz\Awards\Service\VoteLimitService;
+use HuseyinFiliz\Awards\Service\VotingService;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tobyz\JsonApiServer\Context as OriginalContext;
 
@@ -25,7 +21,7 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
     public function __construct(
         protected TranslatorInterface $translator,
         protected RateLimiter $limiter,
-        protected VoteLimitService $voteLimitService,
+        protected VotingService $voting,
     ) {
     }
 
@@ -51,7 +47,6 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                 ->before(function (OriginalContext $context) {
                     $actor = $context->getActor();
                     $actor->assertCan('awards.vote');
-
                     $key = 'awards_vote_'.$actor->id;
                     if ($this->limiter->tooManyAttempts($key, 10)) {
                         throw new ValidationException([
@@ -59,148 +54,10 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
                         ]);
                     }
                     $this->limiter->hit($key, 60);
-
-                    $attrs = (array) ($context->body()['data']['attributes'] ?? []);
-                    $name = trim($attrs['name'] ?? '');
-                    $categoryId = $attrs['categoryId'] ?? null;
-
-                    if (empty($name)) {
-                        throw new ValidationException([
-                            'name' => $this->translator->trans('validation.required', ['attribute' => 'name']),
-                        ]);
-                    }
-
-                    if (mb_strlen($name) > 255) {
-                        throw new ValidationException([
-                            'name' => $this->translator->trans('validation.max.string', ['attribute' => 'name', 'max' => 255]),
-                        ]);
-                    }
-
-                    $category = Category::with('award')->findOrFail($categoryId);
-
-                    if (!$category->allow_other) {
-                        throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.other_not_allowed'),
-                        ]);
-                    }
-
-                    if (!$category->award->isVotingOpen()) {
-                        throw new ValidationException([
-                            'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.voting_closed'),
-                        ]);
-                    }
-
-                    if (!$this->voteLimitService->isUnlimited()) {
-                        if (!$this->voteLimitService->canVote($categoryId, $actor->id)) {
-                            throw new ValidationException([
-                                'message' => $this->translator->trans('huseyinfiliz-awards.forum.error.vote_quota_exhausted'),
-                            ]);
-                        }
-                    }
-
-                    $context->body = array_merge($context->body(), [
-                        'data' => array_merge($context->body()['data'] ?? [], [
-                            'attributes' => array_merge($attrs, [
-                                'name'   => $name,
-                                'status' => 'pending',
-                            ]),
-                        ]),
-                    ]);
                 }),
             Endpoint\Update::make()
                 ->can('update')
-                ->before(function (OriginalContext $context) {
-                    $context->getActor()->assertCan('awards.manage');
-                    $attrs = (array) ($context->body()['data']['attributes'] ?? []);
-                    $action = $attrs['action'] ?? null;
-                    $mergeToNomineeId = $attrs['mergeToNomineeId'] ?? null;
-                    /** @var OtherSuggestion $model */
-                    $model = $context->model;
-
-                    switch ($action) {
-                        case 'approve':
-                            if ($model->status !== 'pending') {
-                                throw new ValidationException([
-                                    'message' => 'This suggestion has already been processed.',
-                                ]);
-                            }
-
-                            $baseSlug = Str::slug($model->name) ?: 'nominee';
-                            $slug = $baseSlug;
-                            $counter = 2;
-                            while (Nominee::where('category_id', $model->category_id)->where('slug', $slug)->exists()) {
-                                $slug = $baseSlug.'-'.$counter;
-                                $counter++;
-                            }
-
-                            $nominee = Nominee::create([
-                                'category_id' => $model->category_id,
-                                'name'        => $model->name,
-                                'slug'        => $slug,
-                                'sort_order'  => 999,
-                            ]);
-
-                            if ($model->user_id) {
-                                if ($this->voteLimitService->isSingleVoteMode()) {
-                                    Vote::updateOrCreate(
-                                        ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                        ['nominee_id' => $nominee->id]
-                                    );
-                                } else {
-                                    Vote::firstOrCreate(
-                                        ['nominee_id' => $nominee->id, 'user_id' => $model->user_id],
-                                        ['category_id' => $model->category_id]
-                                    );
-                                }
-                            }
-
-                            $model->status = 'approved';
-                            $model->merged_to_nominee_id = $nominee->id;
-                            $model->save();
-                            break;
-
-                        case 'reject':
-                            if ($model->status !== 'pending') {
-                                throw new ValidationException([
-                                    'message' => 'This suggestion has already been processed.',
-                                ]);
-                            }
-
-                            $model->status = 'rejected';
-                            $model->save();
-                            break;
-
-                        case 'merge':
-                            if ($model->status !== 'pending') {
-                                throw new ValidationException([
-                                    'message' => 'This suggestion has already been processed.',
-                                ]);
-                            }
-
-                            if (!$mergeToNomineeId) {
-                                throw new \InvalidArgumentException('mergeToNomineeId is required for merge action');
-                            }
-
-                            if ($model->user_id) {
-                                if ($this->voteLimitService->isSingleVoteMode()) {
-                                    Vote::updateOrCreate(
-                                        ['category_id' => $model->category_id, 'user_id' => $model->user_id],
-                                        ['nominee_id' => $mergeToNomineeId]
-                                    );
-                                } else {
-                                    Vote::firstOrCreate(
-                                        ['nominee_id' => $mergeToNomineeId, 'user_id' => $model->user_id],
-                                        ['category_id' => $model->category_id]
-                                    );
-                                }
-                            }
-
-                            $model->status = 'merged';
-                            $model->merged_to_nominee_id = $mergeToNomineeId;
-                            $model->save();
-                            break;
-                    }
-                }),
+                ->before(fn (OriginalContext $context) => $context->getActor()->assertCan('awards.manage')),
             Endpoint\Delete::make()
                 ->can('delete'),
             Endpoint\Index::make()
@@ -213,19 +70,26 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
         return [
             Schema\Str::make('name')
                 ->requiredOnCreate()
+                ->minLength(1)
                 ->maxLength(255)
-                ->writable(),
-            Schema\Str::make('status')
-                ->writable(),
+                ->writableOnCreate(),
+            Schema\Str::make('status'),
+            Schema\Str::make('action')
+                ->hidden()
+                ->writableOnUpdate()
+                ->set(fn () => null),
             Schema\DateTime::make('createdAt')
                 ->property('created_at'),
             Schema\Integer::make('categoryId')
-                ->writable()
+                ->requiredOnCreate()
+                ->writableOnCreate()
                 ->property('category_id'),
             Schema\Integer::make('mergedToNomineeId')
-                ->writable()
                 ->property('merged_to_nominee_id'),
-
+            Schema\Integer::make('mergeToNomineeId')
+                ->hidden()
+                ->writableOnUpdate()
+                ->set(fn () => null),
             Schema\Relationship\ToOne::make('category')
                 ->includable()
                 ->type('award-categories'),
@@ -238,6 +102,17 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
         ];
     }
 
+    public function setValue(object $model, \Tobyz\JsonApiServer\Schema\Field\Field $field, mixed $value, OriginalContext $context): void
+    {
+        if ($field->name === 'name') {
+            $value = trim($value);
+            if ($value === '') {
+                throw new ValidationException(['name' => $this->translator->trans('validation.required', ['attribute' => 'name'])]);
+            }
+        }
+        parent::setValue($model, $field, $value, $context);
+    }
+
     public function sorts(): array
     {
         return [];
@@ -247,8 +122,24 @@ class OtherSuggestionResource extends Resource\AbstractDatabaseResource
     {
         $model = parent::newModel($context);
         $model->user_id = $context->getActor()->id;
-        $model->status = 'pending';
 
         return $model;
+    }
+
+    public function create(object $model, OriginalContext $context): object
+    {
+        return $this->voting->suggest($model);
+    }
+
+    public function update(object $model, OriginalContext $context): object
+    {
+        $attrs = $context->body()['data']['attributes'] ?? [];
+
+        return $this->voting->moderate($model, $attrs['action'] ?? '', isset($attrs['mergeToNomineeId']) ? (int) $attrs['mergeToNomineeId'] : null);
+    }
+
+    public function delete(object $model, OriginalContext $context): void
+    {
+        $this->voting->delete($model);
     }
 }
