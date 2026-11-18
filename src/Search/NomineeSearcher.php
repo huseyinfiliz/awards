@@ -11,6 +11,9 @@ class NomineeSearcher extends AbstractSearcher
 {
     public function getQuery(User $actor): Builder
     {
-        return Nominee::whereVisibleTo($actor)->select('award_nominees.*');
+        return Nominee::whereVisibleTo($actor)
+            ->select('award_nominees.*')
+            ->withCount('votes')
+            ->with(['category' => fn ($query) => $query->withCount('votes')->with('award')]);
     }
 }
