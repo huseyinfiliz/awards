@@ -38,7 +38,7 @@ class AuditIntegration
                 }
                 if ($model instanceof Nominee && $model->wasChanged('vote_adjustment')) {
                     AuditLogger::log('awards.nominee.votes_adjusted', [
-                        'nominee_id' => $model->id,
+                        'nominee_id'     => $model->id,
                         'old_adjustment' => (int) $model->getRawOriginal('vote_adjustment'),
                         'new_adjustment' => (int) $model->vote_adjustment,
                     ]);
@@ -51,9 +51,9 @@ class AuditIntegration
             if ($suggestion->wasChanged('status')) {
                 AuditLogger::log('awards.suggestion.moderated', [
                     'suggestion_id' => $suggestion->id,
-                    'category_id' => $suggestion->category_id,
-                    'old_status' => $suggestion->getRawOriginal('status'),
-                    'new_status' => $suggestion->status,
+                    'category_id'   => $suggestion->category_id,
+                    'old_status'    => $suggestion->getRawOriginal('status'),
+                    'new_status'    => $suggestion->status,
                 ]);
             }
         });

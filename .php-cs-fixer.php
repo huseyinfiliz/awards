@@ -11,6 +11,8 @@ return (new Config())
         'array_indentation' => true,
         'ordered_imports' => true,
         'no_unused_imports' => false,
+        'binary_operator_spaces' => ['operators' => ['=>' => 'align_single_space_minimal']],
+        'blank_line_before_statement' => ['statements' => ['return', 'throw', 'try']],
     ])
     ->setFinder(
         Finder::create()

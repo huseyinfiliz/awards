@@ -20,7 +20,7 @@ class SecurityRegressionTest extends TestCase
         $this->extension('huseyinfiliz-awards');
         $this->prepareDatabase([
             User::class => [$this->normalUser()],
-            'awards' => [
+            'awards'    => [
                 ['id' => 1, 'name' => 'Public Award', 'slug' => 'public-award', 'status' => 'active'],
                 ['id' => 2, 'name' => 'Draft Award', 'slug' => 'draft-award', 'status' => 'draft'],
             ],
@@ -223,7 +223,7 @@ class SecurityRegressionTest extends TestCase
     {
         return $this->send($this->request('POST', '/api/award-votes', [
             'authenticatedAs' => 2,
-            'json' => ['data' => ['type' => 'award-votes', 'attributes' => array_merge(['nomineeId' => $nomineeId], $extra)]],
+            'json'            => ['data' => ['type' => 'award-votes', 'attributes' => array_merge(['nomineeId' => $nomineeId], $extra)]],
         ]));
     }
 
@@ -231,7 +231,7 @@ class SecurityRegressionTest extends TestCase
     {
         return $this->send($this->request('POST', '/api/award-other-suggestions', [
             'authenticatedAs' => 2,
-            'json' => ['data' => ['type' => 'award-other-suggestions', 'attributes' => array_merge(['categoryId' => 1, 'name' => 'Suggested nominee'], $extra)]],
+            'json'            => ['data' => ['type' => 'award-other-suggestions', 'attributes' => array_merge(['categoryId' => 1, 'name' => 'Suggested nominee'], $extra)]],
         ]));
     }
 
@@ -239,7 +239,7 @@ class SecurityRegressionTest extends TestCase
     {
         return $this->send($this->request('PATCH', '/api/award-other-suggestions/'.$id, [
             'authenticatedAs' => 1,
-            'json' => ['data' => ['type' => 'award-other-suggestions', 'attributes' => $attributes]],
+            'json'            => ['data' => ['type' => 'award-other-suggestions', 'attributes' => $attributes]],
         ]));
     }
 }
