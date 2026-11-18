@@ -17,6 +17,7 @@ tests/.phpunit.cache
 tests/.phpunit.result.cache
 /tests/integration/tmp
 js/coverage-ts
+js/dist-typings/
 
 # Coverage
 coverage/

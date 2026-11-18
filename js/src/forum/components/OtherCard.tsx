@@ -5,6 +5,7 @@ import SuggestionModal from './SuggestionModal';
 
 export default class OtherCard extends Component {
   openModal(category: Category) {
+    if (!app.session.user || !app.forum.attribute('canVoteAwards')) return;
     app.modal.show(SuggestionModal, { category });
   }
 

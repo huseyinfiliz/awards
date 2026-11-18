@@ -15,23 +15,23 @@ export default class NomineeCard extends Component {
 
     const currentUserId = app.session.user?.id();
     const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       return !vUserId || String(vUserId) === String(currentUserId);
     });
     const nomineeId = nominee.id();
     const categoryId = category.id();
 
     const userVote = userVotes.find((v) => {
-      const vNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
-      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      const vNomineeId = v.nomineeId() || v.relationshipId('nominee');
+      const vCategoryId = v.categoryId() || v.relationshipId('category');
       return String(vNomineeId) === String(nomineeId) && String(vCategoryId) === String(categoryId);
     });
 
     const isVoted = !!userVote;
-    const canVote = award.isVotingOpen() && app.session.user;
+    const canVote = award.isVotingOpen() && app.session.user && app.forum.attribute('canVoteAwards');
     const showVotes = award.canShowVotes();
 
-    // Tıklanabilir mi kontrolü
+    // Only authorized voters can interact with nominee cards.
     const isClickable = canVote && !this.loading;
 
     return (
@@ -108,15 +108,15 @@ export default class NomineeCard extends Component {
     const categoryId = category.id();
     const currentUserId = app.session.user?.id();
     const userVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       const isCurrentUser = !vUserId || String(vUserId) === String(currentUserId);
-      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      const vCategoryId = v.categoryId() || v.relationshipId('category');
       return isCurrentUser && String(vCategoryId) === String(categoryId);
     });
 
     const userVoteIds = userVotesInCategory
       .map((v) => {
-        return v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+        return v.nomineeId() || v.relationshipId('nominee');
       })
       .filter(Boolean);
 
@@ -128,7 +128,7 @@ export default class NomineeCard extends Component {
   }
 
   toggleVote(nominee: Nominee, category: Category, userVote?: Vote) {
-    if (!app.session.user) {
+    if (!app.session.user || !app.forum.attribute('canVoteAwards') || !(this.attrs.award as Award).isVotingOpen()) {
       return;
     }
 
@@ -167,9 +167,9 @@ export default class NomineeCard extends Component {
     // Adding a new vote - check limits for multi-vote mode
     const currentUserId = app.session.user?.id();
     const existingVotesInCategory = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       const isCurrentUser = !vUserId || String(vUserId) === String(currentUserId);
-      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      const vCategoryId = v.categoryId() || v.relationshipId('category');
       return isCurrentUser && String(vCategoryId) === String(categoryId);
     });
 
@@ -198,7 +198,7 @@ export default class NomineeCard extends Component {
         // Only remove existing votes in single-vote mode (votesLimit === 1)
         if (votesLimit === 1) {
           existingVotesInCategory.forEach((v) => {
-            const prevNomineeId = v.nomineeId?.() || v.data?.relationships?.nominee?.data?.id;
+            const prevNomineeId = v.nomineeId() || v.relationshipId('nominee');
             if (prevNomineeId && String(prevNomineeId) !== String(nominee.id())) {
               const prevNominee = app.store.getById('award-nominees', String(prevNomineeId));
               if (prevNominee) {

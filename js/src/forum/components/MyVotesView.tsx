@@ -27,7 +27,7 @@ export default class MyVotesView extends Component {
     const categories = (award.categories() || []) as Category[];
     const currentUserId = app.session.user?.id();
     const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       return !vUserId || String(vUserId) === String(currentUserId);
     });
     const votesLimit = parseInt(app.forum.attribute('awardsVotesPerCategory') || '1', 10);
@@ -43,7 +43,7 @@ export default class MyVotesView extends Component {
 
       // Find ALL votes for this category (multi-vote support)
       const categoryVotes = userVotes.filter((v) => {
-        const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+        const vCategoryId = v.categoryId() || v.relationshipId('category');
         return String(vCategoryId) === String(categoryId);
       });
 
@@ -51,7 +51,7 @@ export default class MyVotesView extends Component {
         const voteEntries: VoteEntry[] = [];
 
         categoryVotes.forEach((vote) => {
-          const vNomineeId = vote.nomineeId?.() || vote.data?.relationships?.nominee?.data?.id;
+          const vNomineeId = vote.nomineeId() || vote.relationshipId('nominee');
           const nominee = nominees.find((n) => String(n.id()) === String(vNomineeId));
 
           if (nominee) {
@@ -185,7 +185,7 @@ export default class MyVotesView extends Component {
                         <div className="MyVotesView-item-name">{nominee.name()}</div>
                       </div>
                       <div className="MyVotesView-item-meta">
-                        {vote.createdAt?.() ? <span className="MyVotesView-item-date">{humanTime(vote.createdAt())}</span> : null}
+                        {vote.createdAt?.() ? <span className="MyVotesView-item-date">{humanTime(vote.createdAt()!)}</span> : null}
                       </div>
                       <div className="MyVotesView-item-actions">
                         {isVotingOpen ? (

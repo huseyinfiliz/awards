@@ -1,6 +1,6 @@
 import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import FormModal from 'flarum/common/components/FormModal';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Nominee from '../../../common/models/Nominee';
@@ -11,13 +11,14 @@ interface NomineeSuggestion {
   imageUrl: string | null;
 }
 
-interface NomineeModalAttrs {
+interface NomineeModalAttrs extends IFormModalAttrs {
   nominee?: Nominee;
   categoryId: string;
   onsubmit?: () => void;
 }
 
-export default class NomineeModal extends FormModal<NomineeModalAttrs> {
+export default class NomineeModal extends FormModal {
+  attrs!: NomineeModalAttrs;
   name: Stream<string>;
   description: Stream<string>;
   slug: Stream<string>;

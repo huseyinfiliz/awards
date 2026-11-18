@@ -1,4 +1,5 @@
 import app from 'flarum/forum/app';
+import type Mithril from 'mithril';
 import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Select from 'flarum/common/components/Select';
@@ -49,7 +50,7 @@ export default class AwardsPage extends Page {
 
   oncreate(vnode: any) {
     super.oncreate(vnode);
-    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
+    const navTitle = app.forum.attribute<string>('awardsNavTitle') || 'Awards';
     app.setTitle(extractText(navTitle));
     this.startCountdown();
   }
@@ -96,12 +97,14 @@ export default class AwardsPage extends Page {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     // Use single translation string with all placeholders
-    this.countdownText = app.translator.trans('huseyinfiliz-awards.forum.hero.countdown', {
-      days,
-      hours,
-      minutes,
-      seconds,
-    }) as string;
+    this.countdownText = extractText(
+      app.translator.trans('huseyinfiliz-awards.forum.hero.countdown', {
+        days,
+        hours,
+        minutes,
+        seconds,
+      })
+    );
   }
 
   async loadAwards() {
@@ -164,7 +167,8 @@ export default class AwardsPage extends Page {
 
     // Scroll to category after DOM updates if category was specified in route
     if (this.routeCategoryId && this.selectedCategoryId) {
-      setTimeout(() => this.scrollToCategory(this.routeCategoryId), 100);
+      const categoryId = this.routeCategoryId;
+      setTimeout(() => this.scrollToCategory(categoryId), 100);
     }
   }
 
@@ -188,10 +192,11 @@ export default class AwardsPage extends Page {
   }
 
   async refreshVoteCounts() {
-    if (!this.selectedAward) return;
+    const awardId = this.selectedAward?.id();
+    if (!awardId) return;
 
     try {
-      await app.store.find('awards', this.selectedAward.id(), {
+      await app.store.find('awards', awardId, {
         include: 'categories,categories.nominees',
       });
       m.redraw();
@@ -223,8 +228,8 @@ export default class AwardsPage extends Page {
   }
 
   hero(): Mithril.Children {
-    const navTitle = app.forum.attribute('awardsNavTitle') || 'Awards';
-    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
+    const navTitle = app.forum.attribute<string>('awardsNavTitle') || 'Awards';
+    const navIcon = app.forum.attribute<string>('awardsNavIcon') || 'fas fa-trophy';
     const imageUrl = this.selectedAward?.imageUrl?.();
     const hasImage = imageUrl && imageUrl.length > 0;
 
@@ -272,7 +277,7 @@ export default class AwardsPage extends Page {
   }
 
   content() {
-    const navIcon = app.forum.attribute('awardsNavIcon') || 'fas fa-trophy';
+    const navIcon = app.forum.attribute<string>('awardsNavIcon') || 'fas fa-trophy';
 
     if (this.awards.length === 0) {
       return (
@@ -323,7 +328,8 @@ export default class AwardsPage extends Page {
                   this.updateUrl();
                   m.redraw();
                   if (this.selectedCategoryId) {
-                    setTimeout(() => this.scrollToCategory(this.selectedCategoryId), 100);
+                    const categoryId = this.selectedCategoryId;
+                    setTimeout(() => this.scrollToCategory(categoryId), 100);
                   }
                 }}
               />

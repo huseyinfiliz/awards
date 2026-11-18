@@ -1,18 +1,19 @@
 import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import FormModal from 'flarum/common/components/FormModal';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
 import OtherSuggestion from '../../../common/models/OtherSuggestion';
 import Nominee from '../../../common/models/Nominee';
 
-interface MergeModalAttrs {
+interface MergeModalAttrs extends IFormModalAttrs {
   suggestion: OtherSuggestion;
   onmerge?: () => void;
 }
 
-export default class MergeModal extends FormModal<MergeModalAttrs> {
+export default class MergeModal extends FormModal {
+  attrs!: MergeModalAttrs;
   loading: boolean = true;
   nominees: Nominee[] = [];
   selectedNomineeId: Stream<string>;
@@ -32,7 +33,8 @@ export default class MergeModal extends FormModal<MergeModalAttrs> {
   }
 
   async loadNominees() {
-    const categoryId = this.attrs.suggestion.category()?.id?.();
+    const category = this.attrs.suggestion.category();
+    const categoryId = category ? category.id() : undefined;
     if (!categoryId) {
       this.loading = false;
       m.redraw();

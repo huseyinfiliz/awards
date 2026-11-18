@@ -1,6 +1,6 @@
 import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import FormModal from 'flarum/common/components/FormModal';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Category from '../../../common/models/Category';
@@ -10,13 +10,14 @@ interface CategorySuggestion {
   description: string | null;
 }
 
-interface CategoryModalAttrs {
+interface CategoryModalAttrs extends IFormModalAttrs {
   category?: Category;
   awardId: string;
   onsubmit?: () => void;
 }
 
-export default class CategoryModal extends FormModal<CategoryModalAttrs> {
+export default class CategoryModal extends FormModal {
+  attrs!: CategoryModalAttrs;
   name: Stream<string>;
   slug: Stream<string>;
   description: Stream<string>;

@@ -1,10 +1,8 @@
 import app from 'flarum/admin/app';
-import extenders from './extend';
+export { default as extend } from './extend';
 import AwardsPage from './components/AwardsPage';
 
 app.initializers.add('huseyinfiliz/awards', () => {
-  extenders.forEach((extender) => extender.extend(app));
-
   app.registry
     .for('huseyinfiliz-awards')
     .registerPage(AwardsPage)

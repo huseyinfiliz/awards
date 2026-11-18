@@ -1,11 +1,11 @@
 import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
-import FormModal from 'flarum/common/components/FormModal';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Award from '../../../common/models/Award';
 
-interface AwardModalAttrs {
+interface AwardModalAttrs extends IFormModalAttrs {
   award?: Award;
   onsubmit?: () => void;
 }
@@ -42,7 +42,7 @@ export default class AwardModal extends FormModal<AwardModalAttrs> {
    * Format a Date object to datetime-local input format using LOCAL timezone
    * This ensures the user sees and edits times in their local timezone
    */
-  formatDateForInput(date: Date | undefined): string {
+  formatDateForInput(date: Date | null | undefined): string {
     if (!date) return '';
 
     const YYYY = date.getFullYear();

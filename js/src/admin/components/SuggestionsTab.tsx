@@ -139,8 +139,8 @@ export default class SuggestionsTab extends Component {
                 <div className="CardList-item-cell CardList-item-cell--primary">
                   <div className="CardList-item-name">{suggestion.name()}</div>
                 </div>
-                <div className="CardList-item-cell CardList-item-cell--muted">{suggestion.category()?.name?.() || '-'}</div>
-                <div className="CardList-item-cell CardList-item-cell--muted">{suggestion.user()?.displayName?.() || '-'}</div>
+                <div className="CardList-item-cell CardList-item-cell--muted">{(suggestion.category() || undefined)?.name() || '-'}</div>
+                <div className="CardList-item-cell CardList-item-cell--muted">{(suggestion.user() || undefined)?.displayName() || '-'}</div>
                 <div className="CardList-item-actions">
                   <Button className="Button Button--success" icon="fas fa-check" onclick={() => this.approveSuggestion(suggestion)}>
                     {app.translator.trans('huseyinfiliz-awards.admin.suggestions.approve')}

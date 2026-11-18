@@ -17,6 +17,7 @@
     "build": "webpack --mode production",
     "analyze": "cross-env ANALYZER=true yarn build",
     "format": "prettier --write src",
+    "check-typings": "tsc --noEmit --emitDeclarationOnly false",
     "format-check": "prettier --check src"
   }
 }

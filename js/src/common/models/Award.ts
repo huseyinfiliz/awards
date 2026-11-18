@@ -43,7 +43,7 @@ export default class Award extends Model {
     const now = new Date();
     const startsAt = this.startsAt();
     const endsAt = this.endsAt();
-    return this.isActive() && startsAt && endsAt && now >= startsAt && now <= endsAt;
+    return this.isActive() && (!startsAt || now >= startsAt) && (!endsAt || now <= endsAt);
   }
 
   canShowVotes(): boolean {

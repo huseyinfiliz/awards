@@ -1,5 +1,5 @@
 import app from 'flarum/forum/app';
-import FormModal from 'flarum/common/components/FormModal';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import Alert from 'flarum/common/components/Alert';
@@ -7,7 +7,12 @@ import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Category from '../../common/models/Category';
 import OtherSuggestion from '../../common/models/OtherSuggestion';
 
+interface SuggestionModalAttrs extends IFormModalAttrs {
+  category: Category;
+}
+
 export default class SuggestionModal extends FormModal {
+  attrs!: SuggestionModalAttrs;
   category!: Category;
   name!: Stream<string>;
   suggestions: OtherSuggestion[] = [];
@@ -206,8 +211,8 @@ export default class SuggestionModal extends FormModal {
       })
       .then((response: any) => {
         // Add to local list
-        const newSuggestion = app.store.pushObject(response.data);
-        this.suggestions.unshift(newSuggestion);
+        const newSuggestion = app.store.pushObject<OtherSuggestion>(response.data);
+        if (newSuggestion) this.suggestions.unshift(newSuggestion);
         this.name('');
         this.loading = false;
 

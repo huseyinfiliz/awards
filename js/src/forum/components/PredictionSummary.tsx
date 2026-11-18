@@ -18,7 +18,7 @@ export default class PredictionSummary extends Component {
   getPredictionResults(award: Award, categories: Category[]): PredictionResult[] {
     const currentUserId = app.session.user?.id();
     const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       return !vUserId || String(vUserId) === String(currentUserId);
     });
     const results: PredictionResult[] = [];
@@ -29,13 +29,13 @@ export default class PredictionSummary extends Component {
 
       // Find user's vote for this category
       const userVote = userVotes.find((v) => {
-        const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+        const vCategoryId = v.categoryId() || v.relationshipId('category');
         return String(vCategoryId) === String(categoryId);
       });
 
       let userVotedNominee: Nominee | null = null;
       if (userVote) {
-        const vNomineeId = userVote.nomineeId?.() || userVote.data?.relationships?.nominee?.data?.id;
+        const vNomineeId = userVote.nomineeId() || userVote.relationshipId('nominee');
         userVotedNominee = nominees.find((n) => String(n.id()) === String(vNomineeId)) || null;
       }
 

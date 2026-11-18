@@ -1,10 +1,16 @@
 import app from 'flarum/forum/app';
-import Modal from 'flarum/common/components/Modal';
+import Modal, { IInternalModalAttrs } from 'flarum/common/components/Modal';
 import Category from '../../common/models/Category';
 import Nominee from '../../common/models/Nominee';
 import Award from '../../common/models/Award';
 
+interface CategoryResultsModalAttrs extends IInternalModalAttrs {
+  category: Category;
+  award: Award;
+}
+
 export default class CategoryResultsModal extends Modal {
+  attrs!: CategoryResultsModalAttrs;
   className() {
     return 'HFAwardsModal CategoryResultsModal';
   }

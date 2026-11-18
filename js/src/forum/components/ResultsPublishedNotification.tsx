@@ -1,13 +1,19 @@
 import app from 'flarum/forum/app';
 import Notification from 'flarum/forum/components/Notification';
 
+interface ResultsContent {
+  awardId?: number;
+  awardSlug?: string;
+  awardName?: string;
+}
+
 export default class ResultsPublishedNotification extends Notification {
   icon() {
     return 'fas fa-trophy';
   }
 
   href() {
-    const content = this.attrs.notification.content() || {};
+    const content = this.attrs.notification.content<ResultsContent>() || {};
     const awardId = content.awardId;
     const awardSlug = content.awardSlug || 'award';
 
@@ -19,7 +25,7 @@ export default class ResultsPublishedNotification extends Notification {
   }
 
   content() {
-    const content = this.attrs.notification.content() || {};
+    const content = this.attrs.notification.content<ResultsContent>() || {};
     const awardName = content.awardName || 'Awards';
 
     return app.translator.trans('huseyinfiliz-awards.forum.notification.results_published', {

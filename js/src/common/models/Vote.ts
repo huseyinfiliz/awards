@@ -14,4 +14,9 @@ export default class Vote extends Model {
   nominee = Model.hasOne<Nominee>('nominee');
   category = Model.hasOne<Category>('category');
   user = Model.hasOne('user');
+
+  relationshipId(name: string): string | undefined {
+    const data = this.data.relationships?.[name]?.data;
+    return data && !Array.isArray(data) ? data.id : undefined;
+  }
 }

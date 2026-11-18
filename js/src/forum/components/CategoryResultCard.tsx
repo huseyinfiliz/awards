@@ -3,13 +3,14 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Category from '../../common/models/Category';
 import Award from '../../common/models/Award';
+import Nominee from '../../common/models/Nominee';
 import CategoryResultsModal from './CategoryResultsModal';
 
 export default class CategoryResultCard extends Component {
   view() {
     const category = this.attrs.category as Category;
     const award = this.attrs.award as Award;
-    const allNominees = category.nominees() || [];
+    const allNominees = (category.nominees() || []).filter((nominee): nominee is Nominee => !!nominee);
     // Sort by vote count and show only top 3
     const nominees = [...allNominees].sort((a, b) => (b.voteCount() || 0) - (a.voteCount() || 0)).slice(0, 3);
 

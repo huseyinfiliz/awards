@@ -17,11 +17,11 @@ export default class CategoryCard extends Component {
     const categoryId = category.id();
     const currentUserId = app.session.user?.id();
     const userVotes = app.store.all<Vote>('award-votes').filter((v) => {
-      const vUserId = (v as any).userId?.() || v.data?.relationships?.user?.data?.id;
+      const vUserId = v.userId() || v.relationshipId('user');
       return !vUserId || String(vUserId) === String(currentUserId);
     });
     const votesInCategory = userVotes.filter((v) => {
-      const vCategoryId = v.categoryId?.() || v.data?.relationships?.category?.data?.id;
+      const vCategoryId = v.categoryId() || v.relationshipId('category');
       return String(vCategoryId) === String(categoryId);
     });
     const userVoteCount = votesInCategory.length;
@@ -63,7 +63,9 @@ export default class CategoryCard extends Component {
             <NomineeCard nominee={nominee} category={category} award={award} />
           ))}
 
-          {category.allowOther() && award.isVotingOpen() && app.session.user ? <OtherCard category={category} /> : null}
+          {category.allowOther() && award.isVotingOpen() && app.session.user && app.forum.attribute('canVoteAwards') ? (
+            <OtherCard category={category} />
+          ) : null}
         </div>
 
         {nominees.length === 0 && !category.allowOther() ? (

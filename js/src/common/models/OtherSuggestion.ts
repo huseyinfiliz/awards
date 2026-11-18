@@ -1,4 +1,5 @@
 import Model from 'flarum/common/Model';
+import User from 'flarum/common/models/User';
 import Category from './Category';
 import Nominee from './Nominee';
 
@@ -9,7 +10,7 @@ export default class OtherSuggestion extends Model {
   updatedAt = Model.attribute('updatedAt', Model.transformDate);
 
   category = Model.hasOne<Category>('category');
-  user = Model.hasOne('user');
+  user = Model.hasOne<User>('user');
   mergedToNominee = Model.hasOne<Nominee>('mergedToNominee');
 
   isPending(): boolean {
