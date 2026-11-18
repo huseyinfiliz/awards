@@ -135,9 +135,19 @@ Draft > Active > Ended > Published
 | Permission | Description |
 |------------|-------------|
 | **View Awards** | Access the awards page |
-| **Vote in Awards** | Cast votes for nominees |
+| **Vote in Awards** | Cast votes and suggest nominees where allowed |
 | **View Results Early** | See results before publishing (for moderators) |
 | **Manage Awards** | Full admin access to create/edit/delete |
+
+Start and end dates are optional. An active award accepts votes whenever all
+configured date bounds are satisfied.
+
+## Audit logging
+
+When Flarum Audit is installed and enabled, Awards records award, category, and
+nominee management changes, results publication, vote adjustments, and suggestion
+moderation decisions. Audit records identify the acting user and affected resource.
+Individual ballots and suggestion text are not included in the audit payload.
 
 ## Translations
 

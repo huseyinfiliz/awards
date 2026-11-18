@@ -20,6 +20,13 @@ return [
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-audit', fn () => [
+            (new \Flarum\Audit\Extend\Audit())
+                ->group('huseyinfiliz-awards')
+                ->using(new \HuseyinFiliz\Awards\Integration\AuditIntegration()),
+        ]),
+
     (new Extend\Settings())
         ->default('huseyinfiliz-awards.votes_per_category', 1)
         ->default('huseyinfiliz-awards.nav_title', 'Awards')
