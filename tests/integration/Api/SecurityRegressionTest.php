@@ -2,9 +2,13 @@
 
 namespace HuseyinFiliz\Awards\Tests\Integration\Api;
 
+use Flarum\Api\Context;
+use Flarum\Api\Endpoint\Delete;
+use Flarum\Extend;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
+use HuseyinFiliz\Awards\Api\Resource\OtherSuggestionResource;
 use HuseyinFiliz\Awards\Models\Nominee;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
 use HuseyinFiliz\Awards\Models\Vote;
@@ -217,6 +221,77 @@ class SecurityRegressionTest extends TestCase
         $this->assertEquals('pending', OtherSuggestion::findOrFail($id)->status);
         $this->assertEquals(3, Nominee::count());
         $this->assertEquals(0, Vote::count());
+    }
+
+    #[Test]
+    public function authors_can_cancel_pending_suggestions_and_reuse_the_slot(): void
+    {
+        $this->assertEquals(201, $this->suggest()->getStatusCode());
+        $id = OtherSuggestion::firstOrFail()->id;
+        $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$id, ['authenticatedAs' => 2]));
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertNull(OtherSuggestion::find($id));
+        $this->assertEquals(201, $this->submitVote(1)->getStatusCode());
+    }
+
+    #[Test]
+    public function authors_can_cancel_after_losing_voting_permission(): void
+    {
+        $this->suggest();
+        $id = OtherSuggestion::firstOrFail()->id;
+        $this->database()->table('group_permission')->where('permission', 'awards.vote')->delete();
+        $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$id, ['authenticatedAs' => 2]));
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertNull(OtherSuggestion::find($id));
+    }
+
+    #[Test]
+    public function authors_cannot_cancel_processed_suggestions(): void
+    {
+        $this->database();
+        foreach (['approved', 'rejected', 'merged'] as $status) {
+            $suggestion = OtherSuggestion::create(['category_id' => 1, 'user_id' => 2, 'name' => 'Processed', 'status' => $status]);
+            $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$suggestion->id, ['authenticatedAs' => 2]));
+            $this->assertEquals(403, $response->getStatusCode());
+            $this->assertEquals($status, $suggestion->fresh()->status);
+        }
+    }
+
+    #[Test]
+    public function other_members_cannot_cancel_someone_elses_suggestion(): void
+    {
+        $this->database();
+        $suggestion = OtherSuggestion::create(['category_id' => 1, 'user_id' => 1, 'name' => 'Another author', 'status' => 'pending']);
+        foreach ([2, null] as $actor) {
+            $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$suggestion->id, ['authenticatedAs' => $actor])->withAttribute('bypassCsrfToken', true));
+            $this->assertContains($response->getStatusCode(), [403, 404]);
+            $this->assertNotNull($suggestion->fresh());
+        }
+    }
+
+    #[Test]
+    public function managers_can_still_delete_processed_suggestions(): void
+    {
+        $this->database();
+        $suggestion = OtherSuggestion::create(['category_id' => 1, 'user_id' => 2, 'name' => 'Processed', 'status' => 'approved']);
+        $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$suggestion->id, ['authenticatedAs' => 1]));
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertNull($suggestion->fresh());
+    }
+
+    #[Test]
+    public function cancellation_rechecks_moderation_state_after_endpoint_authorization(): void
+    {
+        $this->extend((new Extend\ApiResource(OtherSuggestionResource::class))
+            ->endpoint('delete', fn (Delete $endpoint) => $endpoint->before(function (Context $context) {
+                // Simulate moderation committing after the endpoint authorized the stale model.
+                OtherSuggestion::whereKey($context->model->id)->update(['status' => 'approved']);
+            })));
+        $this->suggest();
+        $id = OtherSuggestion::firstOrFail()->id;
+        $response = $this->send($this->request('DELETE', '/api/award-other-suggestions/'.$id, ['authenticatedAs' => 2]));
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('approved', OtherSuggestion::findOrFail($id)->status);
     }
 
     private function submitVote(int $nomineeId, array $extra = []): \Psr\Http\Message\ResponseInterface

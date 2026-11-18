@@ -116,6 +116,6 @@ class VoteResource extends Resource\AbstractDatabaseResource
 
     public function delete(object $model, OriginalContext $context): void
     {
-        $this->voting->delete($model);
+        $this->voting->delete($model, $context->getActor());
     }
 }

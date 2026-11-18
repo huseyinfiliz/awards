@@ -32,6 +32,10 @@ class OtherSuggestionPolicy extends AbstractPolicy
             return $this->allow();
         }
 
+        if (!$actor->isGuest() && (int) $actor->id === (int) $suggestion->user_id && $suggestion->status === 'pending') {
+            return $this->allow();
+        }
+
         return null;
     }
 }

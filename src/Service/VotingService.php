@@ -3,6 +3,7 @@
 namespace HuseyinFiliz\Awards\Service;
 
 use Flarum\Foundation\ValidationException;
+use Flarum\User\User;
 use HuseyinFiliz\Awards\Models\Category;
 use HuseyinFiliz\Awards\Models\Nominee;
 use HuseyinFiliz\Awards\Models\OtherSuggestion;
@@ -117,10 +118,13 @@ class VotingService
         });
     }
 
-    public function delete(Vote|OtherSuggestion $model): void
+    public function delete(Vote|OtherSuggestion $model, User $actor): void
     {
-        $model->getConnection()->transaction(function () use ($model) {
+        $model->getConnection()->transaction(function () use ($model, $actor) {
             $this->lockCategory($model->category_id);
+            // Moderation may have changed the suggestion while this request waited.
+            $model->refresh();
+            $actor->assertCan('delete', $model);
             $model->delete();
         });
     }
